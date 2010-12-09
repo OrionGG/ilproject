@@ -5,13 +5,14 @@ import java.net.*;
 
 public class ExtractText {
 	public static void main(String[] args) throws Exception {
-		String sourceUrlString="http://pacozamora.blogia.com/2010/112201-investigue-sobre-el-cambio-climatico-desde-su-casa.php";
+		String sourceUrlString="http://revista.blogalia.com/";
 		if (args.length==0)
 		  System.err.println("Using default argument of \""+sourceUrlString+'"');
 		else
 			sourceUrlString=args[0];
 		if (sourceUrlString.indexOf(':')==-1) sourceUrlString="file:"+sourceUrlString;
 		GetBlogInfo(sourceUrlString);
+		//GetBlogText(sourceUrlString);
   }
 
 	private static void GetBlogInfo(String sourceUrlString) throws IOException,
