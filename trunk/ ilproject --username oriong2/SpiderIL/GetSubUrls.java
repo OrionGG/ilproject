@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.htmlparser.util.ParserException;
 
 
 public class GetSubUrls {
@@ -15,7 +14,7 @@ public class GetSubUrls {
 	 * @throws IOException 
 	 * @throws ParserException 
 	 */
-	public static void main(String[] args) throws IOException, ParserException {
+	public static void main(String[] args) throws IOException {
 		String sUrl = "http://www.blogalia.com/directorio.php";
 		String sTail = "blogalia.com";
 		List<String> oList = SpiderUrl(sUrl, sTail);
