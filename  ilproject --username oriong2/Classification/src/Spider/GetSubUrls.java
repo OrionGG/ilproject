@@ -19,8 +19,8 @@ public class GetSubUrls {
 	 * @throws ParserException 
 	 */
 	public static void main(String[] args) throws IOException {
-		//String sUrl = "http://www.blogalia.com/directorio.php";
-		String sUrl = "http://wordpress.com/";
+		String sUrl = "http://www.blogalia.com/directorio.php";
+		//String sUrl = "http://wordpress.com/";
 		//String sTail = "blogalia.com";
 		String sTail = "";
 		List<String> oList = SpiderUrl(sUrl, sTail);
@@ -39,6 +39,16 @@ public class GetSubUrls {
 		URL oURL = new URL(sUrl);
 		
 		List<String> oList = oApacheURLLister.listAll(oURL, 2, 1000, sTail);
+		return oList;
+	}
+	
+	public static List<String> DefaultSpiderUrl(String sUrl) throws MalformedURLException, IOException {
+		// TODO Auto-generated method stub
+		ApacheURLListerRecursive oApacheURLLister = new ApacheURLListerRecursive();
+		//URL oURL = new URL("http://www.blogia.com");
+		URL oURL = new URL(sUrl);
+		
+		List<String> oList = oApacheURLLister.listAll(oURL, 2, 1000, "");
 		return oList;
 	}
 

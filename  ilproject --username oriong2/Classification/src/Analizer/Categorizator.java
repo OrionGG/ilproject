@@ -1,6 +1,6 @@
-package Analizer;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
@@ -13,9 +13,32 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
+import GetBlogText.ExtractText;
+import Spider.GetSubUrls;
 
 
 public class Categorizator {
+
+
+	public static void main(String[] args) throws Exception {
+		if (args.length > 1){
+			String sOption = args[0].toString();
+			String sUrl = args[1].toString();
+			if(sOption.equals("-u")){
+				String sText = ExtractText.GetBlogText(sUrl);
+				similarityFunction(sText);
+			}
+			else if(sOption.equals("-l")){
+				List<String> oList = GetSubUrls.DefaultSpiderUrl(sUrl);
+				for(String sSubUrl : oList){
+					String sText = ExtractText.GetBlogText(sSubUrl);
+					similarityFunction(sText);
+				
+				}
+			}
+		}
+	
+	}
 	
 	public static void similarityFunction(String parseo) throws CorruptIndexException, IOException, ParseException{
 		 Directory indexDirectory = FSDirectory.open(new File(".\\resources\\index"));
