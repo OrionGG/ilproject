@@ -1,7 +1,13 @@
+package CategoryGenerator;
+
+
+
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -18,6 +24,13 @@ import org.apache.lucene.search.*;
 import org.apache.lucene.store.*;
 import org.apache.lucene.util.Version;
 
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+
+import dao.DAO_Model;
+
+import Analizer.BlogSpaAnalyzer;
+
 
 public class CategoryGerenator {
 
@@ -30,12 +43,19 @@ public class CategoryGerenator {
 	@SuppressWarnings("deprecation")
 	public static void main(String[] args) throws CorruptIndexException, IOException, ParseException {
 		// TODO Auto-generated method stub
+		
+		  
+		  Model ontology=DAO_Model.generateMainModel();
+		  
+		
+		
+		
 		   BlogSpaAnalyzer analyzer = new BlogSpaAnalyzer(Version.LUCENE_CURRENT);
-
+		   
 		    // Store the index in memory:
 		    // Directory directory = new RAMDirectory();
 		    // To store an index on disk, use this instead:
-		    Directory indexDirectory = FSDirectory.open(new File("./resources/index"));
+		    Directory indexDirectory = FSDirectory.open(new File(".\\resources\\index"));
 		 
 		   
 		    IndexWriter iwriter = new IndexWriter(indexDirectory, analyzer, true, new IndexWriter.MaxFieldLength(25000));
