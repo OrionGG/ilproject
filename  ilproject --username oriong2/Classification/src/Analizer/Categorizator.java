@@ -1,3 +1,5 @@
+package Analizer;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -13,6 +15,8 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
+
+import DBLayer.DAOUrl;
 import GetBlogText.ExtractText;
 import Spider.GetSubUrls;
 
@@ -26,12 +30,16 @@ public class Categorizator {
 			String sUrl = args[1].toString();
 			if(sOption.equals("-u")){
 				String sText = ExtractText.GetBlogText(sUrl);
+				DAOUrl oDAOUrl = new DAOUrl();
+				oDAOUrl.insertOrUpdateUrl(sUrl, sText);
 				similarityFunction(sText);
 			}
 			else if(sOption.equals("-l")){
 				List<String> oList = GetSubUrls.DefaultSpiderUrl(sUrl);
 				for(String sSubUrl : oList){
 					String sText = ExtractText.GetBlogText(sSubUrl);
+					DAOUrl oDAOUrl = new DAOUrl();
+					oDAOUrl.insertOrUpdateUrl(sSubUrl, sText);
 					similarityFunction(sText);
 				
 				}
