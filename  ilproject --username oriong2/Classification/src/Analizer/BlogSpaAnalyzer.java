@@ -1,3 +1,4 @@
+package Analizer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.util.Version;
 

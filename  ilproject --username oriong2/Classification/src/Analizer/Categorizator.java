@@ -1,3 +1,4 @@
+package Analizer;
 import java.io.File;
 import java.io.IOException;
 
@@ -13,10 +14,11 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
 
+
 public class Categorizator {
 	
 	public static void similarityFunction(String parseo) throws CorruptIndexException, IOException, ParseException{
-		 Directory indexDirectory = FSDirectory.open(new File("./resources/index"));
+		 Directory indexDirectory = FSDirectory.open(new File(".\\resources\\index"));
 		// Now search the index:
 	    IndexSearcher isearcher = new IndexSearcher(indexDirectory, true); // read-only=true
 	    // Parse a simple query that searches for "text":
