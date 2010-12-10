@@ -1,3 +1,4 @@
+
 package Analizer;
 
 import java.io.File;
@@ -19,7 +20,6 @@ import org.apache.lucene.util.Version;
 import DBLayer.DAOUrl;
 import GetBlogText.ExtractText;
 import Spider.GetSubUrls;
-
 
 public class Categorizator {
 
