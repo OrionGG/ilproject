@@ -1,3 +1,5 @@
+package src;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -15,8 +17,10 @@ public class GetSubUrls {
 	 * @throws ParserException 
 	 */
 	public static void main(String[] args) throws IOException {
-		String sUrl = "http://www.blogalia.com/directorio.php";
-		String sTail = "blogalia.com";
+		//String sUrl = "http://www.blogalia.com/directorio.php";
+		String sUrl = "http://wordpress.com/";
+		//String sTail = "blogalia.com";
+		String sTail = "";
 		List<String> oList = SpiderUrl(sUrl, sTail);
 		Map<String,String> oMap = new HashMap<String, String>();
 		for(String sSubUrl : oList){
@@ -32,7 +36,7 @@ public class GetSubUrls {
 		//URL oURL = new URL("http://www.blogia.com");
 		URL oURL = new URL(sUrl);
 		
-		List<String> oList = oApacheURLLister.listAll(oURL, 2, 1000, sTail);
+		List<String> oList = oApacheURLLister.listAll(oURL, 3, 1000, sTail);
 		return oList;
 	}
 
