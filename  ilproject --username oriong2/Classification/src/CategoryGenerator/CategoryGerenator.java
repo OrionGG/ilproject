@@ -70,8 +70,14 @@ public class CategoryGerenator {
 			String text3= WikipediaText.GetTextFromWikipedia(resource.getLocalName());
 			Set<String> oSyn = Synonym.lookupSynonyms(resource.getLocalName());
 			 for(String sWord:oSyn){
-				 String sTextSynonym = WikipediaText.GetTextFromWikipedia(sWord);
-				 text3 += " " + sTextSynonym;
+				 try{
+					 String sTextSynonym = WikipediaText.GetTextFromWikipedia(sWord);
+					 text3 += " " + sTextSynonym;
+				 }
+				 catch(Exception e){
+					 
+				 
+				 }
 			 }
 			
 			text.concat(text3).concat(text2);
