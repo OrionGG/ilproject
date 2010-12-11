@@ -59,20 +59,19 @@ public class CategoryGerenator {
 		System.out.println("Fin categorias");
 		
 		
-		Document categoria = new Document();
 		BlogSpaAnalyzer analyzer = new BlogSpaAnalyzer(Version.LUCENE_CURRENT);
 		Directory indexDirectory = FSDirectory.open(new File(".\\resources\\index"));
 		IndexWriter iwriter = new IndexWriter(indexDirectory, analyzer, true, new IndexWriter.MaxFieldLength(25000));
 		for(Resource resource: urlCategorias){
-			String text=getResourcesCategorias(resource.getURI());
-			String text2=getSubClasesCategorias(resource.getURI());
+			String sText=getResourcesCategorias(resource.getURI());
+			String sTextSubClasses=getSubClassesCategorias(resource.getURI());
 
-			String text3= WikipediaText.GetTextFromWikipedia(resource.getLocalName());
+			String sTextWikipedia= WikipediaText.GetTextFromWikipedia(resource.getLocalName());
 			Set<String> oSyn = Synonym.lookupSynonyms(resource.getLocalName());
 			 for(String sWord:oSyn){
 				 try{
-					 String sTextSynonym = WikipediaText.GetTextFromWikipedia(sWord);
-					 text3 += " " + sTextSynonym;
+					 String sTextWikipediaSynonym = WikipediaText.GetTextFromWikipedia(sWord);
+					 sTextWikipedia += " " + sTextWikipediaSynonym;
 				 }
 				 catch(Exception e){
 					 
@@ -80,7 +79,7 @@ public class CategoryGerenator {
 				 }
 			 }
 			
-			text.concat(text3).concat(text2);
+			 String sTotalText = sText + " " + sTextSubClasses + " " + sTextWikipedia;
 			
 			///ANALIZADORRRRRR
 
@@ -88,7 +87,10 @@ public class CategoryGerenator {
 		
 			//SE RECORREN TODOS LOS FICHEROS DE UNA CATEGORIA
 				//SE A�ADEN A CADA DOC=CATEGORIA
-			categoria.add( new Field("fieldname", text, Field.Store.YES,Field.Index.ANALYZED)); 
+			Document categoria = new Document();
+			categoria.add( new Field("CategoryName", resource.getLocalName(), Field.Store.YES,Field.Index.ANALYZED));
+			categoria.add( new Field("CategoryText", sTotalText, Field.Store.YES,Field.Index.ANALYZED)); 
+			
 			iwriter.addDocument(categoria);
 		}
 
@@ -97,7 +99,7 @@ public class CategoryGerenator {
 
 	}
 
-	private static String getSubClasesCategorias(
+	private static String getSubClassesCategorias(
 			String string) {
 		// TODO Auto-generated method stub
 		return null;
