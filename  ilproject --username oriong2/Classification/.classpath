@@ -39,6 +39,7 @@
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.14-bin.jar"/>
 	<classpathentry kind="lib" path="lib/URCSWordNetBrowser-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/arq-2.8.1-tests.jar"/>
-	<classpathentry kind="lib" path="/gestionate/lib/arq-2.8.1.jar"/>
+	<classpathentry kind="lib" path="lib/arq-2.8.1.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-snowball-3.0.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
