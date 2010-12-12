@@ -62,7 +62,7 @@ public class Synonym {
 		try {
 			// initialize JWNL (this must be done before JWNL can be used)
 			// See the JWordnet documentation for details on the properties file
-			FileInputStream oFileInputStream = new FileInputStream("..\\config\\file_properties.xml");
+			FileInputStream oFileInputStream = new FileInputStream(".\\config\\file_properties.xml");
 			JWNL.initialize(oFileInputStream);
 		} catch (Exception ex) {
 			ex.printStackTrace();
