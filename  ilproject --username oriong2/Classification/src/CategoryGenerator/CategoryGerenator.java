@@ -37,6 +37,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 
 import dao.DAO_Model;
 import dominio.DbPedia;
+import encoders.Encode;
 
 
 import Analizer.BlogSpaAnalyzer;
@@ -45,29 +46,54 @@ import GetBlogText.WikipediaText;
 
 public class CategoryGerenator {
 
-	/**
-	 * @param args
-	 * @throws Exception 
-	 */
-	@SuppressWarnings("deprecation")
+
+	private static String rdfs = "http://www.w3.org/2000/01/rdf-schema#";
+	private static 	String rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns/#";
+	private static String thing="http://www.w3.org/2002/07/owl#Thing";
+	
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 
 
 		Model ontology=DAO_Model.generateMainModel();
-		ArrayList<Resource> urlCategorias=getCategories(ontology);
+		ArrayList<Resource> urlCategorias=getFatherCategories(ontology);
 		System.out.println("Fin categorias");
 		
 		
 		BlogSpaAnalyzer analyzer = new BlogSpaAnalyzer(Version.LUCENE_CURRENT);
+		Property type=ontology.createProperty(rdf,"type");
 		Directory indexDirectory = FSDirectory.open(new File(".\\resources\\index"));
 		IndexWriter iwriter = new IndexWriter(indexDirectory, analyzer, true, new IndexWriter.MaxFieldLength(25000));
-		for(Resource resource: urlCategorias){
-			String sText=getResourcesCategorias(resource.getURI());
-			String sTextSubClasses=getSubClassesCategorias(resource.getURI());
+		String name = null;	
+		String sText = null;
+		String sTextSubClasses = null;
+		for(Resource category: urlCategorias){
+			
+			
+			////PRIMERA PARTE-->>Recursos de DbPedia
+			String pathCategory=category.getURI();
+			
+			List<Resource> lis=DbPedia.getResourcesOfType(pathCategory);
+			System.out.println("lis tiene "+lis.size());
+			
+			for(Resource resource : lis){
+				//if(resource.getLocalName()!=null){
+					//name=resource.getLocalName();
+				//}else{
+			//	System.out.print("asi "+resource.getLocalName());
+					String url=resource.getURI();
+				//DbPedia.getSpaLabel(rb.getURI());
+				 name =Encode.getNameFromUrl(url);
+			//	}
+				
+				System.out.print(name);
+				sText=name+" "+sText;
+			}
+			
+			///SEGUNDA PARTE--->Texto de WIkipedia
 
-			String sTextWikipedia= WikipediaText.GetTextFromWikipedia(resource.getLocalName());
-			Set<String> oSyn = Synonym.lookupSynonyms(resource.getLocalName());
+			String sTextWikipedia= WikipediaText.GetTextFromWikipedia(category.getLocalName());
+			Set<String> oSyn = Synonym.lookupSynonyms(category.getLocalName());
 			 for(String sWord:oSyn){
 				 try{
 					 String sTextWikipediaSynonym = WikipediaText.GetTextFromWikipedia(sWord);
@@ -83,12 +109,12 @@ public class CategoryGerenator {
 			
 			///ANALIZADORRRRRR
 
-			System.out.println("Contenido ficheros: "+ resource.getLocalName());
+			System.out.println("Contenido ficheros: "+ name);
 		
 			//SE RECORREN TODOS LOS FICHEROS DE UNA CATEGORIA
 				//SE A�ADEN A CADA DOC=CATEGORIA
 			Document categoria = new Document();
-			categoria.add( new Field("CategoryName", resource.getLocalName(), Field.Store.YES,Field.Index.ANALYZED));
+			categoria.add( new Field("CategoryName", name, Field.Store.YES,Field.Index.ANALYZED));
 			categoria.add( new Field("CategoryText", sTotalText, Field.Store.YES,Field.Index.ANALYZED)); 
 			
 			iwriter.addDocument(categoria);
@@ -111,88 +137,51 @@ public class CategoryGerenator {
 		return null;
 	}
 
-	private static ArrayList<Resource> getCategories(Model model) throws SQLException, ClassNotFoundException {
+	private static ArrayList<Resource> getFatherCategories(Model model) throws SQLException, ClassNotFoundException {
 		// TODO Auto-generated method stub
-		String rdfs = "http://www.w3.org/2000/01/rdf-schema#";
-		String rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns/#";
+		
 		Property subClassOf = model.createProperty(rdfs,"subClassOf");
-		Property label = model.createProperty(rdfs,"label");
-		Property type=model.createProperty(rdf,"type");
-		//model.write(System.out);
-
-		// List everyone in the model who has a child:
-		ResIterator parents = model.listSubjectsWithProperty(subClassOf);
-		model.listObjects();
-		// Because subjects of statements are Resources, the method returned a ResIterator
-		System.out.println("Entra subjects categorias");
-		/*while (parents.hasNext()) {
-
-		  // ResIterator has a typed nextResource() method
-		  Resource object = parents.nextResource();
-
-		  // Print the URI of the resource
-		  System.out.println(object.getLocalName());
-		}*/
-
-		// Can also find all the parents by getting the objects of all "childOf" statements
-		// Objects of statements could be Resources or literals, so the Iterator returned
-		// contains RDFNodes
-		NodeIterator moreParents = model.listObjectsOfProperty(subClassOf);
-
-		// To find all the siblings of a specific person, the model itself can be queried 
-		//NodeIterator siblings = model.listObjectsOfProperty(edward, siblingOf);
-		System.out.println("\n\n\nEntra objects categorias");
-
 		//  po: http://purl.org/ontology/po/
 		//	http://www.w3.org/2002/07/owl# rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns/#
 		// skos http://www.w3.org/TR/skos-reference/skos.html# rdfs http://www.w3.org/2000/01/rdf-schema#
-		ArrayList<Resource> urlCategorias=new ArrayList<Resource>();
-		while (moreParents.hasNext()) {
+		
+		
+		Property label = model.createProperty(rdfs,"label");
+		Property type=model.createProperty(rdf,"type");
 
-			// ResIterator has a typed nextResource() method
-			Resource object = (Resource) moreParents.nextNode();
-			System.out.println("\n\n"+object.getURI()+":\n\n");
-			urlCategorias.add(object);
-			if(!(object.getURI().equals("http://dbpedia.org/ontology/Eukaryote"))){
-				Model resourceModel=DbPedia.getRelatedModelFull(object.getURI());
-
-				//System.out.print(resourceModel.getRequiredProperty(object, label).getObject());
-				//System.out.println(object.getRequiredProperty(label).toString());
-				Resource res=null;
-
-				NodeIterator ni=resourceModel.listObjectsOfProperty(type);
-				//System.out.print(object.getURI());
+		System.out.println("\n\n\nEntra objects categorias");
+		NodeIterator ri=model.listObjectsOfProperty(subClassOf);
+		
+		//NodeIterator moreParents = model.listObjectsOfProperty(subClassOf);
+		ArrayList <Resource> allCategorias=new ArrayList<Resource>();
+		ArrayList <Resource> topCategorias=new ArrayList<Resource>();
+		
+//		ArrayList<Resource> urlCategorias=new ArrayList<Resource>();
+		//boolean found=false;
+		//&& !found
+		while (ri.hasNext() ) {
+			Resource node=(Resource) ri.next();
+			System.out.println("All Cat "+node.getLocalName());
+			allCategorias.add(node);
+			
+			if(node.getURI().equals(thing)){
+				System.out.println("entra");
+				Resource thingRes =node;
+				//found =true;
+				NodeIterator ni=model.listObjectsOfProperty(thingRes, subClassOf);
 				while(ni.hasNext()){
-					RDFNode node=ni.next();
-					if(node.isResource()){
-						Resource r=(Resource)node;
-
-						System.out.print("/ Type = "+r.getLocalName());
+					RDFNode parentCat=ni.next();
+					if(parentCat.isResource()){
+						Resource cat=(Resource) parentCat;
+						topCategorias.add(cat);
+						System.out.println("Cat "+cat.getLocalName());
 					}
-
-
-
-
+					
 				}
-				NodeIterator ni1=resourceModel.listObjectsOfProperty(subClassOf);
-				//System.out.print(object.getURI());
-				while(ni1.hasNext()){
-					RDFNode node=ni1.next();
-
-					System.out.print("/ LABEL = "+node.toString());
-
-
-				}
-
 			}
-
-			// But it's more elegant to ask the Resource directly
-			// This method yields an iterator over Statements
-			//StmtIterator moreSiblings = edward.listProperties(siblingOf);
-
-
-
 		}
-		return urlCategorias;
+		
+			
+		return allCategorias;
 	}
 }
