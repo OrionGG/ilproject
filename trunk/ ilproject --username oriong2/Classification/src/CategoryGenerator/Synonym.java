@@ -1,8 +1,10 @@
 package CategoryGenerator;
 
 import java.io.FileInputStream;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+
+import com.google.api.translate.Language;
+import com.google.api.translate.Translate;
 
 import net.didion.jwnl.JWNL;
 import net.didion.jwnl.JWNLException;
@@ -14,12 +16,21 @@ import net.didion.jwnl.dictionary.Dictionary;
 
 public class Synonym {
 	public static void main(String[] args) 
-	throws JWNLException {
+	throws Exception {
 		 //Set<String> oSyn = lookupSynonyms(args[0]);
 
-		 Set<String> oSyn = lookupSynonyms("wing");
-		 for(String sWord:oSyn){
-			 System.out.println(sWord);
+		 
+		 String sWord = getSenses("sport");
+		 System.out.println(sWord);
+		 sWord = Translate(sWord);
+		 System.out.println(sWord);
+		 
+		 Set<String> oSyn = lookupSynonyms("sport");
+		 for(String sSynon:oSyn){
+			 String sSynonDef = getSenses(sSynon);
+			 System.out.println(sSynonDef);
+			 sSynonDef = Translate(sSynonDef);
+			 System.out.println(sSynonDef);
 		 }
 	}
 	
@@ -42,6 +53,7 @@ public class Synonym {
              synonyms.add(word.getLemma());
           }
        }
+       synonyms.remove(lexicalForm);
        return synonyms;
     }
 	
@@ -56,5 +68,27 @@ public class Synonym {
 			ex.printStackTrace();
 			System.exit(-1);
 		}
+	}
+	
+	public static String getSenses(String sWord) throws Exception {
+		configureJWordNet();
+		Dictionary dictionary = Dictionary.getInstance();
+		IndexWord word = dictionary.lookupIndexWord(POS.NOUN, sWord);
+		Synset[] senses = word.getSenses();
+		String oResult = "";
+		for (int i=0; i<senses.length; i++) {
+		  Synset sense = senses[i];
+		  Translate(sWord);
+		    
+		  oResult += sense.getGloss() + " ";
+		}
+		return oResult;
+	}
+
+	private static String Translate(String sWord) throws Exception {
+		Translate.setHttpReferrer("en-es");
+
+		String translatedText = Translate.execute(sWord, Language.ENGLISH, Language.SPANISH);
+		return translatedText;
 	}
 }
