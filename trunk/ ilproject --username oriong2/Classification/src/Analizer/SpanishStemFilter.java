@@ -1,12 +1,11 @@
 package Analizer;
 
-import java.io.IOException; 
+import java.io.IOException;
 
+import org.apache.lucene.analysis.TokenFilter;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.tokenattributes.TermAttribute;
 import org.tartarus.snowball.ext.SpanishStemmer;
-
-import org.apache.lucene.analysis.Token;   
-import org.apache.lucene.analysis.TokenFilter;   
-import org.apache.lucene.analysis.TokenStream;   
 
 /**   
  * Spanish stemming algorithm.  
@@ -14,11 +13,13 @@ import org.apache.lucene.analysis.TokenStream;
 public final class SpanishStemFilter extends TokenFilter {   
 
 	private SpanishStemmer stemmer;   
-	private Token token = null;   
+	private TermAttribute termAtt;   
 
 	public SpanishStemFilter(TokenStream in) {   
 		super(in);   
-		stemmer = new SpanishStemmer();   
+		stemmer = new SpanishStemmer(); 
+		termAtt = addAttribute(TermAttribute.class);
+
 	}     
 
 	/**  
@@ -36,12 +37,13 @@ public final class SpanishStemFilter extends TokenFilter {
 	@Override
 	public boolean incrementToken() throws IOException {
 		if (input.incrementToken()) {
-			String term = token.term();  
+			String term = termAtt.term();
+			stemmer.setCurrent(term);
 			stemmer.stem();   
 			String s = stemmer.getCurrent();   
 			// If not stemmed, don't waste the time  adjusting the token.
 			if ((s != null) && !s.equals( term ) )
-				token.setTermBuffer(s);
+				termAtt.setTermBuffer(s);
 			return true;
 		} else {
 			return false;
