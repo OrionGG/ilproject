@@ -84,8 +84,7 @@ public class SpanishAnalyzer extends Analyzer {
         TokenStream result = new StandardTokenizer(matchVersion, reader);  
         result = new StandardFilter(result);  
         result = new LowerCaseFilter(result);  
-        result = new StopFilter(StopFilter.getEnablePositionIncrementsVersionDefault(matchVersion),
-        		result, stopTable);  
+        result = new StopFilter(true ,result, stopTable);  
         result = new SpanishStemFilter(result);  
         return result;  
     }  

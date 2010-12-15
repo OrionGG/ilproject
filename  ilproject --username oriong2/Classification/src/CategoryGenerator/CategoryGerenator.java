@@ -17,6 +17,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.FieldSelectorResult;
 import org.apache.lucene.document.Fieldable;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
@@ -41,7 +42,10 @@ import encoders.Encode;
 
 
 import Analizer.BlogSpaAnalyzer;
+import Analizer.SpanishAnalyzer;
 import GetBlogText.WikipediaText;
+import Language.Synonym;
+import Language.Traductor;
 
 
 public class CategoryGerenator {
@@ -54,50 +58,74 @@ public class CategoryGerenator {
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 
-
+		System.out.println("EMPIEZA: coge categorias");
 		Model ontology=DAO_Model.generateMainModel();
-		ArrayList<Resource> urlCategorias=getFatherCategories(ontology);
-		System.out.println("Fin categorias");
+		ArrayList<Resource> urlCategorias=getFatherCategoriesInternet();
+		//System.out.println("Fin categorias");
 		
 		
-		BlogSpaAnalyzer analyzer = new BlogSpaAnalyzer(Version.LUCENE_CURRENT);
+		SpanishAnalyzer analyzer = new SpanishAnalyzer(Version.LUCENE_30, new File (".\\resources\\stopwords\\spanishSmart.txt"));
 		Property type=ontology.createProperty(rdf,"type");
-		Directory indexDirectory = FSDirectory.open(new File(".\\resources\\index"));
+		
+		File directory=new File(".\\resources\\index");
+		
+		Directory indexDirectory = FSDirectory.open(directory,new NoLockFactory());
+		
 		IndexWriter iwriter = new IndexWriter(indexDirectory, analyzer, true, new IndexWriter.MaxFieldLength(25000));
-		String name = null;	
-		String sText = null;
-		String sTextSubClasses = null;
-		for(Resource category: urlCategorias){
+		String nameResource = null;	
+		String sTextResources = null;
+		String sTotalTextSynonym = null;
+		//int i = 0; i< 20; i++
+		for(Resource category : urlCategorias){
 			
-			
+			//Resource category = urlCategorias.get(i);
 			////PRIMERA PARTE-->>Recursos de DbPedia
 			String pathCategory=category.getURI();
 			
 			List<Resource> lis=DbPedia.getResourcesOfType(pathCategory);
-			System.out.println("lis tiene "+lis.size());
 			
-			for(Resource resource : lis){
+			
+			System.out.println("\n\nSALIDA DE LA PRIMERA FASE: ");
+			String labelResource=null;
+			System.out.println("\nCATEGORIA = " +category.getLocalName()+"\n");
+			System.out.println("Tiene "+lis.size()+" resources");
+			for(int i=0; i<9 && i<lis.size();i++){
+				Resource resource =lis.get(i);
 				//if(resource.getLocalName()!=null){
-					//name=resource.getLocalName();
+				  // labelResource=resource.getLocalName();
 				//}else{
-			//	System.out.print("asi "+resource.getLocalName());
-					String url=resource.getURI();
-				//DbPedia.getSpaLabel(rb.getURI());
-				 name =Encode.getNameFromUrl(url);
-			//	}
+					labelResource=DbPedia.getLabel(resource.getURI());
+				//	labelResource =Encode.getNameFromUrl(resource.getURI());
+				//}
+			
+				//System.out.print(labelResource+" ");
+				if(labelResource.endsWith("@en")){
+					labelResource=labelResource.replace("@en","");
+					labelResource=Traductor.Translate(labelResource);			
+				}else{
+					labelResource=labelResource.replace("@es","");
+				}
+				//eliminar tag @es y @en
+				System.out.print(labelResource+" |");
 				
-				System.out.print(name);
-				sText=name+" "+sText;
+			
+				
+				sTextResources=labelResource+" "+sTextResources;
 			}
 			
 			///SEGUNDA PARTE--->Texto de WIkipedia
 
 			String sTextWikipedia= WikipediaText.GetTextFromWikipedia(category.getLocalName());
+			System.out.println("\n\nSALIDA DE LA SEGUNDA FASE: ");
+			System.out.print(sTextWikipedia);
 			Set<String> oSyn = Synonym.lookupSynonyms(category.getLocalName());
 			 for(String sWord:oSyn){
+				
 				 try{
-					 String sTextWikipediaSynonym = WikipediaText.GetTextFromWikipedia(sWord);
-					 sTextWikipedia += " " + sTextWikipediaSynonym;
+					   String sTextWikipediaSynonym = WikipediaText.GetTextFromWikipedia(sWord);
+						System.out.println("\n\nSALIDA DE LA TERCERA FASE: ");
+						System.out.print(sTextWikipediaSynonym);
+						sTotalTextSynonym += " " + sTextWikipediaSynonym;
 				 }
 				 catch(Exception e){
 					 
@@ -105,18 +133,24 @@ public class CategoryGerenator {
 				 }
 			 }
 			
-			 String sTotalText = sText + " " + sTextSubClasses + " " + sTextWikipedia;
+			 String sTotalText = sTextResources + " " + sTotalTextSynonym + " " + sTextWikipedia;
 			
 			///ANALIZADORRRRRR
 
-			System.out.println("Contenido ficheros: "+ name);
+			System.out.println("Contenido fichero categoria:  "+category.getLocalName()+"\n"+ sTotalText);
 		
 			//SE RECORREN TODOS LOS FICHEROS DE UNA CATEGORIA
 				//SE A�ADEN A CADA DOC=CATEGORIA
 			Document categoria = new Document();
-			categoria.add( new Field("CategoryName", name, Field.Store.YES,Field.Index.ANALYZED));
-			categoria.add( new Field("CategoryText", sTotalText, Field.Store.YES,Field.Index.ANALYZED)); 
+			Field textoField=new Field("CategoryText", sTotalText, Field.Store.YES,Field.Index.ANALYZED,Field.TermVector.YES);
 			
+			categoria.add( new Field("CategoryName", category.getLocalName(), Field.Store.YES,Field.Index.ANALYZED));
+			
+			categoria.add(textoField ); 
+		textoField.isIndexed();
+			textoField.isTokenized();
+			textoField.isTermVectorStored();
+			//textoField.isAnalyzed(); 
 			iwriter.addDocument(categoria);
 		}
 
@@ -137,6 +171,14 @@ public class CategoryGerenator {
 		return null;
 	}
 
+	private static ArrayList<Resource> getFatherCategoriesInternet() throws SQLException, ClassNotFoundException {
+		// TODO Auto-generated method stub
+		
+		ArrayList <Resource> fatherCategorias=DbPedia.getFatherCategories();
+
+			
+		return fatherCategorias;
+	}
 	private static ArrayList<Resource> getFatherCategories(Model model) throws SQLException, ClassNotFoundException {
 		// TODO Auto-generated method stub
 		
@@ -159,6 +201,7 @@ public class CategoryGerenator {
 //		ArrayList<Resource> urlCategorias=new ArrayList<Resource>();
 		//boolean found=false;
 		//&& !found
+		
 		while (ri.hasNext() ) {
 			Resource node=(Resource) ri.next();
 			System.out.println("All Cat "+node.getLocalName());

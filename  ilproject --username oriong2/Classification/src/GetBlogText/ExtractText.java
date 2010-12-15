@@ -4,16 +4,24 @@ import java.util.*;
 import java.io.*;
 import java.net.*;
 
+import org.apache.lucene.analysis.WordlistLoader;
+
+
+
+import encoders.Encode;
+
 public class ExtractText {
 	public static void main(String[] args) throws Exception {
-		String sourceUrlString="http://revista.blogalia.com/";
+		String sourceUrlString="http://terceranfiteatro.wordpress.com/2010/12/11/44/";
 		if (args.length==0)
 		  System.err.println("Using default argument of \""+sourceUrlString+'"');
 		else
 			sourceUrlString=args[0];
 		if (sourceUrlString.indexOf(':')==-1) sourceUrlString="file:"+sourceUrlString;
-		GetBlogInfo(sourceUrlString);
-		//GetBlogText(sourceUrlString);
+		//GetBlogInfo(sourceUrlString);
+		String sResult= GetBlogText(sourceUrlString);
+		System.out.println(sResult);
+		
   }
 
 	private static void GetBlogInfo(String sourceUrlString) throws IOException,
@@ -71,9 +79,29 @@ public class ExtractText {
 
 		// Call fullSequentialParse manually as most of the source will be parsed.
 		source.fullSequentialParse();
+		String sResultTextExtractor= "";
+		
+		TextExtractor oTextExtractor = source.getTextExtractor();
+		//sResult = oTextExtractor.setExcludeNonHTMLElements(true).setIncludeAttributes(true).toString();
+		sResultTextExtractor = oTextExtractor.setIncludeAttributes(true).toString();
+		char[] cArray = sResultTextExtractor.toCharArray();
+		//ArrayList<String> oSpecialCharsList = SpecialChars.getSpecialChars();
+		Set<String> oSpecialCharsList = new HashSet(WordlistLoader.getWordSet(new File(".\\resources\\specialwords\\specialSpanishSmart.txt"))); 
 		String sResult= "";
-		sResult = source.getTextExtractor().setIncludeAttributes(true).toString();
-		System.out.println(sResult);
+		for (char c : cArray){
+			String sStringC = new String(String.valueOf(c).getBytes("UTF8"), "US-Ascii");
+			boolean bSpecialWord = false;
+			for(String sSpecialWord:oSpecialCharsList){
+				sSpecialWord = new String(sSpecialWord.getBytes("UTF8"), "US-Ascii");
+				if(sSpecialWord.equals(sStringC)){
+					bSpecialWord = true;
+					break;
+				}
+			}
+			if(!bSpecialWord){
+				sResult += c;
+			}
+		}
 		return sResult;
 		
 	}

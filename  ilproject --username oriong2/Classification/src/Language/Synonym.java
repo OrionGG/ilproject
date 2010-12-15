@@ -1,4 +1,4 @@
-package CategoryGenerator;
+package Language;
 
 import java.io.FileInputStream;
 import java.util.*;
@@ -22,14 +22,14 @@ public class Synonym {
 		 
 		 String sWord = getSenses("sport");
 		 System.out.println(sWord);
-		 sWord = Translate(sWord);
+		 sWord = Traductor.Translate(sWord);
 		 System.out.println(sWord);
 		 
 		 Set<String> oSyn = lookupSynonyms("sport");
 		 for(String sSynon:oSyn){
 			 String sSynonDef = getSenses(sSynon);
 			 System.out.println(sSynonDef);
-			 sSynonDef = Translate(sSynonDef);
+			 sSynonDef = Traductor.Translate(sSynonDef);
 			 System.out.println(sSynonDef);
 		 }
 	}
@@ -62,7 +62,7 @@ public class Synonym {
 		try {
 			// initialize JWNL (this must be done before JWNL can be used)
 			// See the JWordnet documentation for details on the properties file
-			FileInputStream oFileInputStream = new FileInputStream(".\\config\\file_properties.xml");
+			FileInputStream oFileInputStream = new FileInputStream(".\\resources\\config\\file_properties.xml");
 			JWNL.initialize(oFileInputStream);
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -78,17 +78,12 @@ public class Synonym {
 		String oResult = "";
 		for (int i=0; i<senses.length; i++) {
 		  Synset sense = senses[i];
-		  Translate(sWord);
+		  Traductor.Translate(sWord);
 		    
 		  oResult += sense.getGloss() + " ";
 		}
 		return oResult;
 	}
 
-	private static String Translate(String sWord) throws Exception {
-		Translate.setHttpReferrer("en-es");
-
-		String translatedText = Translate.execute(sWord, Language.ENGLISH, Language.SPANISH);
-		return translatedText;
-	}
+	
 }
