@@ -71,11 +71,12 @@ public class CategoryGerenator {
 		
 		Directory indexDirectory = FSDirectory.open(directory,new NoLockFactory());
 		
-		IndexWriter iwriter = new IndexWriter(indexDirectory, analyzer, true, new IndexWriter.MaxFieldLength(25000));
+		IndexWriter iwriter = new IndexWriter(indexDirectory, analyzer, IndexWriter.MaxFieldLength.LIMITED);
 		String nameResource = null;	
 		String sTextResources = null;
 		String sTotalTextSynonym = null;
-		//int i = 0; i< 20; i++
+		//for(int j = 0; j< 2; j++){
+			//Resource category = urlCategorias.get(j);
 		for(Resource category : urlCategorias){
 			
 			//Resource category = urlCategorias.get(i);
@@ -142,15 +143,14 @@ public class CategoryGerenator {
 			//SE RECORREN TODOS LOS FICHEROS DE UNA CATEGORIA
 				//SE A�ADEN A CADA DOC=CATEGORIA
 			Document categoria = new Document();
-			Field textoField=new Field("CategoryText", sTotalText, Field.Store.YES,Field.Index.ANALYZED,Field.TermVector.YES);
 			
-			categoria.add( new Field("CategoryName", category.getLocalName(), Field.Store.YES,Field.Index.ANALYZED));
+			categoria.add( new Field("CategoryName", category.getLocalName(), Field.Store.YES,Field.Index.NO));
 			
+			Field textoField=new Field("CategoryText", sTotalText, Field.Store.YES,Field.Index.ANALYZED, Field.TermVector.YES);
 			categoria.add(textoField ); 
-		textoField.isIndexed();
-			textoField.isTokenized();
-			textoField.isTermVectorStored();
+			
 			//textoField.isAnalyzed(); 
+			iwriter.optimize();
 			iwriter.addDocument(categoria);
 		}
 
