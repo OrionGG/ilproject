@@ -35,7 +35,7 @@ public class SpanishAnalyzer extends Analyzer {
      * useful for searching. Imported from http://www.unine.ch/info/clef/.  
      */   
     // TODO: no pego en el tutorial el listado de stopWords utilizado para  
-    // no sobredimensionarlo, son 351 términos.  
+    // no sobredimensionarlo, son 351 tÃ©rminos.  
     public static final String[] SPANISH_STOP_WORDS = { "" };  
       
     /** 
@@ -83,6 +83,7 @@ public class SpanishAnalyzer extends Analyzer {
     public final TokenStream tokenStream(String fieldName, Reader reader) {  
         TokenStream result = new StandardTokenizer(matchVersion, reader);  
         result = new StandardFilter(result);  
+        result = new NumberFilter(result);        
         result = new LowerCaseFilter(result);  
         result = new StopFilter(true ,result, stopTable);  
         result = new SpanishStemFilter(result);  
