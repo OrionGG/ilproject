@@ -874,8 +874,9 @@ public static String getLabel(String pathResource) {
 
 public static ArrayList<Resource> getFatherCategories() {
 	// TODO Auto-generated method stub
-String qsInfoDbpedia = "select distinct ?res where {?res rdfs:subClassOf owl:Thing . FILTER regex(?res,"+"\"^http://dbpedia.org/ontology\")}";
-	
+//String qsInfoDbpedia = "select distinct ?res where {?res rdfs:subClassOf owl:Thing . FILTER regex(?res,"+"\"^http://dbpedia.org/ontology\")}";
+
+String qsInfoDbpedia = "select distinct ?res where {?res rdfs:subClassOf dbpedia-owl:Person}";
 	//System.out.print(qsInfoDbpedia);
 	List<ResultBinding> lis=DAO_Sparql.selectQueryToList("",serviceEndpoint,qsInfoDbpedia);	
 	ArrayList <Resource> types=new ArrayList <Resource>();

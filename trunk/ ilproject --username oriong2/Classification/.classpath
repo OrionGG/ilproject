@@ -41,5 +41,7 @@
 	<classpathentry kind="lib" path="lib/lucene-snowball-3.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/arq-2.8.7.jar"/>
 	<classpathentry kind="lib" path="lib/musicbrainz_1.0.jar"/>
+	<classpathentry kind="lib" path="lib/jena.jar"/>
+	<classpathentry kind="lib" path="lib/servicios.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
