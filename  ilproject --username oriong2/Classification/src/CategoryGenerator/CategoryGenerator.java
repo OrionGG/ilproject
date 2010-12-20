@@ -48,7 +48,7 @@ import Language.Synonym;
 import Language.Traductor;
 
 
-public class CategoryGerenator {
+public class CategoryGenerator {
 
 
 	private static String rdfs = "http://www.w3.org/2000/01/rdf-schema#";
@@ -71,12 +71,11 @@ public class CategoryGerenator {
 		
 		Directory indexDirectory = FSDirectory.open(directory,new NoLockFactory());
 		
-		IndexWriter iwriter = new IndexWriter(indexDirectory, analyzer, IndexWriter.MaxFieldLength.LIMITED);
+		IndexWriter iwriter = new IndexWriter(indexDirectory, analyzer, true, new IndexWriter.MaxFieldLength(25000));
 		String nameResource = null;	
 		String sTextResources = null;
 		String sTotalTextSynonym = null;
-		//for(int j = 0; j< 2; j++){
-			//Resource category = urlCategorias.get(j);
+		//int i = 0; i< 20; i++
 		for(Resource category : urlCategorias){
 			
 			//Resource category = urlCategorias.get(i);
@@ -133,6 +132,7 @@ public class CategoryGerenator {
 				 
 				 }
 			 }
+			 
 			
 			 String sTotalText = sTextResources + " " + sTotalTextSynonym + " " + sTextWikipedia;
 			
@@ -143,17 +143,16 @@ public class CategoryGerenator {
 			//SE RECORREN TODOS LOS FICHEROS DE UNA CATEGORIA
 				//SE A�ADEN A CADA DOC=CATEGORIA
 			Document categoria = new Document();
+		
 			
 			categoria.add( new Field("CategoryName", category.getLocalName(), Field.Store.YES,Field.Index.NO));
-			
-			Field textoField=new Field("CategoryText", sTotalText, Field.Store.YES,Field.Index.ANALYZED, Field.TermVector.YES);
+			Field textoField=new Field("CategoryText", sTotalText, Field.Store.YES,Field.Index.ANALYZED,Field.TermVector.YES);
 			categoria.add(textoField ); 
+	
 			
-			//textoField.isAnalyzed(); 
-			iwriter.optimize();
 			iwriter.addDocument(categoria);
 		}
-
+		iwriter.optimize();
 		iwriter.close();
 		
 

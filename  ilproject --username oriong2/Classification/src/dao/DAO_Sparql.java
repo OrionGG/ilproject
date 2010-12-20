@@ -42,6 +42,8 @@ public class DAO_Sparql {
 		// TODO Auto-generated method stub
 		return "img/mulholland_drive.jpg";
 	}
+	private static String prologue = "PREFIX po: <http://purl.org/ontology/po/>\n PREFIX pc:<http://dbtune.org/bbc/playcount/>\nPREFIX mo: <http://purl.org/ontology/mo/>\n PREFIX oa: <http://dbpedia.org/ontology/Artist/>\nPREFIX oma: <http://dbpedia.org/ontology/MusicalArtist/>\n PREFIX p: <http://dbpedia.org/property/>\n PREFIX pa: <http://dbpedia.org/property/Artist/>\n PREFIX dbpedia-owl:<http://dbpedia.org/ontology/>\n PREFIX owl: <http://www.w3.org/2002/07/owl#>\n PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns/#> \n PREFIX skos: <http://www.w3.org/TR/skos-reference/skos.html#> \nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX vocab: <http://dbtune.org/musicbrainz/resource/vocab/> \n PREFIX db: <http://dbtune.org/musicbrainz/resource/>PREFIX dc: <http://purl.org/dc/elements/1.1/>\n PREFIX foaf: <http://xmlns.com/foaf/0.1/> ";
+
 	
 	 public static ResultSet selectQuery(String ruta,String serviceEndpoint,String qs)
 	    {
@@ -49,9 +51,7 @@ public class DAO_Sparql {
 	    	//Generate the comun prologue
 	        PropertyFunctionRegistry.get().put("http://dbtune.org:3062/sparql", Jenate.class) ;
 
-	        String prologue = "PREFIX po: <http://purl.org/ontology/po/>\n PREFIX pc:<http://dbtune.org/bbc/playcount/>\nPREFIX mo: <http://purl.org/ontology/mo/>\n PREFIX oa: <http://dbpedia.org/ontology/Artist/>\nPREFIX oma: <http://dbpedia.org/ontology/MusicalArtist/>\n PREFIX p: <http://dbpedia.org/property/>\n PREFIX pa: <http://dbpedia.org/property/Artist/>\n PREFIX db-ont:<http://dbpedia.org/ontology/>\n PREFIX owl: <http://www.w3.org/2002/07/owl#>\n PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns/#> \n PREFIX skos: <http://www.w3.org/TR/skos-reference/skos.html#> \nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>";
-	        prologue=prologue+" PREFIX vocab: <http://dbtune.org/musicbrainz/resource/vocab/> \n PREFIX db: <http://dbtune.org/musicbrainz/resource/>PREFIX dc: <http://purl.org/dc/elements/1.1/>\n PREFIX foaf: <http://xmlns.com/foaf/0.1/> ";
-
+	    
 	        qs = prologue+qs;
 	        
 	     	Query query = QueryFactory.create(qs) ;
@@ -80,9 +80,7 @@ public class DAO_Sparql {
 			
 		   	//Generate the comun prologue
 	        PropertyFunctionRegistry.get().put("http://dbtune.org:3062/sparql", Jenate.class) ;
-	        String prologue = "PREFIX po: <http://purl.org/ontology/po/>\n PREFIX pc:<http://dbtune.org/bbc/playcount/>\nPREFIX mo: <http://purl.org/ontology/mo/>\n PREFIX oa: <http://dbpedia.org/ontology/Artist/>\nPREFIX oma: <http://dbpedia.org/ontology/MusicalArtist/>\n PREFIX p: <http://dbpedia.org/property/>\n PREFIX pa: <http://dbpedia.org/property/Artist/>\n PREFIX db-ont:<http://dbpedia.org/ontology/>\n PREFIX owl: <http://www.w3.org/2002/07/owl#>\n PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns/#> \n PREFIX skos: <http://www.w3.org/TR/skos-reference/skos.html#> \nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>";
-	        prologue=prologue+" PREFIX vocab: <http://dbtune.org/musicbrainz/resource/vocab/> \n PREFIX db: <http://dbtune.org/musicbrainz/resource/>PREFIX dc: <http://purl.org/dc/elements/1.1/>\n PREFIX foaf: <http://xmlns.com/foaf/0.1/> ";
-
+	       
 	        //prologue="PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns/#> PREFIX mo:<http://purl.org/ontology/mo/>";
 	        qs = prologue+qs;
 	        
@@ -117,9 +115,7 @@ public class DAO_Sparql {
     	
     	//Generate the comun prologue
         PropertyFunctionRegistry.get().put("http://dbtune.org:3062/sparql", Jenate.class) ;
-        String prologue = "PREFIX po: <http://purl.org/ontology/po/>\n PREFIX pc:<http://dbtune.org/bbc/playcount/>\nPREFIX mo: <http://purl.org/ontology/mo/>\n PREFIX oa: <http://dbpedia.org/ontology/Artist/>\nPREFIX oma: <http://dbpedia.org/ontology/MusicalArtist/>\n PREFIX p: <http://dbpedia.org/property/>\n PREFIX pa: <http://dbpedia.org/property/Artist/>\n PREFIX db-ont:<http://dbpedia.org/ontology/>\n PREFIX owl: <http://www.w3.org/2002/07/owl#>\n PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns/#> \n PREFIX skos: <http://www.w3.org/TR/skos-reference/skos.html#> \nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>";
-        prologue=prologue+" PREFIX vocab: <http://dbtune.org/musicbrainz/resource/vocab/> \n PREFIX db: <http://dbtune.org/musicbrainz/resource/>PREFIX dc: <http://purl.org/dc/elements/1.1/>\n PREFIX foaf: <http://xmlns.com/foaf/0.1/> ";
-
+      
         //prologue="PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns/#> PREFIX mo:<http://purl.org/ontology/mo/>";
         qs = prologue+qs;
         
@@ -150,7 +146,6 @@ public class DAO_Sparql {
     	
 		//Recojo toda la info de ese artista
     	PropertyFunctionRegistry.get().put("http://dbtune.org:3062/sparql", Jenate.class) ;
-        String prologue = "PREFIX oa: <http://dbpedia.org/ontology/Artist/>\n PREFIX oma: <http://dbpedia.org/ontology/MusicalArtist/>\n PREFIX p: <http://dbpedia.org/property/> \n PREFIX pa: <http://dbpedia.org/property/Artist/>\n PREFIX db-ont: <http://dbpedia.org/ontology/>\n PREFIX owl: <http://www.w3.org/2002/07/owl#>\n PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n PREFIX skos: <http://www.w3.org/2004/02/skos/core#>";
         
         
         qs = prologue+qs;
