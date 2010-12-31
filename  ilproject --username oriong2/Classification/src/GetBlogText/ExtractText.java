@@ -11,6 +11,7 @@ import org.apache.lucene.analysis.WordlistLoader;
 import encoders.Encode;
 
 public class ExtractText {
+	
 	public static void main(String[] args) throws Exception {
 		String sourceUrlString="http://terceranfiteatro.wordpress.com/2010/12/11/44/";
 		if (args.length==0)
@@ -69,21 +70,47 @@ public class ExtractText {
 		System.out.println(textExtractor.setIncludeAttributes(true).toString());
 	}
 	
-	public static String GetBlogText(String sourceUrlString) throws IOException,	
+	public static String GetBlogText(String sourceUrlString) throws IOException, MalformedURLException{
+		
+		return GetBlogText(sourceUrlString, true);
+	}
+	
+	public static String GetBlogText(String sourceUrlString, Boolean bDeleteSpecialChars) throws IOException,	
 		MalformedURLException {
 		MicrosoftTagTypes.register();
 		PHPTagTypes.register();
 		PHPTagTypes.PHP_SHORT.deregister(); // remove PHP short tags for this example otherwise they override processing instructions
 		MasonTagTypes.register();
-		Source source=new Source(new URL(sourceUrlString));
-
-		// Call fullSequentialParse manually as most of the source will be parsed.
-		source.fullSequentialParse();
-		String sResultTextExtractor= "";
 		
-		TextExtractor oTextExtractor = source.getTextExtractor();
-		//sResult = oTextExtractor.setExcludeNonHTMLElements(true).setIncludeAttributes(true).toString();
-		sResultTextExtractor = oTextExtractor.setIncludeAttributes(true).toString();
+		String sResult = "";
+		String sResultTextExtractor= "";
+
+		try{
+			Source source=new Source(new URL(sourceUrlString));
+
+			// Call fullSequentialParse manually as most of the source will be parsed.
+			source.fullSequentialParse();
+
+			TextExtractor oTextExtractor = source.getTextExtractor();
+			//sResult = oTextExtractor.setExcludeNonHTMLElements(true).setIncludeAttributes(true).toString();
+			sResultTextExtractor = oTextExtractor.setIncludeAttributes(true).toString();
+		
+			if(bDeleteSpecialChars){
+				sResult = DeleteSpecialChars(sResultTextExtractor);
+			}
+			else{
+				sResult = sResultTextExtractor;
+			}
+		}
+		catch(Exception ex){
+		}
+		
+		return sResult;
+		
+	}
+
+	private static String DeleteSpecialChars(String sResultTextExtractor)
+			throws IOException, UnsupportedEncodingException {
 		char[] cArray = sResultTextExtractor.toCharArray();
 		//ArrayList<String> oSpecialCharsList = SpecialChars.getSpecialChars();
 		Set<String> oSpecialCharsList = new HashSet(WordlistLoader.getWordSet(new File(".\\resources\\specialwords\\specialSpanishSmart.txt"))); 
@@ -103,7 +130,6 @@ public class ExtractText {
 			}
 		}
 		return sResult;
-		
 	}
 
 	private static String getTitle(Source source) {
