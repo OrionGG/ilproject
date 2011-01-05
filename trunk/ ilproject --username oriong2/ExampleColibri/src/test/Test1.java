@@ -159,6 +159,11 @@ public class Test1 implements StandardCBRApplication
 		System.out.println(rrd.getNewsType().ToString());
 		System.out.println();
 
+		ResultsAvegare(res);
+
+	}
+
+	private void ResultsAvegare(Collection<RetrievalResult> res) {
 		Map<NewsType, Double> oAverageType = new TreeMap<NewsType, Double>();
 		Map<NewsType, Integer> oCountType = new TreeMap<NewsType, Integer>();
 
@@ -201,7 +206,6 @@ public class Test1 implements StandardCBRApplication
 			System.out.println(((NewsType)oKV.getKey()).ToString() + " = " + ((Integer)oCountType.get(((NewsType)oKV.getKey()))).toString());
 			System.out.println((Double)oKV.getValue());
 		}
-
 	}
 
 	/*
@@ -235,12 +239,12 @@ public class Test1 implements StandardCBRApplication
 
 
 			//String sUrl = javax.swing.JOptionPane.showInputDialog("Please enter the restaurant description:");
-			String sUrl = "http://www.marca.es";
+			//String sUrl = "http://www.marca.es";
 				
 			//String sUrl = "http://www.hola.com/";
 			//String sUrl = "http://www.elpais.com";
 			//String sUrl = "http://www.barrapunto.com";
-			//String sUrl = "http://www.waping.com.ar/";
+			String sUrl = "http://www.waping.com.ar/";
 			//String sUrl = "http://www.elmundo.es/elmundodeporte";
 
 			String sText = GetBlogText.ExtractText.GetBlogText(sUrl, false);

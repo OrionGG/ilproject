@@ -2,8 +2,11 @@ package test;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+
+import org.apache.lucene.document.Field.Index;
+
+import Analizer.SpanishAnalyzer;
 
 import jcolibri.casebase.LinealCaseBase;
 import jcolibri.cbrcore.Attribute;
@@ -20,22 +23,26 @@ import jcolibri.method.retrieve.NNretrieval.similarity.global.Average;
 import jcolibri.method.retrieve.NNretrieval.similarity.local.textual.LuceneTextSimilarity;
 import jcolibri.method.retrieve.selection.SelectCases;
 import jcolibri.test.main.SwingProgressBar;
+import jcolibrilucene302.LuceneIndex30;
 import retriever.GetNews;
 
 import comparers.AverageCoefficient;
 import comparers.LuceneIndexCreatorString;
+import comparers.LuceneTextSimilarityString;
 
 import connector.TheNewsConnector;
 import entities.APiecesOfNews;
+import entities.APiecesOfNews.NewsType;
 import entities.NewsAnalyzer;
 
 public class Test2 {
 	List<APiecesOfNews> oNewsList;
 	Connector _connector;
 	CBRCaseBase _caseBase;
+	int numResults =  APiecesOfNews.oArrayNewsTypes.length * 3;
 
 
-    LuceneIndex luceneIndex;
+	LuceneIndex30 luceneIndex;
 
 	/*
 	 * (non-Javadoc)
@@ -71,8 +78,15 @@ public class Test2 {
 		//Obtain cases
 		_caseBase.init(_connector);
 
+		Map<Attribute, Index> attributes = new Hashtable<Attribute, Index>();
+		
+		Attribute at1 = new Attribute("ssimpletext", APiecesOfNews.class);
+		attributes.put(at1, Index.ANALYZED);
 
-		luceneIndex = LuceneIndexCreatorString.createLuceneIndex(_caseBase);
+		Attribute at2 = new Attribute("dWeight", APiecesOfNews.class);
+		//attributes.put(at2, Index.NO);
+		
+		luceneIndex = LuceneIndexCreatorString.createLuceneIndex(_caseBase, attributes, at2, new SpanishAnalyzer());
 
 		return _caseBase;
 	}
@@ -101,12 +115,12 @@ public class Test2 {
 		//We only compare the "description" attribute using Lucene
 
 		Attribute at1 = new Attribute("ssimpletext", APiecesOfNews.class);
-		nnConfig.addMapping(at1, new comparers.LuceneTextSimilarityString(luceneIndex,query,at1, true));
+		nnConfig.addMapping(at1, new LuceneTextSimilarityString(luceneIndex,query,at1, false, cases.size(), new SpanishAnalyzer()));
 
 		
 		System.out.println("RESULT:");
 		Collection<RetrievalResult> res = NNScoringMethod.evaluateSimilarity(cases, query, nnConfig);
-		res = SelectCases.selectTopKRR(res, 5);
+		res = SelectCases.selectTopKRR(res, numResults);
 
 		for(RetrievalResult rr: res){
 			System.out.println(rr);
@@ -123,7 +137,53 @@ public class Test2 {
 		System.out.println(rrd.getNewsType().ToString());
 		System.out.println();
 
+		ResultsAvegare(res);
 
+	}
+	
+	private void ResultsAvegare(Collection<RetrievalResult> res) {
+		Map<NewsType, Double> oAverageType = new TreeMap<NewsType, Double>();
+		Map<NewsType, Integer> oCountType = new TreeMap<NewsType, Integer>();
+
+		for(RetrievalResult rr: res){
+			APiecesOfNews oAPiecesOfNews = ((APiecesOfNews)rr.get_case().getDescription());
+			NewsType oNewsType = oAPiecesOfNews.getNewsType();
+			for(NewsType oN : APiecesOfNews.oArrayNewsTypes){
+				if(oNewsType.equals(oN)){
+					int countValue = 0;
+					try{
+						countValue = (Integer)oCountType.get(oN);
+					}
+					catch(NullPointerException ex){
+						countValue = 0;	
+					}
+					double averageValue = 0.0;
+					try{
+						averageValue = (Double)oAverageType.get(oN);
+					}
+					catch(NullPointerException ex){
+						averageValue = 0.0;						
+					}
+
+					int lastCountValue = countValue;
+					int newCountValue = countValue + 1;
+
+					double dEval =  rr.getEval();
+
+					averageValue = (((averageValue * lastCountValue) + dEval) / newCountValue);
+					oAverageType.put(oN, averageValue);
+					oCountType.put(oN, newCountValue);
+
+
+					break;
+				}
+			}
+		}
+
+		for(Map.Entry<NewsType, Double> oKV: oAverageType.entrySet()){
+			System.out.println(((NewsType)oKV.getKey()).ToString() + " = " + ((Integer)oCountType.get(((NewsType)oKV.getKey()))).toString());
+			System.out.println((Double)oKV.getValue());
+		}
 	}
 
 	/*
@@ -157,12 +217,17 @@ public class Test2 {
 
 
 			//String sUrl = javax.swing.JOptionPane.showInputDialog("Please enter the restaurant description:");
-			String sUrl = "http://www.marca.es";
+			//String sUrl = "http://www.marca.es";
+			//String sUrl = "http://www.hola.es";
+			String sUrl = "http://www.elpais.es/tecnologia";
 
-			String sText = GetBlogText.ExtractText.GetBlogText(sUrl, false);
+			//String sUrl = "http://www.waping.com.ar/";
+			//String sUrl = "http://www.elmundo.es/elmundodeporte";
+
+			String sText = GetBlogText.ExtractText.GetBlogText(sUrl, true);
 			
 			CBRQuery query = new CBRQuery();
-			APiecesOfNews queryDescription = new APiecesOfNews(sUrl, sText, null);
+			APiecesOfNews queryDescription = new APiecesOfNews(sUrl, sText, null, 1.0);
 			query.setDescription(queryDescription);
 
 			test.cycle(query);

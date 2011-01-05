@@ -1,7 +1,11 @@
 package comparers;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
+
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.document.Field.Index;
+
+import Analizer.SpanishAnalyzer;
 
 import entities.APiecesOfNews;
 
@@ -9,9 +13,11 @@ import jcolibri.cbrcore.Attribute;
 import jcolibri.cbrcore.CBRCase;
 import jcolibri.cbrcore.CBRCaseBase;
 import jcolibri.datatypes.Text;
+import jcolibri.exception.AttributeAccessException;
 import jcolibri.extensions.textual.lucene.LuceneDocument;
 import jcolibri.extensions.textual.lucene.LuceneIndex;
 import jcolibri.method.precycle.LuceneIndexCreator;
+import jcolibrilucene302.*;
 
 public class LuceneIndexCreatorString {
 	/**
@@ -19,10 +25,12 @@ public class LuceneIndexCreatorString {
 	 * This method creates a LuceneDocument for each case, and adds a new field for each attribute (recived as parameter). 
 	 * The name and content of the Lucene document field is the name and content of the attribute.
 	 */
-	public static LuceneIndex createLuceneIndex(CBRCaseBase casebase, Collection<Attribute> fields)
+	public static LuceneIndex30 createLuceneIndex(CBRCaseBase casebase, Map<Attribute, Index> attributes, Attribute dWeightAttribute, Analyzer oAnalyzer)
 	{
-		for(Attribute field: fields)
+		for(Map.Entry<Attribute,Index> fieldAnalyzer: attributes.entrySet())
 		{	
+			Attribute field = fieldAnalyzer.getKey();
+
 			Class c = field.getType();
 			if(!String.class.isAssignableFrom(c))
 			{
@@ -30,12 +38,22 @@ public class LuceneIndexCreatorString {
 				return null;
 			}
 		}
-		
-		ArrayList<LuceneDocument> docs = new ArrayList<LuceneDocument>();
+
+		ArrayList<LuceneDocument30> docs = new ArrayList<LuceneDocument30>();
 		for(CBRCase c: casebase.getCases())
 		{
-			LuceneDocument ld = new LuceneDocument((String)c.getID());
-			for(Attribute field: fields){
+			double dWeight = 1.0;
+			try {
+				dWeight = (Double) dWeightAttribute.getValue(c.getDescription());
+			} catch (AttributeAccessException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			LuceneDocument30 ld = new LuceneDocument30((String)c.getID(), dWeight);
+			for(Map.Entry<Attribute,Index> fieldAnalyzer: attributes.entrySet())
+			{	
+				Attribute field = fieldAnalyzer.getKey();
+				Index indexAnalyzer = fieldAnalyzer.getValue();
 				Text oText =  new Text();
 				try {
 					oText.fromString((String)jcolibri.util.AttributeUtils.findValue(field, c));
@@ -43,36 +61,16 @@ public class LuceneIndexCreatorString {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				ld.addContentField(field.getName(), oText);
+				try {
+					ld.addContentField(field.getName(), oText, indexAnalyzer);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			docs.add(ld);
 		}
-		return new LuceneIndex(docs);
+		return new LuceneIndex30(docs, oAnalyzer);
 
 	}
-	
-
-	/**
-	 * Creates a Lucene Index with the text contained in some attributes. The type of that attributes must be "Text".
-	 * This method creates a LuceneDocument for each case, and adds a new field for each attribute (recived as parameter). 
-	 * The name and content of the Lucene document field is the name and content of the attribute.
-	 */
-	public static LuceneIndex createLuceneIndex(CBRCaseBase casebase)
-	{
-	    	CBRCase _case = casebase.getCases().iterator().next();
-	    	Collection<Attribute> attributes = new ArrayList<Attribute>();
-	    	if(_case.getDescription() != null)
-	    		attributes.add(new Attribute("ssimpletext", APiecesOfNews.class));
-	    	    //attributes.addAll(jcolibri.util.AttributeUtils.getAttributes(_case.getDescription(), String.class));
-	    	if(_case.getSolution() != null)
-	    	    attributes.addAll(jcolibri.util.AttributeUtils.getAttributes(_case.getSolution(), String.class));
-	    	if(_case.getResult() != null)
-	    	    attributes.addAll(jcolibri.util.AttributeUtils.getAttributes(_case.getResult(), String.class));
-	    	if(_case.getJustificationOfSolution() != null)
-	    	    attributes.addAll(jcolibri.util.AttributeUtils.getAttributes(_case.getJustificationOfSolution(), String.class));
-	    	
-
-		return createLuceneIndex(casebase, attributes);
-
-	}	
 }

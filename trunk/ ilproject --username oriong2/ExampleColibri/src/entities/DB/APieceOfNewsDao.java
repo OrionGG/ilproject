@@ -41,6 +41,8 @@ public class APieceOfNewsDao{
 	}
 
 	public List<Integer>  getId(String sUrl) throws Exception{
+		sUrl = normalizeUrl(sUrl);
+		
 		List<Integer>  oResultList = new ArrayList<Integer>();
 		ResultSet oResultSet;
 		oResultSet = getDBConnector().executeQuery("SELECT ID FROM URL WHERE URL = '" + sUrl + "'");
@@ -50,6 +52,15 @@ public class APieceOfNewsDao{
 		}
 
 		return oResultList;
+	}
+
+	private String normalizeUrl(String sUrl) {
+		StringBuilder sUrlNormalized = new StringBuilder(sUrl);
+		while (sUrlNormalized.toString().endsWith("/")){
+			sUrlNormalized.deleteCharAt(sUrlNormalized.length()-1);
+		}
+		sUrl = sUrlNormalized.toString();
+		return sUrl;
 	}
 
 	public APiecesOfNews getApieceOfNews(int iId) throws Exception{
@@ -80,6 +91,7 @@ public class APieceOfNewsDao{
 	}
 
 	public void insertUrl(String sUrl, String sText, NewsType oNewsType, double iWeight)throws Exception{
+		sUrl = normalizeUrl(sUrl);
 		getDBConnector().executeUpdate("INSERT INTO URL(URL,TEXT, TYPE, Weight) VALUES(?,?,?,?)",sUrl,sText, oNewsType.ToString(), iWeight);
 	}
 
