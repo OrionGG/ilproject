@@ -91,13 +91,13 @@ public class SpanishAnalyzer extends Analyzer {
     
     private String SPANISH_STOP_WORDS[] = {
 
-    		"un", "una", "unas", "unos", "uno", "sobre", "todo", "también", "tras",
-    		"otro", "algún", "alguno", "alguna",
+    		"un", "una", "unas", "unos", "uno", "sobre", "todo", "tambiÃ©n", "tras",
+    		"otro", "algÃºn", "alguno", "alguna",
 
     		"algunos", "algunas", "ser", "es", "soy", "eres", "somos", "sois", "estoy",
     		"esta", "estamos", "estais",
 
-    		"estan", "en", "para", "atras", "porque", "por qué", "estado", "estaba",
+    		"estan", "en", "para", "atras", "porque", "por quÃ©", "estado", "estaba",
     		"ante", "antes", "siendo",
 
     		"ambos", "pero", "por", "poder", "puede", "puedo", "podemos", "podeis",

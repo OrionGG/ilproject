@@ -4,6 +4,7 @@ import java.util.*;
 import java.io.*;
 import java.net.*;
 
+import org.apache.lucene.analysis.StopFilter;
 import org.apache.lucene.analysis.WordlistLoader;
 
 
@@ -113,7 +114,15 @@ public class ExtractText {
 			throws IOException, UnsupportedEncodingException {
 		char[] cArray = sResultTextExtractor.toCharArray();
 		//ArrayList<String> oSpecialCharsList = SpecialChars.getSpecialChars();
-		Set<String> oSpecialCharsList = new HashSet(WordlistLoader.getWordSet(new File(".\\resources\\specialwords\\specialSpanishSmart.txt"))); 
+		Set<String> oSpecialCharsList = new HashSet<String>();
+		try{
+			oSpecialCharsList = new HashSet<String>(WordlistLoader.getWordSet(new File(".\\resources\\specialwords\\specialSpanishSmart.txt")));
+    	}
+    	catch(IOException oEx)
+    	{
+    		List<String> list = Arrays.asList(SPECIAL_WORDS);
+    		oSpecialCharsList = new HashSet<String>(list); 
+    	}
 		String sResult= "";
 		for (char c : cArray){
 			String sStringC = new String(String.valueOf(c).getBytes("UTF8"), "US-Ascii");
@@ -131,6 +140,8 @@ public class ExtractText {
 		}
 		return sResult;
 	}
+	
+	private static String SPECIAL_WORDS[] = {".", ",", "(", ")", "/", "|", "[", "]", "*", "?", "←", ":", "-", "_", "!"};
 
 	private static String getTitle(Source source) {
 		Element titleElement=source.getFirstElement(HTMLElementName.TITLE);

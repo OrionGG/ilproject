@@ -89,7 +89,7 @@ public class ApacheURLListerRecursive {
 
 			Matcher matcher = PATTERN.matcher(htmlText);
 
-			while (wide > 0 && matcher.find()) {
+			while (matcher.find() && wide > 0) {
 				// get the href text and the displayed text
 				String href = matcher.group(1);
 
@@ -105,6 +105,7 @@ public class ApacheURLListerRecursive {
 						if ((href.endsWith(suffix) || href.endsWith(suffix + "/")) && !href.contains("google") && !urlList.contains(href)) {
 							urlList.add(href);
 							System.out.println(href);
+							wide--;
 						}
 						if (href.endsWith(".com") || href.endsWith(".es")){
 							URL oUrl = new URL(href);
@@ -115,7 +116,6 @@ public class ApacheURLListerRecursive {
 						continue;
 					}
 				}
-				wide--;
 			}
 		}
 	}

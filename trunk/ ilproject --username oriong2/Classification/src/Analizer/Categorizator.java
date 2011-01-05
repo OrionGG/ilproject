@@ -68,7 +68,7 @@ public class Categorizator {
 	    parser.setAllowLeadingWildcard(false);
 	    Query query = parser.parse(parseo);
 
-	    ScoreDoc[] hits = isearcher.search(query, null, 1000).scoreDocs; 
+	    ScoreDoc[] hits = isearcher.search(query, 1000).scoreDocs; 
 	    
 	    //////FUNCIONALIDADES POSIBLES PARA LEER EL INDICE
 	    //System.out.println("El termino -"+term+"- aparece "+isearcher.docFreq(term)+" veces");
