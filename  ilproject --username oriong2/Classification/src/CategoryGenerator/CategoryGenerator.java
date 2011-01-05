@@ -54,7 +54,7 @@ public class CategoryGenerator {
 	private static String rdfs = "http://www.w3.org/2000/01/rdf-schema#";
 	private static 	String rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns/#";
 	private static String thing="http://www.w3.org/2002/07/owl#Thing";
-	
+
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 
@@ -62,29 +62,29 @@ public class CategoryGenerator {
 		Model ontology=DAO_Model.generateMainModel();
 		ArrayList<Resource> urlCategorias=getFatherCategoriesInternet();
 		//System.out.println("Fin categorias");
-		
-		
+
+
 		SpanishAnalyzer analyzer = new SpanishAnalyzer(Version.LUCENE_30, new File (".\\resources\\stopwords\\spanishSmart.txt"));
 		Property type=ontology.createProperty(rdf,"type");
-		
+
 		File directory=new File(".\\resources\\index");
-		
+
 		Directory indexDirectory = FSDirectory.open(directory,new NoLockFactory());
-		
+
 		IndexWriter iwriter = new IndexWriter(indexDirectory, analyzer, true, new IndexWriter.MaxFieldLength(25000));
 		String nameResource = null;	
 		String sTextResources = null;
 		String sTotalTextSynonym = null;
 		//int i = 0; i< 20; i++
 		for(Resource category : urlCategorias){
-			
+
 			//Resource category = urlCategorias.get(i);
 			////PRIMERA PARTE-->>Recursos de DbPedia
 			String pathCategory=category.getURI();
-			
+
 			List<Resource> lis=DbPedia.getResourcesOfType(pathCategory);
-			
-			
+
+
 			System.out.println("\n\nSALIDA DE LA PRIMERA FASE: ");
 			String labelResource=null;
 			System.out.println("\nCATEGORIA = " +category.getLocalName()+"\n");
@@ -92,12 +92,12 @@ public class CategoryGenerator {
 			for(int i=0; i<9 && i<lis.size();i++){
 				Resource resource =lis.get(i);
 				//if(resource.getLocalName()!=null){
-				  // labelResource=resource.getLocalName();
+				// labelResource=resource.getLocalName();
 				//}else{
-					labelResource=DbPedia.getLabel(resource.getURI());
+				labelResource=DbPedia.getLabel(resource.getURI());
 				//	labelResource =Encode.getNameFromUrl(resource.getURI());
 				//}
-			
+
 				//System.out.print(labelResource+" ");
 				if(labelResource.endsWith("@en")){
 					labelResource=labelResource.replace("@en","");
@@ -107,54 +107,54 @@ public class CategoryGenerator {
 				}
 				//eliminar tag @es y @en
 				System.out.print(labelResource+" |");
-				
-			
-				
+
+
+
 				sTextResources=labelResource+" "+sTextResources;
 			}
-			
+
 			///SEGUNDA PARTE--->Texto de WIkipedia
 
 			String sTextWikipedia= WikipediaText.GetTextFromWikipedia(category.getLocalName());
 			System.out.println("\n\nSALIDA DE LA SEGUNDA FASE: ");
 			System.out.print(sTextWikipedia);
 			Set<String> oSyn = Synonym.lookupSynonyms(category.getLocalName());
-			 for(String sWord:oSyn){
-				
-				 try{
-					   String sTextWikipediaSynonym = WikipediaText.GetTextFromWikipedia(sWord);
-						System.out.println("\n\nSALIDA DE LA TERCERA FASE: ");
-						System.out.print(sTextWikipediaSynonym);
-						sTotalTextSynonym += " " + sTextWikipediaSynonym;
-				 }
-				 catch(Exception e){
-					 
-				 
-				 }
-			 }
-			 
-			
-			 String sTotalText = sTextResources + " " + sTotalTextSynonym + " " + sTextWikipedia;
-			
+			for(String sWord:oSyn){
+
+				try{
+					String sTextWikipediaSynonym = WikipediaText.GetTextFromWikipedia(sWord);
+					System.out.println("\n\nSALIDA DE LA TERCERA FASE: ");
+					System.out.print(sTextWikipediaSynonym);
+					sTotalTextSynonym += " " + sTextWikipediaSynonym;
+				}
+				catch(Exception e){
+
+
+				}
+			}
+
+
+			String sTotalText = sTextResources + " " + sTotalTextSynonym + " " + sTextWikipedia;
+
 			///ANALIZADORRRRRR
 
 			System.out.println("Contenido fichero categoria:  "+category.getLocalName()+"\n"+ sTotalText);
-		
+
 			//SE RECORREN TODOS LOS FICHEROS DE UNA CATEGORIA
-				//SE A�ADEN A CADA DOC=CATEGORIA
+			//SE A�ADEN A CADA DOC=CATEGORIA
 			Document categoria = new Document();
-		
-			
+
+
 			categoria.add( new Field("CategoryName", category.getLocalName(), Field.Store.YES,Field.Index.NO));
-			Field textoField=new Field("CategoryText", sTotalText, Field.Store.YES,Field.Index.ANALYZED,Field.TermVector.YES);
+			Field textoField= new Field("Text", sTotalText, Field.Store.YES,Field.Index.ANALYZED,Field.TermVector.YES);
 			categoria.add(textoField ); 
-	
-			
-			iwriter.addDocument(categoria);
+
+
+			iwriter.addDocument(categoria );
 		}
 		iwriter.optimize();
 		iwriter.close();
-		
+
 
 	}
 
@@ -172,40 +172,40 @@ public class CategoryGenerator {
 
 	private static ArrayList<Resource> getFatherCategoriesInternet() throws SQLException, ClassNotFoundException {
 		// TODO Auto-generated method stub
-		
+
 		ArrayList <Resource> fatherCategorias=DbPedia.getFatherCategories();
 
-			
+
 		return fatherCategorias;
 	}
 	private static ArrayList<Resource> getFatherCategories(Model model) throws SQLException, ClassNotFoundException {
 		// TODO Auto-generated method stub
-		
+
 		Property subClassOf = model.createProperty(rdfs,"subClassOf");
 		//  po: http://purl.org/ontology/po/
 		//	http://www.w3.org/2002/07/owl# rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns/#
 		// skos http://www.w3.org/TR/skos-reference/skos.html# rdfs http://www.w3.org/2000/01/rdf-schema#
-		
-		
+
+
 		Property label = model.createProperty(rdfs,"label");
 		Property type=model.createProperty(rdf,"type");
 
 		System.out.println("\n\n\nEntra objects categorias");
 		NodeIterator ri=model.listObjectsOfProperty(subClassOf);
-		
+
 		//NodeIterator moreParents = model.listObjectsOfProperty(subClassOf);
 		ArrayList <Resource> allCategorias=new ArrayList<Resource>();
 		ArrayList <Resource> topCategorias=new ArrayList<Resource>();
-		
-//		ArrayList<Resource> urlCategorias=new ArrayList<Resource>();
+
+		//		ArrayList<Resource> urlCategorias=new ArrayList<Resource>();
 		//boolean found=false;
 		//&& !found
-		
+
 		while (ri.hasNext() ) {
 			Resource node=(Resource) ri.next();
 			System.out.println("All Cat "+node.getLocalName());
 			allCategorias.add(node);
-			
+
 			if(node.getURI().equals(thing)){
 				System.out.println("entra");
 				Resource thingRes =node;
@@ -218,12 +218,12 @@ public class CategoryGenerator {
 						topCategorias.add(cat);
 						System.out.println("Cat "+cat.getLocalName());
 					}
-					
+
 				}
 			}
 		}
-		
-			
+
+
 		return allCategorias;
 	}
 }
