@@ -21,7 +21,6 @@ public class MysqlDBConnector  implements DBConnector{
 	      return instance;
 	   }
 	
-	@Override
 	public void loadDriver() {
 		try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -31,7 +30,6 @@ public class MysqlDBConnector  implements DBConnector{
         }
 	}
 	
-	@Override
 	public void setConnection(String sDBName) throws SQLException {
 		String connectionUrl ="jdbc:mysql://localhost:3306/"+ sDBName +"?user=root";
 		oCon = DriverManager.getConnection(connectionUrl);
