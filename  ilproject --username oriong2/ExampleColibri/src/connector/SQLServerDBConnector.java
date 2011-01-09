@@ -21,7 +21,6 @@ public class SQLServerDBConnector implements DBConnector {
 	      return instance;
 	   }
 	
-	@Override
 	public void loadDriver() {
 		try {
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
@@ -31,7 +30,6 @@ public class SQLServerDBConnector implements DBConnector {
         }
 	}
 	
-	@Override
 	public void setConnection(String sDBName) throws SQLException {
 		String connectionUrl = "jdbc:sqlserver://localhost;instanceName=SQLEXPRESS;database="+ sDBName +";user=sa";
 		oCon = DriverManager.getConnection(connectionUrl);
