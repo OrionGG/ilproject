@@ -28,7 +28,8 @@ public class APieceOfNewsDao{
 	}
 
 	public DBConnector getDBConnector(){
-		DBConnector oDBConnector = SQLServerDBConnector.getInstance();
+		//DBConnector oDBConnector = SQLServerDBConnector.getInstance();
+		DBConnector oDBConnector = MysqlDBConnector.getInstance();
 		try {
 			oDBConnector.setConnection("NewsDB");
 		} catch (Exception e) {
