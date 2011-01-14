@@ -31,7 +31,8 @@ public class Categorizator {
 	public static void main(String[] args) throws Exception {
 		if (args.length > 1){
 			String sOption = args[0].toString();
-			String sUrl = args[1].toString();
+			String sDomainUrl = args[1].toString();
+			String sUrl = args[2].toString();
 			if(sOption.equals("-u")){
 				String sText = ExtractText.GetBlogText(sUrl);
 				//DAOUrl oDAOUrl = new DAOUrl();
@@ -40,7 +41,7 @@ public class Categorizator {
 				similarityFunction(sText);
 			}
 			else if(sOption.equals("-l")){
-				List<String> oList = GetSubUrls.DefaultSpiderUrl(sUrl);
+				List<String> oList = GetSubUrls.DefaultSpiderUrl(sDomainUrl, sUrl);
 				for(String sSubUrl : oList){
 					String sText = ExtractText.GetBlogText(sSubUrl);
 					DAOUrl oDAOUrl = new DAOUrl();

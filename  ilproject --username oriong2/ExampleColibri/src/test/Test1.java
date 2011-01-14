@@ -142,7 +142,7 @@ public class Test1 implements StandardCBRApplication
 
 		System.out.println("RESULT:");
 		Collection<RetrievalResult> res = NNScoringMethod.evaluateSimilarity(cases, query, nnConfig);
-		res = SelectCases.selectTopKRR(res, APiecesOfNews.oArrayNewsTypes.length * 3);
+		res = SelectCases.selectTopKRR(res, APiecesOfNews.oArrayNewsTypes.length);
 
 		for(RetrievalResult rr: res){
 			System.out.println(rr);
@@ -243,8 +243,8 @@ public class Test1 implements StandardCBRApplication
 				
 			//String sUrl = "http://www.hola.com/";
 			//String sUrl = "http://www.elpais.com";
-			//String sUrl = "http://www.barrapunto.com";
-			String sUrl = "http://www.waping.com.ar/";
+			String sUrl = "http://www.barrapunto.com";
+			//String sUrl = "http://www.waping.com.ar/";
 			//String sUrl = "http://www.elmundo.es/elmundodeporte";
 
 			String sText = GetBlogText.ExtractText.GetBlogText(sUrl, false);

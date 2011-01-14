@@ -41,7 +41,7 @@ public class APieceOfNewsDao{
 
 	}
 
-	public List<Integer>  getId(String sUrl) throws Exception{
+	public List<Integer>  getIds(String sUrl) throws Exception{
 		sUrl = normalizeUrl(sUrl);
 		
 		List<Integer>  oResultList = new ArrayList<Integer>();

@@ -141,7 +141,7 @@ public class ExtractText {
 		return sResult;
 	}
 	
-	private static String SPECIAL_WORDS[] = {".", ",", "(", ")", "/", "|", "[", "]", "*", "?", "←", ":", "-", "_", "!"};
+	private static String SPECIAL_WORDS[] = {".", ",", "(", ")", "/", "|", "[", "]", "*", "?", "←", ":", "-", "_", "!", "="};
 
 	private static String getTitle(Source source) {
 		Element titleElement=source.getFirstElement(HTMLElementName.TITLE);
