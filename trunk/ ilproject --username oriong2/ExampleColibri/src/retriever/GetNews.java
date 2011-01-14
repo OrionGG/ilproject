@@ -21,14 +21,14 @@ import entities.DB.APieceOfNewsDao;
 
 public class GetNews {
 
-	public static void GetCasesFromUrl(String sWebPageParam, int pagesPerCategory) throws Exception{
+	public static void GetCasesFromUrl(String sMainUrlParam, String sWebPageParam, int pagesPerCategory) throws Exception{
 
-		String sWebPage = "http://www.elpais.com/";
+		String sMainUrl = "http://www.elpais.com";
+		String sWebPage = "/";
 
-
-
-		if(sWebPageParam != null)
+		if(sMainUrlParam != null && sWebPageParam != null)
 		{
+			sMainUrl = sMainUrlParam;
 			sWebPage = sWebPageParam;
 		}	
 
@@ -39,17 +39,17 @@ public class GetNews {
 		for(APiecesOfNews.NewsType oN : APiecesOfNews.oArrayNewsTypes){
 
 
-			getNewsFromType(sWebPage, oAPieceOfNewsDao, oN, pagesPerCategory);
+			getNewsFromType(sMainUrl, sWebPage, oAPieceOfNewsDao, oN, pagesPerCategory);
 		}
 	}
 
-	private static void getNewsFromType(String sWebPage,
+	private static void getNewsFromType(String sMainUrl,String sWebPage,
 			APieceOfNewsDao oAPieceOfNewsDao, APiecesOfNews.NewsType oN, int pagesPerCategory)
 	throws MalformedURLException, IOException {
 		String sUrl = sWebPage + oN.ToString();
-		AddNews(sUrl, oN, oAPieceOfNewsDao, 1.1);
+		AddNews(sMainUrl + sUrl, oN, oAPieceOfNewsDao, 1.1);
 
-		List<String> oUrls = Spider.GetSubUrls.SpiderUrl(sUrl, 1, pagesPerCategory - 1, "");
+		List<String> oUrls = Spider.GetSubUrls.SpiderUrl(sMainUrl, sUrl, 1, pagesPerCategory - 1, "");
 		for(String sUrlSub : oUrls){
 			//Reader stringReader = new StringReader(sText);
 			//TokenStream tokenStream = (new SpanishAnalyzer()).tokenStream("defaultFieldName", stringReader);
@@ -62,27 +62,12 @@ public class GetNews {
 
 		List<Integer> iList = new ArrayList<Integer>();
 		try {
-			iList = oAPieceOfNewsDao.getId(sUrl);
+			iList = oAPieceOfNewsDao.getIds(sUrl);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
-		for(int iId : iList){
-			try {
-				APiecesOfNews oAPieceOfNews = oAPieceOfNewsDao.getApieceOfNews(iId);
-				NewsType oNewsTypeId = oAPieceOfNews.getNewsType();
-				if(oNewsTypeId.equals(oNewsType)){
-					return;
-				}
-				if(oAPieceOfNews.getWeigt() > 1){
-					return;
-				}
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
 		String sText = "";
 		if(iList.size() == 0){
 			try {
@@ -101,26 +86,46 @@ public class GetNews {
 			}
 		}
 		else{
-			try {
-				sText = oAPieceOfNewsDao.getApieceOfNews(iList.get(0)).getsSimpleText();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+			for(int iId : iList){
+				try {
+					APiecesOfNews oAPieceOfNews = oAPieceOfNewsDao.getApieceOfNews(iId);
+					NewsType oNewsTypeId = oAPieceOfNews.getNewsType();
+					sText = oAPieceOfNews.getsSimpleText();
+					if(oNewsTypeId.equals(oNewsType)){
+						return;
+					}
+					if(oAPieceOfNews.getWeigt() > 1){
+						return;
+					}
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 
-		for(int iId : iList){
-			try {
-				oAPieceOfNewsDao.updateTextWeight(iId, sText , Math.pow((0.9), iList.size())* dWeight);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				try {
+					if(dWeight > 1){
+						oAPieceOfNewsDao.deleteUrl(iId);
+						//oAPieceOfNewsDao.updateTextWeight(iId, sText , 0);
+					}
+					else{
+						oAPieceOfNewsDao.updateTextWeight(iId, sText , Math.pow((0.9), iList.size())* dWeight);
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 
 
 		try {
-			oAPieceOfNewsDao.insertUrl(sUrl, sText, oNewsType,  Math.pow((0.9), iList.size())* dWeight);
+			if(dWeight > 1){
+				oAPieceOfNewsDao.insertUrl(sUrl, sText, oNewsType,  dWeight);
+			}
+			else{
+				oAPieceOfNewsDao.insertUrl(sUrl, sText, oNewsType,  Math.pow((0.9), iList.size())* dWeight);
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -143,7 +148,7 @@ public class GetNews {
 
 
 	public static void main(String[] args) throws Exception {		
-		GetNews.GetCasesFromUrl(null, 30);
+		GetNews.GetCasesFromUrl(null,null, 100);
 
 		/*String sWebPage = "http://www.elpais.com/";
 		APieceOfNewsDao oAPieceOfNewsDao = new APieceOfNewsDao();

@@ -217,9 +217,9 @@ public class Test2 {
 
 
 			//String sUrl = javax.swing.JOptionPane.showInputDialog("Please enter the restaurant description:");
-			//String sUrl = "http://www.marca.es";
+			String sUrl = "http://www.marca.es";
 			//String sUrl = "http://www.hola.es";
-			String sUrl = "http://www.elpais.es/tecnologia";
+			//String sUrl = "http://www.elpais.es/tecnologia";
 
 			//String sUrl = "http://www.waping.com.ar/";
 			//String sUrl = "http://www.elmundo.es/elmundodeporte";
