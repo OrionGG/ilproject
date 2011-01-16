@@ -112,19 +112,24 @@ public class CategoryGenerator {
 
 				sTextResources=labelResource+" "+sTextResources;
 			}
+			
+			AddDocument(iwriter, category, sTextResources, 1);
 
 			///SEGUNDA PARTE--->Texto de WIkipedia
-
-			String sTextWikipedia= WikipediaText.GetTextFromWikipedia(category.getLocalName());
 			System.out.println("\n\nSALIDA DE LA SEGUNDA FASE: ");
-			System.out.print(sTextWikipedia);
+			WikipediaText oWikipediaText = new WikipediaText();
+			String sTextWikipedia= oWikipediaText.GetTextFromWikipedia(category.getLocalName(), true);
+
+
+			AddDocument(iwriter, category, sTextWikipedia, 2);
+
 			Set<String> oSyn = Synonym.lookupSynonyms(category.getLocalName());
 			for(String sWord:oSyn){
 
 				try{
-					String sTextWikipediaSynonym = WikipediaText.GetTextFromWikipedia(sWord);
 					System.out.println("\n\nSALIDA DE LA TERCERA FASE: ");
-					System.out.print(sTextWikipediaSynonym);
+					String sTextWikipediaSynonym = oWikipediaText.GetTextFromWikipedia(sWord, true);
+
 					sTotalTextSynonym += " " + sTextWikipediaSynonym;
 				}
 				catch(Exception e){
@@ -134,28 +139,30 @@ public class CategoryGenerator {
 			}
 
 
-			String sTotalText = sTextResources + " " + sTotalTextSynonym + " " + sTextWikipedia;
-
-			///ANALIZADORRRRRR
-
-			System.out.println("Contenido fichero categoria:  "+category.getLocalName()+"\n"+ sTotalText);
-
-			//SE RECORREN TODOS LOS FICHEROS DE UNA CATEGORIA
-			//SE A�ADEN A CADA DOC=CATEGORIA
-			Document categoria = new Document();
+			AddDocument(iwriter, category, sTotalTextSynonym, 3);
 
 
-			categoria.add( new Field("CategoryName", category.getLocalName(), Field.Store.YES,Field.Index.NO));
-			Field textoField= new Field("Text", sTotalText, Field.Store.YES,Field.Index.ANALYZED,Field.TermVector.YES);
-			categoria.add(textoField ); 
-
-
-			iwriter.addDocument(categoria );
+			
 		}
 		iwriter.optimize();
 		iwriter.close();
 
 
+	}
+
+	private static void AddDocument(IndexWriter iwriter, Resource category,
+			String sTotalText, int iPriority) throws CorruptIndexException, IOException {
+		Document categoria = new Document();
+
+		
+		categoria.add( new Field("CategoryName", category.getLocalName(), Field.Store.YES,Field.Index.NO));
+		Field textoField= new Field("Text", sTotalText, Field.Store.YES,Field.Index.ANALYZED,Field.TermVector.YES);
+		categoria.add(textoField ); 
+		Field priorityField= new Field("Priority", String.valueOf(iPriority), Field.Store.YES,Field.Index.NO);
+		categoria.add(priorityField );
+
+
+		iwriter.addDocument(categoria );
 	}
 
 	private static String getSubClassesCategorias(
