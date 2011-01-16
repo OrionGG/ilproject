@@ -89,7 +89,7 @@ public class SpanishAnalyzer extends Analyzer {
         return result;  
     }
     
-    private String SPANISH_STOP_WORDS[] = {
+    public static String SPANISH_STOP_WORDS[] = {
 
     		"un", "una", "unas", "unos", "uno", "sobre", "todo", "también", "tras",
     		"otro", "algún", "alguno", "alguna",
@@ -139,6 +139,6 @@ public class SpanishAnalyzer extends Analyzer {
     		"trabajais", "trabajan", "podria", "podrias", "podriamos", "podrian",
     		"podriais", "yo", "aquel", "mi",
 
-    		"de", "a", "e", "i", "o", "u"};
+    		"del","de", "a", "e", "i", "o", "u"};
 
 }  

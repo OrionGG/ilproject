@@ -124,7 +124,7 @@ public class ApacheURLListerRecursive {
 				// handle complete URL listings
 				if (href.startsWith("http:") || href.startsWith("https:")) {
 					try {
-						if ((href.endsWith(suffix) || href.endsWith(suffix + "/")) && !href.contains("google") && !urlList.contains(href)) {
+						if (href.contains(suffix) && !href.contains("google") && !urlList.contains(href)) {
 							urlList.add(href);
 							System.out.println(href);
 							wide--;

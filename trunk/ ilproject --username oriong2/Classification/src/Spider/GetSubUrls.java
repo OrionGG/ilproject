@@ -20,13 +20,14 @@ public class GetSubUrls {
 	 */
 	public static void main(String[] args) throws IOException {
 		
-		String sMainUrl = "http://www.elpais.com";
-		String sRestUrl = "/deportes/";
+		//String sMainUrl = "http://www.elpais.com";
+		//String sRestUrl = "/deportes/";
 		//String sUrl = "http://wordpress.com/";
-		//String sTail = "blogalia.com";
-		String sTail = "";
-		//List<String> oList = SpiderUrl(sUrl, sTail);
-		List<String> oList = SpiderUrl(sMainUrl, sRestUrl, 1,1000, sTail);
+		String sMainUrl = "http://www.blogalia.com";
+		String sRestUrl = "/";
+		String sSuffix = "blogalia.com";
+		List<String> oList = SpiderUrl(sMainUrl, sRestUrl, sSuffix);
+		//List<String> oList = SpiderUrl(sMainUrl, sRestUrl, 1,1000, sTail);
 		Map<String,String> oMap = new HashMap<String, String>();
 		for(String sSubUrl : oList){
 			String sText = ExtractText.GetBlogText(sSubUrl);
@@ -35,19 +36,19 @@ public class GetSubUrls {
 		}
 	}
 
-	private static List<String> SpiderUrl(String sMainUrl, String sRestUrl, String sTail) throws MalformedURLException, IOException {
+	private static List<String> SpiderUrl(String sMainUrl, String sRestUrl, String sSuffix) throws MalformedURLException, IOException {
 		// TODO Auto-generated method stub
 		ApacheURLListerRecursive oApacheURLLister = new ApacheURLListerRecursive();
 		
-		List<String> oList = oApacheURLLister.listAll(sMainUrl, sRestUrl, 2, 1000, sTail);
+		List<String> oList = oApacheURLLister.listAll(sMainUrl, sRestUrl, 2, 10, sSuffix);
 		return oList;
 	}
 	
-	public static List<String> SpiderUrl(String sMainUrl, String sRestUrl, int depth, int wide, String sTail) throws MalformedURLException, IOException {
+	public static List<String> SpiderUrl(String sMainUrl, String sRestUrl, int depth, int wide, String sSuffix) throws MalformedURLException, IOException {
 		// TODO Auto-generated method stub
 		ApacheURLListerRecursive oApacheURLLister = new ApacheURLListerRecursive();
 		
-		List<String> oList = oApacheURLLister.listAll(sMainUrl, sRestUrl, depth, wide, sTail);
+		List<String> oList = oApacheURLLister.listAll(sMainUrl, sRestUrl, depth, wide, sSuffix);
 		return oList;
 	}
 	

@@ -3,9 +3,12 @@ package Analizer;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
@@ -32,15 +35,15 @@ public class Categorizator {
 		if (args.length > 1){
 			String sOption = args[0].toString();
 			String sDomainUrl = args[1].toString();
-			String sUrl = args[2].toString();
 			if(sOption.equals("-u")){
-				String sText = ExtractText.GetBlogText(sUrl);
+				String sText = ExtractText.GetBlogText(sDomainUrl);
 				//DAOUrl oDAOUrl = new DAOUrl();
 				//oDAOUrl.insertOrUpdateUrl(sUrl, sText);
 				//String sText = "Impotencia. Rabia. Llanto. Indignación e insultos. Esos fueron los prolegómenos del concierto de ayer de Lady Gaga, la nueva reina del pop del siglo XIX, que en Madrid estuvo marcado por la venta de entradas falsas. Ese fue el motivo de que cientos de fans, venidos de toda España y de otros países, y que llevaban varios días a la intemperie, con el fin de ser los primeros en ver y oír a su musa";
 				similarityFunction(sText);
 			}
 			else if(sOption.equals("-l")){
+				String sUrl = args[2].toString();
 				List<String> oList = GetSubUrls.DefaultSpiderUrl(sDomainUrl, sUrl);
 				for(String sSubUrl : oList){
 					String sText = ExtractText.GetBlogText(sSubUrl);
@@ -55,7 +58,7 @@ public class Categorizator {
 	}
 	
 
-	public static void similarityFunction(String parseo) throws CorruptIndexException, IOException, ParseException{
+	public static void similarityFunction(String sText) throws CorruptIndexException, IOException, ParseException{
 		 Directory indexDirectory = FSDirectory.open(new File(".\\resources\\index"));
 		// Now search the index:
 	    IndexSearcher isearcher = new IndexSearcher(indexDirectory, true); // read-only=true
@@ -67,7 +70,13 @@ public class Categorizator {
 	   // Term term=new Term("baile");
 	    BooleanQuery.setMaxClauseCount(Integer.MAX_VALUE);
 	    parser.setAllowLeadingWildcard(false);
-	    Query query = parser.parse(parseo);
+	    
+	    Reader stringReader = new StringReader(sText);
+        TokenStream tokenStream = (new SpanishAnalyzer()).tokenStream("defaultFieldName", stringReader);
+        sText =  (new Analizer.test.TermAnalyzerView()).GetView(tokenStream, 0).trim();
+        
+	    
+	    Query query = parser.parse(sText);
 
 	    ScoreDoc[] hits = isearcher.search(query, 1000).scoreDocs; 
 	    
@@ -75,7 +84,7 @@ public class Categorizator {
 	    //System.out.println("El termino -"+term+"- aparece "+isearcher.docFreq(term)+" veces");
 	    System.out.println("Tras ejecutar la query " + hits.length+ " encontrados para");
 	    // Iterate through the results:
-	    System.out.println(parseo);
+	    System.out.println(sText);
 	    for (int i = 0; i < hits.length; i++) {
 	      /////TE DICE EN QUE FICHERO SE ENCUENTRA EL TERM
 	    	ScoreDoc oScoreDoc = hits[i];

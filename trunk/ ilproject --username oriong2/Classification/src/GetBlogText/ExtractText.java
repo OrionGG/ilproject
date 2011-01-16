@@ -96,12 +96,13 @@ public class ExtractText {
 			//sResult = oTextExtractor.setExcludeNonHTMLElements(true).setIncludeAttributes(true).toString();
 			sResultTextExtractor = oTextExtractor.setIncludeAttributes(true).toString();
 		
-			if(bDeleteSpecialChars){
+			/*if(bDeleteSpecialChars){
 				sResult = DeleteSpecialChars(sResultTextExtractor);
 			}
 			else{
 				sResult = sResultTextExtractor;
-			}
+			}*/
+			sResult = sResultTextExtractor;
 		}
 		catch(Exception ex){
 		}
@@ -110,7 +111,7 @@ public class ExtractText {
 		
 	}
 
-	private static String DeleteSpecialChars(String sResultTextExtractor)
+	/*private static String DeleteSpecialChars(String sResultTextExtractor)
 			throws IOException, UnsupportedEncodingException {
 		char[] cArray = sResultTextExtractor.toCharArray();
 		//ArrayList<String> oSpecialCharsList = SpecialChars.getSpecialChars();
@@ -142,7 +143,7 @@ public class ExtractText {
 	}
 	
 	private static String SPECIAL_WORDS[] = {".", ",", "(", ")", "/", "|", "[", "]", "*", "?", "←", ":", "-", "_", "!", "="};
-
+*/
 	private static String getTitle(Source source) {
 		Element titleElement=source.getFirstElement(HTMLElementName.TITLE);
 		if (titleElement==null) return null;
