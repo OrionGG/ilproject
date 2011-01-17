@@ -65,13 +65,21 @@ public class CategoryGenerator {
 
 
 		SpanishAnalyzer analyzer = new SpanishAnalyzer(Version.LUCENE_30, new File (".\\resources\\stopwords\\spanishSmart.txt"));
-		Property type=ontology.createProperty(rdf,"type");
+		//Property type=ontology.createProperty(rdf,"type");
 
-		File directory=new File(".\\resources\\index");
+		File fDBPediaDirectory=new File(".\\resources\\DBPediaIndex");
+		Directory dDBPediaIndexDirectory = FSDirectory.open(fDBPediaDirectory,new NoLockFactory());
+		IndexWriter iDBPediaWriter = new IndexWriter(dDBPediaIndexDirectory, analyzer, true, new IndexWriter.MaxFieldLength(25000));
 
-		Directory indexDirectory = FSDirectory.open(directory,new NoLockFactory());
+		File fWikiDirectory=new File(".\\resources\\WikiIndex");
+		Directory dWikiIndexDirectory = FSDirectory.open(fWikiDirectory,new NoLockFactory());
+		IndexWriter iWikiWriter = new IndexWriter(dWikiIndexDirectory, analyzer, true, new IndexWriter.MaxFieldLength(25000));
 
-		IndexWriter iwriter = new IndexWriter(indexDirectory, analyzer, true, new IndexWriter.MaxFieldLength(25000));
+		File fListWebsDirectory=new File(".\\resources\\ListWebsIndex");
+		Directory dListWebsIndexDirectory = FSDirectory.open(fListWebsDirectory,new NoLockFactory());
+		IndexWriter iListWebsWriter = new IndexWriter(dListWebsIndexDirectory, analyzer, true, new IndexWriter.MaxFieldLength(25000));
+
+
 		String nameResource = null;	
 		String sTextResources = null;
 		String sTotalTextSynonym = null;
@@ -112,8 +120,8 @@ public class CategoryGenerator {
 
 				sTextResources=labelResource+" "+sTextResources;
 			}
-			
-			AddDocument(iwriter, category, sTextResources, 1);
+
+			AddDocument(iDBPediaWriter, category, sTextResources, 1);
 
 			///SEGUNDA PARTE--->Texto de WIkipedia
 			System.out.println("\n\nSALIDA DE LA SEGUNDA FASE: ");
@@ -121,14 +129,14 @@ public class CategoryGenerator {
 			String sTextWikipedia= oWikipediaText.GetTextFromWikipedia(category.getLocalName(), true);
 
 
-			AddDocument(iwriter, category, sTextWikipedia, 2);
-
+			//AddDocument(iWikiWriter, category, sTextWikipedia, 2);
+			String sTextWikipediaSynonym = "";
 			Set<String> oSyn = Synonym.lookupSynonyms(category.getLocalName());
 			for(String sWord:oSyn){
 
 				try{
 					System.out.println("\n\nSALIDA DE LA TERCERA FASE: ");
-					String sTextWikipediaSynonym = oWikipediaText.GetTextFromWikipedia(sWord, true);
+					sTextWikipediaSynonym = oWikipediaText.GetTextFromWikipedia(sWord, true);
 
 					sTotalTextSynonym += " " + sTextWikipediaSynonym;
 				}
@@ -137,15 +145,17 @@ public class CategoryGenerator {
 
 				}
 			}
-
-
-			AddDocument(iwriter, category, sTotalTextSynonym, 3);
-
-
 			
+			String sTotalTextWikipedia =  sTextWikipedia + " "+ sTextWikipediaSynonym;
+			
+			AddDocument(iWikiWriter, category, sTotalTextWikipedia, 3);
+
+
+
 		}
-		iwriter.optimize();
-		iwriter.close();
+		iDBPediaWriter.close();
+		iWikiWriter.close();
+		iListWebsWriter.close();
 
 
 	}
@@ -154,7 +164,7 @@ public class CategoryGenerator {
 			String sTotalText, int iPriority) throws CorruptIndexException, IOException {
 		Document categoria = new Document();
 
-		
+
 		categoria.add( new Field("CategoryName", category.getLocalName(), Field.Store.YES,Field.Index.NO));
 		Field textoField= new Field("Text", sTotalText, Field.Store.YES,Field.Index.ANALYZED,Field.TermVector.YES);
 		categoria.add(textoField ); 
@@ -163,6 +173,8 @@ public class CategoryGenerator {
 
 
 		iwriter.addDocument(categoria );
+
+		iwriter.optimize();
 	}
 
 	private static String getSubClassesCategorias(
@@ -225,7 +237,6 @@ public class CategoryGenerator {
 						topCategorias.add(cat);
 						System.out.println("Cat "+cat.getLocalName());
 					}
-
 				}
 			}
 		}
