@@ -90,18 +90,17 @@ public class Categorizator {
 		Analyzer analyzer = new SpanishAnalyzer(Version.LUCENE_30, new File (".\\resources\\stopwords\\spanishSmart.txt"));
 
 		//Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_CURRENT);
-		QueryParser parser = new QueryParser(Version.LUCENE_30,"CategoryText", analyzer);
+		QueryParser parser = new QueryParser(Version.LUCENE_30,"Text", analyzer);
 		// Term term=new Term("baile");
 		BooleanQuery.setMaxClauseCount(Integer.MAX_VALUE);
 		parser.setAllowLeadingWildcard(false);
 
 		Reader stringReader = new StringReader(sText);
-		Analyzer oAnalyzer = new SpanishAnalyzer(Version.LUCENE_30, new File (".\\resources\\stopwords\\spanishSmart.txt"));
 		
-		TokenStream tokenStream = (oAnalyzer).tokenStream("defaultFieldName", stringReader);
+		TokenStream tokenStream = (analyzer).tokenStream("defaultFieldName", stringReader);
 		sText =  (new Analizer.test.TermAnalyzerView()).GetView(tokenStream, 0).trim();
 
-		System.out.println(sText);
+		System.out.println("Texto parseado: " + sText);
 
 		Query query = parser.parse(sText);
 		ArrayList<TopDocs> oListHits = new ArrayList<TopDocs>();
@@ -117,7 +116,7 @@ public class Categorizator {
 	private static TopDocs hitDosByIndex(String sText,
 			IndexSearcher oIndexSearcher, Directory oDirectory,
 			Query query) throws IOException, CorruptIndexException {
-		TopDocs hits = oIndexSearcher.search(query, 10); 
+		TopDocs hits = oIndexSearcher.search(query, 1000); 
 
 		//////FUNCIONALIDADES POSIBLES PARA LEER EL INDICE
 		//System.out.println("El termino -"+term+"- aparece "+isearcher.docFreq(term)+" veces");

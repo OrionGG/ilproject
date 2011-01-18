@@ -69,7 +69,7 @@ public class CategoryGenerator {
 		//System.out.println("Fin categorias");
 
 
-		SpanishAnalyzer analyzer = new SpanishAnalyzer(Version.LUCENE_29, new File (".\\resources\\stopwords\\spanishSmart.txt"));
+		SpanishAnalyzer analyzer = new SpanishAnalyzer(Version.LUCENE_30, new File (".\\resources\\stopwords\\spanishSmart.txt"));
 		//Property type=ontology.createProperty(rdf,"type");
 
 		
