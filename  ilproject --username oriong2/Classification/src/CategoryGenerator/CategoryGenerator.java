@@ -97,7 +97,7 @@ public class CategoryGenerator {
 			String labelResource=null;
 			System.out.println("\nCATEGORIA = " +category.getLocalName()+"\n");
 			System.out.println("Tiene "+lis.size()+" resources");
-			for(int i=0; i<9 && i<lis.size();i++){
+			for(int i=0; i<90 && i<lis.size();i++){
 				Resource resource =lis.get(i);
 				//if(resource.getLocalName()!=null){
 				// labelResource=resource.getLocalName();

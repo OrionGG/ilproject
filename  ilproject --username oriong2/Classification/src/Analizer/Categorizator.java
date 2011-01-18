@@ -5,7 +5,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
@@ -62,20 +66,25 @@ public class Categorizator {
 
 	public static void similarityFunction(String sText) throws CorruptIndexException, IOException, ParseException{
 
+		Map<IndexSearcher, Directory> lIndex = new Hashtable<IndexSearcher, Directory>();
+		
 		File fDBPediaDirectory=new File(".\\resources\\DBPediaIndex");
 		Directory dDBPediaIndexDirectory = FSDirectory.open(fDBPediaDirectory,new NoLockFactory());
 		// Now search the index:
 		IndexSearcher iDBPediaSearcher = new IndexSearcher(dDBPediaIndexDirectory, true); // read-only=true
+		lIndex.put(iDBPediaSearcher, dDBPediaIndexDirectory);
 
 		File fWikiDirectory=new File(".\\resources\\WikiIndex");
 		Directory dWikiIndexDirectory = FSDirectory.open(fWikiDirectory,new NoLockFactory());
 		// Now search the index:
 		IndexSearcher iWikiSearcher = new IndexSearcher(dWikiIndexDirectory, true); // read-only=true
+		lIndex.put(iWikiSearcher, dWikiIndexDirectory);
 
 		File fListWebsDirectory=new File(".\\resources\\ListWebsIndex");
 		Directory dListWebsIndexDirectory = FSDirectory.open(fListWebsDirectory,new NoLockFactory());
 		// Now search the index:
 		IndexSearcher iListWebsSearcher = new IndexSearcher(dListWebsIndexDirectory, true); // read-only=true
+		lIndex.put(iWikiSearcher, dWikiIndexDirectory);
 
 		// Parse a simple query that searches for "text":
 		Analyzer analyzer = new SpanishAnalyzer(Version.LUCENE_30, new File (".\\resources\\stopwords\\spanishSmart.txt"));
@@ -92,29 +101,37 @@ public class Categorizator {
 
 
 		Query query = parser.parse(sText);
+		ArrayList<TopDocs> oListHits = new ArrayList<TopDocs>();
+		for(Entry<IndexSearcher, Directory> oIndex: lIndex.entrySet()){
+			IndexSearcher oIndexSearcher = oIndex.getKey();
+			Directory oDirectory = oIndex.getValue();
+			TopDocs oHits = hitDosByIndex(sText, oIndexSearcher, oDirectory, query);
+			oListHits.add(oHits);
+		}
+	}
 
-		ScoreDoc[] hits = isearcher.search(query, 1000).scoreDocs; 
+
+	private static TopDocs hitDosByIndex(String sText,
+			IndexSearcher oIndexSearcher, Directory oDirectory,
+			Query query) throws IOException, CorruptIndexException {
+		TopDocs hits = oIndexSearcher.search(query, 10); 
 
 		//////FUNCIONALIDADES POSIBLES PARA LEER EL INDICE
 		//System.out.println("El termino -"+term+"- aparece "+isearcher.docFreq(term)+" veces");
-		System.out.println("Tras ejecutar la query " + hits.length+ " encontrados para");
+		System.out.println("Tras ejecutar la query " + hits.scoreDocs.length + " encontrados para");
 		// Iterate through the results:
 		System.out.println(sText);
-		for (int i = 0; i < hits.length; i++) {
-			/////TE DICE EN QUE FICHERO SE ENCUENTRA EL TERM
-			ScoreDoc oScoreDoc = hits[i];
-			Document hitDoc = isearcher.doc(oScoreDoc.doc);
+		for(ScoreDoc oScoreDoc : hits.scoreDocs)
+		{
+			Document hitDoc = oIndexSearcher.doc(oScoreDoc.doc);
 			System.out.println("Esta en Documento "+hitDoc.hashCode()+" "+hitDoc.getField("CategoryName") + " "+ oScoreDoc.score);
 			// System.out.println(hitDoc.toString());
 
 			//assertEquals("This is the text to be indexed.", hitDoc.get("fieldname"));
 		}
-		iDBPediaSearcher.close();
-		dDBPediaIndexDirectory.close();
-		iWikiSearcher.close();
-		dWikiIndexDirectory.close();
-		iListWebsSearcher.close();
-		dListWebsIndexDirectory.close();
+		oIndexSearcher.close();
+		oDirectory.close();
+		return hits;
 	}
 
 }
