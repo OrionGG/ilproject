@@ -96,9 +96,12 @@ public class Categorizator {
 		parser.setAllowLeadingWildcard(false);
 
 		Reader stringReader = new StringReader(sText);
-		TokenStream tokenStream = (new SpanishAnalyzer()).tokenStream("defaultFieldName", stringReader);
+		Analyzer oAnalyzer = new SpanishAnalyzer(Version.LUCENE_30, new File (".\\resources\\stopwords\\spanishSmart.txt"));
+		
+		TokenStream tokenStream = (oAnalyzer).tokenStream("defaultFieldName", stringReader);
 		sText =  (new Analizer.test.TermAnalyzerView()).GetView(tokenStream, 0).trim();
 
+		System.out.println(sText);
 
 		Query query = parser.parse(sText);
 		ArrayList<TopDocs> oListHits = new ArrayList<TopDocs>();
