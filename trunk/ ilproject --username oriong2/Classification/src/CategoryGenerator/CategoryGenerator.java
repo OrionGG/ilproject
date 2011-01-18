@@ -8,13 +8,18 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.StopFilter;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FieldSelectorResult;
@@ -64,18 +69,29 @@ public class CategoryGenerator {
 		//System.out.println("Fin categorias");
 
 
-		SpanishAnalyzer analyzer = new SpanishAnalyzer(Version.LUCENE_30, new File (".\\resources\\stopwords\\spanishSmart.txt"));
+		SpanishAnalyzer analyzer = new SpanishAnalyzer(Version.LUCENE_29, new File (".\\resources\\stopwords\\spanishSmart.txt"));
 		//Property type=ontology.createProperty(rdf,"type");
 
+		
+		
 		File fDBPediaDirectory=new File(".\\resources\\DBPediaIndex");
+		if(fDBPediaDirectory.exists()){
+			fDBPediaDirectory.delete();
+		}
 		Directory dDBPediaIndexDirectory = FSDirectory.open(fDBPediaDirectory,new NoLockFactory());
 		IndexWriter iDBPediaWriter = new IndexWriter(dDBPediaIndexDirectory, analyzer, true, new IndexWriter.MaxFieldLength(25000));
 
 		File fWikiDirectory=new File(".\\resources\\WikiIndex");
+		if(fWikiDirectory.exists()){
+			fWikiDirectory.delete();
+		}
 		Directory dWikiIndexDirectory = FSDirectory.open(fWikiDirectory,new NoLockFactory());
 		IndexWriter iWikiWriter = new IndexWriter(dWikiIndexDirectory, analyzer, true, new IndexWriter.MaxFieldLength(25000));
 
 		File fListWebsDirectory=new File(".\\resources\\ListWebsIndex");
+		if(fListWebsDirectory.exists()){
+			fListWebsDirectory.delete();
+		}
 		Directory dListWebsIndexDirectory = FSDirectory.open(fListWebsDirectory,new NoLockFactory());
 		IndexWriter iListWebsWriter = new IndexWriter(dListWebsIndexDirectory, analyzer, true, new IndexWriter.MaxFieldLength(25000));
 
@@ -84,6 +100,7 @@ public class CategoryGenerator {
 		String sTextResources = null;
 		String sTotalTextSynonym = null;
 		//int i = 0; i< 20; i++
+		int j = 0;
 		for(Resource category : urlCategorias){
 
 			//Resource category = urlCategorias.get(i);
@@ -91,13 +108,13 @@ public class CategoryGenerator {
 			String pathCategory=category.getURI();
 
 			List<Resource> lis=DbPedia.getResourcesOfType(pathCategory);
-
-
+			
 			System.out.println("\n\nSALIDA DE LA PRIMERA FASE: ");
 			String labelResource=null;
-			System.out.println("\nCATEGORIA = " +category.getLocalName()+"\n");
+			System.out.println("\nCATEGORIA = " +category.getLocalName()+ ": " + j +"\n");
+			j++;
 			System.out.println("Tiene "+lis.size()+" resources");
-			for(int i=0; i<90 && i<lis.size();i++){
+			for(int i=0; i<5 && i<lis.size();i++){
 				Resource resource =lis.get(i);
 				//if(resource.getLocalName()!=null){
 				// labelResource=resource.getLocalName();
@@ -113,15 +130,16 @@ public class CategoryGenerator {
 				}else{
 					labelResource=labelResource.replace("@es","");
 				}
-				//eliminar tag @es y @en
-				System.out.print(labelResource+" |");
-
-
-
 				sTextResources=labelResource+" "+sTextResources;
 			}
 
-			AddDocument(iDBPediaWriter, category, sTextResources, 1);
+
+			String sText = showTextAnalized(sTextResources, analyzer);
+
+			System.out.println(sText);
+
+			
+			AddDocument(iDBPediaWriter, category, sText, 1);
 
 			///SEGUNDA PARTE--->Texto de WIkipedia
 			System.out.println("\n\nSALIDA DE LA SEGUNDA FASE: ");
@@ -129,15 +147,26 @@ public class CategoryGenerator {
 			String sTextWikipedia= oWikipediaText.GetTextFromWikipedia(category.getLocalName(), true);
 
 
+			sText = showTextAnalized(sTextWikipedia, analyzer);
+
+			System.out.println(sText);
+
 			//AddDocument(iWikiWriter, category, sTextWikipedia, 2);
 			String sTextWikipediaSynonym = "";
 			Set<String> oSyn = Synonym.lookupSynonyms(category.getLocalName());
+			
+
+			System.out.println("num sinonimos: " + oSyn.size());
 			for(String sWord:oSyn){
 
 				try{
 					System.out.println("\n\nSALIDA DE LA TERCERA FASE: ");
 					sTextWikipediaSynonym = oWikipediaText.GetTextFromWikipedia(sWord, true);
 
+					sText = showTextAnalized(sTextWikipediaSynonym, analyzer);
+
+					System.out.println(sText);
+					
 					sTotalTextSynonym += " " + sTextWikipediaSynonym;
 				}
 				catch(Exception e){
@@ -147,17 +176,34 @@ public class CategoryGenerator {
 			}
 			
 			String sTotalTextWikipedia =  sTextWikipedia + " "+ sTextWikipediaSynonym;
-			
-			AddDocument(iWikiWriter, category, sTotalTextWikipedia, 3);
+
+
+			sText = showTextAnalized(sTotalTextWikipedia, analyzer);
+
+			AddDocument(iWikiWriter, category, sText, 3);
 
 
 
 		}
+		
+
+		iDBPediaWriter.optimize();
+		iWikiWriter.optimize();
+		iListWebsWriter.optimize();
 		iDBPediaWriter.close();
 		iWikiWriter.close();
 		iListWebsWriter.close();
 
 
+	}
+
+	private static String showTextAnalized(String sTextResources, Analyzer oAnalyzer)
+			throws IOException {
+		//clean stopwords
+		Reader stringReader = new StringReader(sTextResources); 
+		TokenStream tokenStream = oAnalyzer.tokenStream("defaultFieldName", stringReader);
+		String sText =  (new Analizer.test.TermAnalyzerView()).GetView(tokenStream, 0).trim();
+		return sText;
 	}
 
 	private static void AddDocument(IndexWriter iwriter, Resource category,
@@ -174,7 +220,6 @@ public class CategoryGenerator {
 
 		iwriter.addDocument(categoria );
 
-		iwriter.optimize();
 	}
 
 	private static String getSubClassesCategorias(

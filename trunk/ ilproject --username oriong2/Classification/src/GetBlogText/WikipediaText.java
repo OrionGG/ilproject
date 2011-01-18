@@ -102,6 +102,8 @@ public class WikipediaText {
 				translatedText = translatedText.replace(".", "");
 				//translatedText = translatedText.replace(" ", "");
 				sWord = translatedText;
+				
+				System.out.println(sWord);
 			}
 			catch(Exception e){
 				sWord = sWord;
@@ -122,7 +124,6 @@ public class WikipediaText {
 			e.printStackTrace();
 		}
 
-		System.out.println(sResult);
 		return sResult;
 	}
 
@@ -161,7 +162,7 @@ public class WikipediaText {
 
 			String[] sTextList = sText.split(" ");
 			for(String sWordDivided:sTextList){
-				sResult = readData(sWordDivided, oMediaWikiBot);
+				sResult += readData(sWordDivided, oMediaWikiBot) + " ";
 			}
 		}
 

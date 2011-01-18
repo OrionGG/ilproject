@@ -877,14 +877,44 @@ public static ArrayList<Resource> getFatherCategories() {
 //String qsInfoDbpedia = "select distinct ?res where {?res rdfs:subClassOf owl:Thing . FILTER regex(?res,"+"\"^http://dbpedia.org/ontology\")}";
 
 String qsInfoDbpedia = "select distinct ?res where {?res rdfs:subClassOf dbpedia-owl:Person}";
+
 	//System.out.print(qsInfoDbpedia);
 	List<ResultBinding> lis=DAO_Sparql.selectQueryToList("",serviceEndpoint,qsInfoDbpedia);	
 	ArrayList <Resource> types=new ArrayList <Resource>();
 	System.out.println("Tiene "+lis.size()+" categorias");
+	
 	for(ResultBinding rb : lis){
 		Resource res=rb.getResource("?res");
-		types.add(res);		
+		if(!(res.getLocalName().equals("Athlete") || res.getLocalName().equals("Artist") )){
+				types.add(res);
+		}		
 	}
+	
+	String qsInfoDbpedia2 = "select distinct ?res where {?res rdfs:subClassOf dbpedia-owl:Athlete}";
+		//System.out.print(qsInfoDbpedia);
+		List<ResultBinding> lis2=DAO_Sparql.selectQueryToList("",serviceEndpoint,qsInfoDbpedia2);	
+		
+		System.out.println("Tiene "+lis2.size()+" categorias");
+		
+		for(ResultBinding rb : lis2){
+			Resource res=rb.getResource("?res");
+			types.add(res);
+				
+		}
+
+		String qsInfoDbpedia3 = "select distinct ?res where {?res rdfs:subClassOf dbpedia-owl:Artist}";
+			//System.out.print(qsInfoDbpedia);
+			List<ResultBinding> lis3=DAO_Sparql.selectQueryToList("",serviceEndpoint,qsInfoDbpedia3);	
+		
+			System.out.println("Tiene "+lis.size()+" categorias");
+			
+			for(ResultBinding rb : lis3){
+				Resource res=rb.getResource("?res");
+				types.add(res);
+						
+			}
+	
+	
 	return types;
 
 }
