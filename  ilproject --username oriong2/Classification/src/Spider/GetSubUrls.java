@@ -23,20 +23,20 @@ public class GetSubUrls {
 		//String sMainUrl = "http://www.elpais.com";
 		//String sRestUrl = "/deportes/";
 		//String sUrl = "http://wordpress.com/";
-		String sMainUrl = "http://www.blogalia.com";
-		String sRestUrl = "/";
-		String sSuffix = "blogalia.com";
-		List<String> oList = SpiderUrl(sMainUrl, sRestUrl, sSuffix);
+		String sMainUrl = "http://www.elmundo.es";
+		String sRestUrl = "/elmundo/ciencia.html ";
+		String sSuffix = "ciencia";
+		List<String> oList = SpiderUrl(sMainUrl, sRestUrl, 2, 100, sSuffix);
 		//List<String> oList = SpiderUrl(sMainUrl, sRestUrl, 1,1000, sTail);
 		Map<String,String> oMap = new HashMap<String, String>();
-		for(String sSubUrl : oList){
+		/*for(String sSubUrl : oList){
 			String sText = ExtractText.GetBlogText(sSubUrl);
 			oMap.put(sSubUrl, sText);
 		
-		}
+		}*/
 	}
 
-	private static List<String> SpiderUrl(String sMainUrl, String sRestUrl, String sSuffix) throws MalformedURLException, IOException {
+	public static List<String> SpiderUrl(String sMainUrl, String sRestUrl, String sSuffix) throws MalformedURLException, IOException {
 		// TODO Auto-generated method stub
 		ApacheURLListerRecursive oApacheURLLister = new ApacheURLListerRecursive();
 		
