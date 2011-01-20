@@ -11,6 +11,7 @@ public enum Categories {
 	),
 	FictionalCharacter(
 			new UrlByCategory[]{
+					new UrlByCategory("http://marcaplayer.com", "/", "")
 			}
 	),
 	Judge(
@@ -61,7 +62,13 @@ public enum Categories {
 			new UrlByCategory[]{}
 	),
 	Scientist(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					new UrlByCategory("http://www.elpais.com", "/tecnologia/", "tecnologia"),
+					new UrlByCategory("http://www.elpais.com", "/sociedad/ciencia/" , "ciencia"),
+					new UrlByCategory("http://www.elmundo.es", "/elmundo/ciencia.html ", "ciencia"),
+					new UrlByCategory("http://www.elmundo.es", "/elmundo/navegante.html", "navegante")
+
+			}
 	),
 	Journalist(
 			new UrlByCategory[]{}
@@ -175,7 +182,7 @@ public enum Categories {
 	}
 	
 	
-	public static Categories[] oCategories = new Categories[]{
+	public static Categories[] allCategories = new Categories[]{
 		BritishRoyalty,
 		FictionalCharacter,
 		Judge,
