@@ -1,19 +1,14 @@
 package Classificator;
 
 public class FinalScoreCalculator {
-	private static double weightWiki= 0.2;	
-	private static double weightDbpedia= 0.2;	
-	private static double weightNews= 0.6;
+	private static float weightWiki= 0.2f;	
+	private static float weightDbpedia= 0.2f;	
+	private static float weightNews= 0.6f;
 	
 	
-	public static void calculateFinalScoreTable(){
-		
-		
-		
-		double finalScore = score1*weighWiki+score2*weighDbpedia+
-		
-		
-		
+	public static void calculateFinalScoreTable(float score1, float score2, float score3){
+		double finalScore = score1*weightWiki+score2*weightDbpedia+score3*weightNews;
+
 	}
 
 }
