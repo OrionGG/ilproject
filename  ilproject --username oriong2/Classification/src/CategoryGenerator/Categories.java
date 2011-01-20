@@ -11,11 +11,13 @@ public enum Categories {
 	),
 	FictionalCharacter(
 			new UrlByCategory[]{
-					new UrlByCategory("http://marcaplayer.com", "/", "")
+					new UrlByCategory("http://marcaplayer.com", "/", "marcaplayer")
 			}
 	),
 	Judge(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					new UrlByCategory("http://www.europapress.es", "/economia/legal-00345/", "europapress")
+			}
 	),
 	PokerPlayer(
 			new UrlByCategory[]{
@@ -38,28 +40,48 @@ public enum Categories {
 			}
 	),
 	Cleric(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					new UrlByCategory("http://www.larazon.es", "/secciones/religion/noticias-generales", "religion")					
+			}
 	),
 	Criminal(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					new UrlByCategory("http://www.noticias.com", "/noticias/sucesos", "noticias")
+			}
 	),
 	Monarch(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					new UrlByCategory("http://www.noticias.com", "/noticias/gobierno", "noticias" )
+			}
 	),
 	OfficeHolder(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					new UrlByCategory("http://www.elpais.com", "/economia/", "economia"),
+					new UrlByCategory("http://www.elmundo.es", "/mundodinero/index.html", "mundodinero")
+					}
 	),
 	MilitaryPerson(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					new UrlByCategory("http://www.soitu.es", "/soitu/tags/portadilla/militares/", "soitu")
+
+					}
 	),
 	Politician(
 			new UrlByCategory[]{}
 	),
 	Astronaut(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					new UrlByCategory("http://www.cassanya.com" , "/anuario.php", "cassanya"),
+					new UrlByCategory("http://www.astrologia.org", "/informacion/revistas/revistas.html", "astrologia")
+			}
 	),
 	Celebrity(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					new UrlByCategory("http://www.abc.es", "/estilo-gente/celebrities-famosos.asp", "gente"),
+					new UrlByCategory("http://www.hola.com", "/famosos/", "famosos"),
+					new UrlByCategory("http://www.larazon.es", "/secciones/gente-2", "larazon"),
+					new UrlByCategory("http://www.elpais.com", "/gentetv/", "gentetv")
+			}
 	),
 	Scientist(
 			new UrlByCategory[]{
@@ -74,7 +96,9 @@ public enum Categories {
 			new UrlByCategory[]{}
 	),
 	Architect(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					new UrlByCategory("http://www.arquitecturaviva.com", "/", "arquitecturaviva")
+			}
 	),
 	Ambassador(
 			new UrlByCategory[]{}
@@ -98,7 +122,9 @@ public enum Categories {
 			new UrlByCategory[]{}
 	),
 	Cyclist(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					new UrlByCategory("http://www.as.com", "/ciclismo/", "ciclismo")
+			}
 	),
 	BadmintonPlayer(
 			new UrlByCategory[]{}
