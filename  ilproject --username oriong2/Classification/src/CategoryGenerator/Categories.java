@@ -16,7 +16,7 @@ public enum Categories {
 	),
 	Judge(
 			new UrlByCategory[]{
-					new UrlByCategory("http://www.europapress.es", "/economia/legal-00345/", "europapress")
+					new UrlByCategory("http://www.europapress.es", "/economia/legal-00345/", "legal")
 			}
 	),
 	PokerPlayer(
@@ -104,19 +104,32 @@ public enum Categories {
 			new UrlByCategory[]{}
 	),
 	SoccerManager(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					new UrlByCategory("http://www.as.com", "/futbol/", "futbol"),
+					new UrlByCategory("http://www.elmundo.es", "/elmundodeporte/futbol.html", "futbol"),
+					new UrlByCategory("http://www.elpais.com", "/deportes/futbol/", "futbol")
+			}
 	),
 	CollegeCoach(
 			new UrlByCategory[]{}
 	),
 	NascarDriver(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					new UrlByCategory("http://www.as.com", "/motor/", "motor"),
+					new UrlByCategory("http://www.elpais.com", "/deportes/motociclismo/", "motociclismo")
+			}
 	),
 	FigureSkater(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					new UrlByCategory("http://www.europapress.es", "/deportes/invierno-00658/", "invierno"),
+					new UrlByCategory("http://www.as.com", "/mas-deporte/estaciones-esqui/", "esqui"),
+					new UrlByCategory("http://www.marca.com", "/mas_deportes/nieve.html", "nieve")
+			}
 	),
 	Boxer(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					new UrlByCategory("http://www.as.com", "/mas-deporte/boxeo/", "boxeo")			
+					}
 	),
 	IceHockeyPlayer(
 			new UrlByCategory[]{}
@@ -133,25 +146,40 @@ public enum Categories {
 			new UrlByCategory[]{}
 	),
 	NationalCollegiateAthleticAssociationAthlete(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					new UrlByCategory("http://www.marca.com", "/atletismo.html", "atletismo"),
+					new UrlByCategory("http://www.as.com", "/mas-deporte/atletismo/", "atletismo")
+			}
 	),
 	Wrestler(
 			new UrlByCategory[]{}
 	),
 	FormulaOneRacer(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					new UrlByCategory("http://www.as.com", "/motor/formula-1/", "formula-1"),
+					new UrlByCategory("http://www.elpais.com", "/deportes/formula1/", "formula1")
+			}
 	),
 	BaseballPlayer(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					new UrlByCategory("http://www.as.com", "/baloncesto/", "baloncesto"),
+					new UrlByCategory("http://www.elpais.com", "/deportes/baloncesto/", "baloncesto")					
+			}
 	),
 	GaelicGamesPlayer(
 			new UrlByCategory[]{}
 	),
 	RugbyPlayer(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					new UrlByCategory("http://www.marca.com", "/mas_deportes/rugby.html", "rugby")
+			}
 	),
 	TennisPlayer(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					new UrlByCategory("http://www.marca.com", "/mas_deportes/padel.html", "padel"),
+					new UrlByCategory("http://www.as.com", "/tenis/", "tenis"),
+					new UrlByCategory("http://www.elpais.com", "/deportes/tenis/", "tenis")
+			}
 	),
 	BasketballPlayer(
 			new UrlByCategory[]{}
