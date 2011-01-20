@@ -10,11 +10,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.net.MalformedURLException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import net.didion.jwnl.JWNLException;
+
+import org.apache.ivy.plugins.resolver.util.URLLister;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.StopFilter;
 import org.apache.lucene.analysis.TokenStream;
@@ -48,6 +52,7 @@ import encoders.Encode;
 
 import Analizer.BlogSpaAnalyzer;
 import Analizer.SpanishAnalyzer;
+import GetBlogText.ExtractText;
 import GetBlogText.WikipediaText;
 import Language.Synonym;
 import Language.Traductor;
@@ -100,89 +105,80 @@ public class CategoryGenerator {
 		String sTextResources = null;
 		String sTotalTextSynonym = null;
 		//int i = 0; i< 20; i++
-		int j = 0;
 		for(Resource category : urlCategorias){
 
 			//Resource category = urlCategorias.get(i);
 			////PRIMERA PARTE-->>Recursos de DbPedia
-			String pathCategory=category.getURI();
-
-			List<Resource> lis=DbPedia.getResourcesOfType(pathCategory);
-			
-			System.out.println("\n\nSALIDA DE LA PRIMERA FASE: ");
-			String labelResource=null;
-			System.out.println("\nCATEGORIA = " +category.getLocalName()+ ": " + j +"\n");
-			j++;
-			System.out.println("Tiene "+lis.size()+" resources");
-			for(int i=0; i<5 && i<lis.size();i++){
-				Resource resource =lis.get(i);
-				//if(resource.getLocalName()!=null){
-				// labelResource=resource.getLocalName();
-				//}else{
-				labelResource=DbPedia.getLabel(resource.getURI());
-				//	labelResource =Encode.getNameFromUrl(resource.getURI());
-				//}
-
-				//System.out.print(labelResource+" ");
-				if(labelResource.endsWith("@en")){
-					labelResource=labelResource.replace("@en","");
-					labelResource=Traductor.Translate(labelResource);			
-				}else{
-					labelResource=labelResource.replace("@es","");
-				}
-				sTextResources=labelResource+" "+sTextResources;
-			}
-
-
-			String sText = showTextAnalized(sTextResources, analyzer);
-
-			System.out.println(sText);
-
-			
-			AddDocument(iDBPediaWriter, category, sText, 1);
+			//getResourcesCategory(analyzer, iDBPediaWriter, sTextResources, category);
 
 			///SEGUNDA PARTE--->Texto de WIkipedia
 			System.out.println("\n\nSALIDA DE LA SEGUNDA FASE: ");
-			WikipediaText oWikipediaText = new WikipediaText();
-			String sTextWikipedia= oWikipediaText.GetTextFromWikipedia(category.getLocalName(), true);
-
-
-			sText = showTextAnalized(sTextWikipedia, analyzer);
-
-			System.out.println(sText);
-
-			//AddDocument(iWikiWriter, category, sTextWikipedia, 2);
-			String sTextWikipediaSynonym = "";
-			Set<String> oSyn = Synonym.lookupSynonyms(category.getLocalName());
 			
-
-			System.out.println("num sinonimos: " + oSyn.size());
-			for(String sWord:oSyn){
-
-				try{
-					System.out.println("\n\nSALIDA DE LA TERCERA FASE: ");
-					sTextWikipediaSynonym = oWikipediaText.GetTextFromWikipedia(sWord, true);
-
-					sText = showTextAnalized(sTextWikipediaSynonym, analyzer);
-
-					System.out.println(sText);
-					
-					sTotalTextSynonym += " " + sTextWikipediaSynonym;
-				}
-				catch(Exception e){
-
-
+			//getTextFromWikipedia(analyzer, iWikiWriter, sTotalTextSynonym, category);
+			List<String> sUrls;
+			
+			for(Categories oCategory: Categories.oCategories){
+				if(category.getLocalName().equals(oCategory.toString())){
+					String sTextUrls = "";
+					for(UrlByCategory oUrlByCategory : oCategory.getLUrlList()){
+						sUrls = Spider.GetSubUrls.SpiderUrl(oUrlByCategory.sMainUrl, oUrlByCategory.sRestUrl, oUrlByCategory.sSuffixFilter);
+						sTextUrls = getTextFromUrls(sUrls) + " ";
+						
+					}
+					AddDocument(iListWebsWriter, category, sTextUrls.trim(), 3);
 				}
 			}
+			/*if(category.getLocalName().equals(Categories.BritishRoyalty.toString())){
+				getLUrlList
+				sUrls = Spider.GetSubUrls.SpiderUrl("http://www.hola.com", "/realeza/", "realeza");
+				//String sTextUrls = getTextFromUrls(sUrls);
+				//AddDocument(iListWebsWriter, category, sTextUrls.trim(), 3);
+			}
+			else if(category.getLocalName().equals("FictionalCharacter")){
+				
+			} 
+			else if(category.getLocalName().equals("Judge")){
+				
+			} 
+			else if(category.getLocalName().equals("PokerPlayer")){
+
+				sUrls = Spider.GetSubUrls.SpiderUrl();
+				//String sTextUrls = getTextFromUrls(sUrls);
 			
-			String sTotalTextWikipedia =  sTextWikipedia + " "+ sTextWikipediaSynonym;
+				sUrls = Spider.GetSubUrls.SpiderUrl();
+				//sTextUrls += getTextFromUrls(sUrls) + " ";
+				//AddDocument(iListWebsWriter, category, sTextUrls.trim(), 3);
+			
+			} 
+			else if(category.getLocalName().equals("Model")){
+				sUrls = Spider.GetSubUrls.SpiderUrl();
+				//String sTextUrls = getTextFromUrls(sUrls);
+				
+				sUrls = Spider.GetSubUrls.SpiderUrl("http://www.hola.com", "/moda/", "moda");
+				//sTextUrls += getTextFromUrls(sUrls) + " ";
+				//AddDocument(iListWebsWriter, category, sTextUrls.trim(), 3);
+			
+				
 
-
-			sText = showTextAnalized(sTotalTextWikipedia, analyzer);
-
-			AddDocument(iWikiWriter, category, sText, 3);
-
-
+			} 
+			else if(category.getLocalName().equals("PlayboyPlaymate")){
+				
+			} 
+			else if(category.getLocalName().equals("Philosopher")){
+				
+			} 
+			else if(category.getLocalName().equals("Cleric")){
+				
+			} 
+			else if(category.getLocalName().equals("Criminal")){
+				
+			} 
+			else if(category.getLocalName().equals("Monarch")){
+				
+			} 
+			else if(category.getLocalName().equals("OfficeHolder")){
+				
+			} */
 
 		}
 		
@@ -195,6 +191,99 @@ public class CategoryGenerator {
 		iListWebsWriter.close();
 
 
+	}
+
+	private static String getTextFromUrls(List<String> sUrls) throws IOException,
+			MalformedURLException {
+		String sText="";
+		for(String sUrlSub:sUrls){
+			sText += ExtractText.GetBlogText(sUrlSub) + " ";
+		}
+		return sText;
+	}
+
+	private static void getTextFromWikipedia(SpanishAnalyzer analyzer,
+			IndexWriter iWikiWriter, String sTotalTextSynonym, Resource category)
+			throws Exception, IOException, JWNLException, CorruptIndexException {
+		String sText;
+		WikipediaText oWikipediaText = new WikipediaText();
+		String sTextWikipedia= oWikipediaText.GetTextFromWikipedia(category.getLocalName(), true);
+
+
+		sText = showTextAnalized(sTextWikipedia, analyzer);
+
+		System.out.println(sText);
+
+		//AddDocument(iWikiWriter, category, sTextWikipedia, 2);
+		String sTextWikipediaSynonym = "";
+		Set<String> oSyn = Synonym.lookupSynonyms(category.getLocalName());
+		
+
+		System.out.println("num sinonimos: " + oSyn.size());
+		for(String sWord:oSyn){
+
+			try{
+				System.out.println("\n\nSALIDA DE LA TERCERA FASE: ");
+				sTextWikipediaSynonym = oWikipediaText.GetTextFromWikipedia(sWord, true);
+
+				sText = showTextAnalized(sTextWikipediaSynonym, analyzer);
+
+				System.out.println(sText);
+				
+				sTotalTextSynonym += " " + sTextWikipediaSynonym;
+			}
+			catch(Exception e){
+
+
+			}
+		}
+		
+		String sTotalTextWikipedia =  sTextWikipedia + " "+ sTextWikipediaSynonym;
+
+
+		sText = showTextAnalized(sTotalTextWikipedia, analyzer);
+
+		AddDocument(iWikiWriter, category, sText, 3);
+	}
+
+	private static void getResourcesCategory(SpanishAnalyzer analyzer,
+			IndexWriter iDBPediaWriter, String sTextResources,
+			Resource category) throws Exception,
+			IOException, CorruptIndexException {
+		String pathCategory=category.getURI();
+
+		List<Resource> lis=DbPedia.getResourcesOfType(pathCategory);
+		
+		System.out.println("\n\nSALIDA DE LA PRIMERA FASE: ");
+		String labelResource=null;
+		System.out.println("\nCATEGORIA = " +category.getLocalName() + "\n");
+		System.out.println("Tiene "+lis.size()+" resources");
+		for(int i=0; i<5 && i<lis.size();i++){
+			Resource resource =lis.get(i);
+			//if(resource.getLocalName()!=null){
+			// labelResource=resource.getLocalName();
+			//}else{
+			labelResource=DbPedia.getLabel(resource.getURI());
+			//	labelResource =Encode.getNameFromUrl(resource.getURI());
+			//}
+
+			//System.out.print(labelResource+" ");
+			if(labelResource.endsWith("@en")){
+				labelResource=labelResource.replace("@en","");
+				labelResource=Traductor.Translate(labelResource);			
+			}else{
+				labelResource=labelResource.replace("@es","");
+			}
+			sTextResources=labelResource+" "+sTextResources;
+		}
+
+
+		String sText = showTextAnalized(sTextResources, analyzer);
+
+		System.out.println(sText);
+
+		
+		AddDocument(iDBPediaWriter, category, sText, 1);
 	}
 
 	private static String showTextAnalized(String sTextResources, Analyzer oAnalyzer)
