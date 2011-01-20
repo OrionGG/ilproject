@@ -117,7 +117,7 @@ public class CategoryGenerator {
 			//getTextFromWikipedia(analyzer, iWikiWriter, sTotalTextSynonym, category);
 			List<String> sUrls;
 			
-			for(Categories oCategory: Categories.oCategories){
+			for(Categories oCategory: Categories.allCategories){
 				if(category.getLocalName().equals(oCategory.toString())){
 					String sTextUrls = "";
 					for(UrlByCategory oUrlByCategory : oCategory.getLUrlList()){
@@ -128,57 +128,7 @@ public class CategoryGenerator {
 					AddDocument(iListWebsWriter, category, sTextUrls.trim(), 3);
 				}
 			}
-			/*if(category.getLocalName().equals(Categories.BritishRoyalty.toString())){
-				getLUrlList
-				sUrls = Spider.GetSubUrls.SpiderUrl("http://www.hola.com", "/realeza/", "realeza");
-				//String sTextUrls = getTextFromUrls(sUrls);
-				//AddDocument(iListWebsWriter, category, sTextUrls.trim(), 3);
-			}
-			else if(category.getLocalName().equals("FictionalCharacter")){
-				
-			} 
-			else if(category.getLocalName().equals("Judge")){
-				
-			} 
-			else if(category.getLocalName().equals("PokerPlayer")){
 
-				sUrls = Spider.GetSubUrls.SpiderUrl();
-				//String sTextUrls = getTextFromUrls(sUrls);
-			
-				sUrls = Spider.GetSubUrls.SpiderUrl();
-				//sTextUrls += getTextFromUrls(sUrls) + " ";
-				//AddDocument(iListWebsWriter, category, sTextUrls.trim(), 3);
-			
-			} 
-			else if(category.getLocalName().equals("Model")){
-				sUrls = Spider.GetSubUrls.SpiderUrl();
-				//String sTextUrls = getTextFromUrls(sUrls);
-				
-				sUrls = Spider.GetSubUrls.SpiderUrl("http://www.hola.com", "/moda/", "moda");
-				//sTextUrls += getTextFromUrls(sUrls) + " ";
-				//AddDocument(iListWebsWriter, category, sTextUrls.trim(), 3);
-			
-				
-
-			} 
-			else if(category.getLocalName().equals("PlayboyPlaymate")){
-				
-			} 
-			else if(category.getLocalName().equals("Philosopher")){
-				
-			} 
-			else if(category.getLocalName().equals("Cleric")){
-				
-			} 
-			else if(category.getLocalName().equals("Criminal")){
-				
-			} 
-			else if(category.getLocalName().equals("Monarch")){
-				
-			} 
-			else if(category.getLocalName().equals("OfficeHolder")){
-				
-			} */
 
 		}
 		
