@@ -12,9 +12,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import net.didion.jwnl.JWNLException;
 
@@ -64,6 +62,7 @@ public class CategoryGenerator {
 	private static String rdfs = "http://www.w3.org/2000/01/rdf-schema#";
 	private static 	String rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns/#";
 	private static String thing="http://www.w3.org/2002/07/owl#Thing";
+	public static Hashtable<Categories, List<String>> listToEvaluate = new Hashtable<Categories, List<String>>();
 
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
@@ -115,19 +114,9 @@ public class CategoryGenerator {
 			System.out.println("\n\nSALIDA DE LA SEGUNDA FASE: ");
 			
 			//getTextFromWikipedia(analyzer, iWikiWriter, sTotalTextSynonym, category);
-			List<String> sUrls;
 			
-			for(Categories oCategory: Categories.allCategories){
-				if(category.getLocalName().equals(oCategory.toString())){
-					String sTextUrls = "";
-					for(UrlByCategory oUrlByCategory : oCategory.getLUrlList()){
-						sUrls = Spider.GetSubUrls.SpiderUrl(oUrlByCategory.sMainUrl, oUrlByCategory.sRestUrl, oUrlByCategory.sSuffixFilter);
-						sTextUrls = getTextFromUrls(sUrls) + " ";
-						
-					}
-					AddDocument(iListWebsWriter, category, sTextUrls.trim(), 3);
-				}
-			}
+			System.out.println("\n\nSALIDA DE LA TERCERA FASE: ");
+			getTextFromUrls(iListWebsWriter, category);
 
 
 		}
@@ -143,10 +132,32 @@ public class CategoryGenerator {
 
 	}
 
-	private static String getTextFromUrls(List<String> sUrls) throws IOException,
+	private static void getTextFromUrls(IndexWriter iListWebsWriter, Resource category)
+			throws MalformedURLException, IOException {
+		List<String> sUrls;
+		
+		for(Categories oCategory: Categories.allCategories){
+			if(category.getLocalName().equals(oCategory.toString())){
+				String sTextUrls = "";
+				for(UrlByCategory oUrlByCategory : oCategory.getLUrlList()){
+					sUrls = Spider.GetSubUrls.SpiderUrl(oUrlByCategory.sMainUrl, oUrlByCategory.sRestUrl, oUrlByCategory.sSuffixFilter);
+					int iMaxToText =(int) (sUrls.size() * 0.8);
+					List<String> sUrlsSubList =  sUrls.subList(iMaxToText, sUrls.size());
+					listToEvaluate.put(oCategory, sUrlsSubList);
+					
+					sTextUrls = getTextFromUrls(sUrls, iMaxToText) + " ";
+					
+				}
+				AddDocument(iListWebsWriter, category, sTextUrls.trim(), 3);
+			}
+		}
+	}
+
+	private static String getTextFromUrls(List<String> sUrls, int maxToText) throws IOException,
 			MalformedURLException {
 		String sText="";
-		for(String sUrlSub:sUrls){
+		for(int i = 0; i<maxToText;i++){
+			String sUrlSub = sUrls.get(i);
 			sText += ExtractText.GetBlogText(sUrlSub) + " ";
 		}
 		return sText;
