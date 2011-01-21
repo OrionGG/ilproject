@@ -86,7 +86,7 @@ public class Classificator {
 	}
 
 
-	public static ArrayList<TopDocs> classificate(String sText, String sDomainUrl) throws CorruptIndexException, IOException, ParseException, SQLException{
+	public static List<CategIndexScore>  classificate(String sText, String sDomainUrl) throws CorruptIndexException, IOException, ParseException, SQLException{
 
 		Map<IndexSearcher, Directory> lIndex = new Hashtable<IndexSearcher, Directory>();
 		
@@ -110,19 +110,13 @@ public class Classificator {
 		Query query = parser.parse(sText);
 		
 		//Generate a list of top docs archived
-		ArrayList<TopDocs> listTopHits = new ArrayList<TopDocs>();
-		int i=0;
 		
 		//For each index
 		for(Entry<IndexSearcher, Directory> oIndex: lIndex.entrySet()){
 			IndexSearcher oIndexSearcher = oIndex.getKey();
 			Directory oDirectory = oIndex.getValue();
-			i++;
-			TopDocs oHits = hitDocsByIndex(sText, oIndexSearcher, oDirectory, query,i,sDomainUrl);
-			//list of docs and its indexes
-			oHits
-			
-			listTopHits.add(oHits);
+			CategIndexScore oCategIndexScore = hitDocsByIndex(oIndexSearcher, oDirectory, query,sDomainUrl);
+
 		}
 		return listTopHits;
 	}
@@ -154,42 +148,40 @@ public class Classificator {
 	}
 
 
-	private static TopDocs hitDocsByIndex(String sText,
-			IndexSearcher oIndexSearcher, Directory oDirectory,
-			Query query,int i, String sDomainUrl) throws IOException, CorruptIndexException, SQLException {
+	private static CategIndexScore hitDocsByIndex(IndexSearcher oIndexSearcher, Directory oDirectory,
+			Query query,String sDomainUrl, int i) throws IOException, CorruptIndexException, SQLException {
+
+		CategIndexScore oResult = new CategIndexScore(oIndexSearcher);
 		TopDocs hits = oIndexSearcher.search(query, 1000); 
 
 		//////FUNCIONALIDADES POSIBLES PARA LEER EL INDICE
 		//System.out.println("El termino -"+term+"- aparece "+isearcher.docFreq(term)+" veces");
 		System.out.println("Tras ejecutar la query " + hits.scoreDocs.length + " encontrados para");
 		// Iterate through the results:
-		System.out.println(sText);
 		System.out.println("Scores del articulo por categorias: "); 
-		
 		for(ScoreDoc oScoreDoc : hits.scoreDocs)
 		{
-			
 			Document hitDoc = oIndexSearcher.doc(oScoreDoc.doc); 
-		
+			String sCategoryName = hitDoc.getField("CategoryName").stringValue();
 
 			////SAVING TO DB TEMPORARY SCORES
-			DAOCategorization.storeEvaWeb(sDomainUrl,i, hitDoc.getField("CategoryName").stringValue(),oScoreDoc.score);
+			DAOCategorization.storeEvaWeb(sDomainUrl,i, sCategoryName,oScoreDoc.score);
+			oResult.hCategScore.put(sCategoryName, oScoreDoc.score);
+		
 			System.out.println("     "+hitDoc.getField("CategoryName").stringValue() + " "+ oScoreDoc.score+"->ALMACENADO");
 			//assertEquals("This is the text to be indexed.", hitDoc.get("fieldname"));
 			
 		}
 		oIndexSearcher.close();
 		oDirectory.close();
-		return hits;
+		return oResult;
 	}
 
 
-	public static ArrayList getScoresCat(String[] urlArray, Categories categories) {
+
+	public static List<CategIndexScore> getScoresCat(String sUrl, Categories oCategories) {
 		// TODO Auto-generated method stub
-		
-		ArrayList scores = null;
-		
-		return scores;
+		return null;
 	}
 
 }
