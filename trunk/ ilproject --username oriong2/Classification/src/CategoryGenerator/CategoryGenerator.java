@@ -108,7 +108,7 @@ public class CategoryGenerator {
 
 			//Resource category = urlCategorias.get(i);
 			////PRIMERA PARTE-->>Recursos de DbPedia
-			getResourcesCategory(analyzer, iDBPediaWriter, sTextResources, category);
+			//getResourcesCategory(analyzer, iDBPediaWriter, sTextResources, category);
 
 			///SEGUNDA PARTE--->Texto de WIkipedia
 			//System.out.println("\n\nSALIDA DE LA SEGUNDA FASE: ");
@@ -116,7 +116,7 @@ public class CategoryGenerator {
 			//getTextFromWikipedia(analyzer, iWikiWriter, sTotalTextSynonym, category);
 			
 			//System.out.println("\n\nSALIDA DE LA TERCERA FASE: ");
-			//getTextFromUrls(iListWebsWriter, category);
+			getTextFromUrls(iListWebsWriter, category);
 
 
 		}
