@@ -46,7 +46,7 @@ public enum Categories {
 	),
 	Criminal(
 			new UrlByCategory[]{
-					new UrlByCategory("http://www.noticias.com", "/noticias/sucesos", "noticias")
+					new UrlByCategory("http://www.noticias.com", "/noticias/sucesos", "sucesos")
 			}
 	),
 	Monarch(
@@ -79,7 +79,7 @@ public enum Categories {
 			new UrlByCategory[]{
 					new UrlByCategory("http://www.abc.es", "/estilo-gente/celebrities-famosos.asp", "gente"),
 					new UrlByCategory("http://www.hola.com", "/famosos/", "famosos"),
-					new UrlByCategory("http://www.larazon.es", "/secciones/gente-2", "larazon"),
+					new UrlByCategory("http://www.larazon.es", "/secciones/gente-2", "gente"),
 					new UrlByCategory("http://www.elpais.com", "/gentetv/", "gentetv")
 			}
 	),
