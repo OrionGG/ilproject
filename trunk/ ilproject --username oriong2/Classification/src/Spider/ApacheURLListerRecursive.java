@@ -111,7 +111,7 @@ public class ApacheURLListerRecursive {
 						}
 					}
 				}
-				catch(MalformedURLException ex){
+				catch(Exception ex){
 					if(!WithMainUrlConcat(sMainUrl, href)){
 						continue;
 					}
