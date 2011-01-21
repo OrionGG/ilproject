@@ -7,9 +7,12 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -34,12 +37,13 @@ import dao.DAO_MySQL;
 
 
 import Analizer.SpanishAnalyzer;
+import CategoryGenerator.Categories;
 import DBLayer.DAOCategorization;
 import DBLayer.DAOUrl;
 import GetBlogText.ExtractText;
 import Spider.GetSubUrls;
 
-public class Categorizator {
+public class Classificator {
 
 
 	public static void main(String[] args) throws Exception {
@@ -47,12 +51,25 @@ public class Categorizator {
 		if (args.length > 1){
 			String sOption = args[0].toString();
 			String sDomainUrl = args[1].toString();
+			
 			if(sOption.equals("-u")){
 				String sText = ExtractText.GetBlogText(sDomainUrl);
-				//DAOUrl oDAOUrl = new DAOUrl();
-				//oDAOUrl.insertOrUpdateUrl(sUrl, sText);
-				//String sText = "Impotencia. Rabia. Llanto. Indignación e insultos. Esos fueron los prolegómenos del concierto de ayer de Lady Gaga, la nueva reina del pop del siglo XIX, que en Madrid estuvo marcado por la venta de entradas falsas. Ese fue el motivo de que cientos de fans, venidos de toda España y de otros países, y que llevaban varios días a la intemperie, con el fin de ser los primeros en ver y oír a su musa";
-				similarityFunction(sText,sDomainUrl);
+				ArrayList<TopDocs> listTopDocs=classificate(sText,sDomainUrl);
+				TreeMap<Float,Categories> scoreCategory= FinalScoreCalculator.getFinalCategories(listTopDocs);					
+			
+				//SAVING TO DB
+				Set<Entry<Float, Categories>> valores=scoreCategory.entrySet();
+				
+				for(Entry<Float,Categories> entry: valores){
+					Float valor =entry.getKey();
+					Categories cat=entry.getValue();
+						DAOCategorization.storeWebCat(sDomainUrl, cat.toString(), valor);
+					}	
+					
+					
+				
+				
+				
 			}
 			else if(sOption.equals("-l")){
 				String sUrl = args[2].toString();
@@ -61,7 +78,7 @@ public class Categorizator {
 					String sText = ExtractText.GetBlogText(sSubUrl);
 					DAOUrl oDAOUrl = new DAOUrl();
 					oDAOUrl.insertOrUpdateUrl(sSubUrl, sText);
-					similarityFunction(sText,sDomainUrl);
+					classificate(sText,sDomainUrl);
 				}
 			}
 		}
@@ -69,9 +86,50 @@ public class Categorizator {
 	}
 
 
-	public static void similarityFunction(String sText, String sDomainUrl) throws CorruptIndexException, IOException, ParseException, SQLException{
+	public static ArrayList<TopDocs> classificate(String sText, String sDomainUrl) throws CorruptIndexException, IOException, ParseException, SQLException{
 
 		Map<IndexSearcher, Directory> lIndex = new Hashtable<IndexSearcher, Directory>();
+		
+		lIndex=generateIndexesReader(lIndex);
+		// Parse a simple query that searches for "text":
+		Analyzer analyzer = new SpanishAnalyzer(Version.LUCENE_30, new File (".\\resources\\stopwords\\spanishSmart.txt"));
+
+		//Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_CURRENT);
+		QueryParser parser = new QueryParser(Version.LUCENE_30,"Text", analyzer);
+		// Term term=new Term("baile");
+		BooleanQuery.setMaxClauseCount(Integer.MAX_VALUE);
+		parser.setAllowLeadingWildcard(false);
+
+		Reader stringReader = new StringReader(sText);
+		
+		TokenStream tokenStream = (analyzer).tokenStream("defaultFieldName", stringReader);
+		sText =  (new Analizer.test.TermAnalyzerView()).GetView(tokenStream, 0).trim();
+		
+		System.out.println("Texto parseado: " + sText);
+
+		Query query = parser.parse(sText);
+		
+		//Generate a list of top docs archived
+		ArrayList<TopDocs> listTopHits = new ArrayList<TopDocs>();
+		int i=0;
+		
+		//For each index
+		for(Entry<IndexSearcher, Directory> oIndex: lIndex.entrySet()){
+			IndexSearcher oIndexSearcher = oIndex.getKey();
+			Directory oDirectory = oIndex.getValue();
+			i++;
+			TopDocs oHits = hitDocsByIndex(sText, oIndexSearcher, oDirectory, query,i,sDomainUrl);
+			//list of docs and its indexes
+			oHits
+			
+			listTopHits.add(oHits);
+		}
+		return listTopHits;
+	}
+	
+
+	private static Map<IndexSearcher, Directory> generateIndexesReader(Map<IndexSearcher, Directory> lIndex) throws IOException {
+		// TODO Auto-generated method stub
 		
 		File fDBPediaDirectory=new File(".\\resources\\DBPediaIndex");
 		Directory dDBPediaIndexDirectory = FSDirectory.open(fDBPediaDirectory,new NoLockFactory());
@@ -92,37 +150,11 @@ public class Categorizator {
 		IndexSearcher iListWebsSearcher = new IndexSearcher(dListWebsIndexDirectory, true); // read-only=true
 		lIndex.put(iWikiSearcher, dListWebsIndexDirectory);
 
-		// Parse a simple query that searches for "text":
-		Analyzer analyzer = new SpanishAnalyzer(Version.LUCENE_30, new File (".\\resources\\stopwords\\spanishSmart.txt"));
-
-		//Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_CURRENT);
-		QueryParser parser = new QueryParser(Version.LUCENE_30,"Text", analyzer);
-		// Term term=new Term("baile");
-		BooleanQuery.setMaxClauseCount(Integer.MAX_VALUE);
-		parser.setAllowLeadingWildcard(false);
-
-		Reader stringReader = new StringReader(sText);
-		
-		TokenStream tokenStream = (analyzer).tokenStream("defaultFieldName", stringReader);
-		sText =  (new Analizer.test.TermAnalyzerView()).GetView(tokenStream, 0).trim();
-
-		System.out.println("Texto parseado: " + sText);
-
-		Query query = parser.parse(sText);
-		ArrayList<TopDocs> oListHits = new ArrayList<TopDocs>();
-		int i=0;
-		for(Entry<IndexSearcher, Directory> oIndex: lIndex.entrySet()){
-			IndexSearcher oIndexSearcher = oIndex.getKey();
-			Directory oDirectory = oIndex.getValue();
-			i++;
-			TopDocs oHits = hitDosByIndex(sText, oIndexSearcher, oDirectory, query,i,sDomainUrl);
-			oListHits.add(oHits);
-			
-		}
+		return lIndex;
 	}
-	
 
-	private static TopDocs hitDosByIndex(String sText,
+
+	private static TopDocs hitDocsByIndex(String sText,
 			IndexSearcher oIndexSearcher, Directory oDirectory,
 			Query query,int i, String sDomainUrl) throws IOException, CorruptIndexException, SQLException {
 		TopDocs hits = oIndexSearcher.search(query, 1000); 
@@ -138,16 +170,26 @@ public class Categorizator {
 		{
 			
 			Document hitDoc = oIndexSearcher.doc(oScoreDoc.doc); 
-			/*"+hitDoc.hashCode()+"*/
-			
-			// System.out.println(hitDoc.toString());
+		
+
+			////SAVING TO DB TEMPORARY SCORES
 			DAOCategorization.storeEvaWeb(sDomainUrl,i, hitDoc.getField("CategoryName").stringValue(),oScoreDoc.score);
 			System.out.println("     "+hitDoc.getField("CategoryName").stringValue() + " "+ oScoreDoc.score+"->ALMACENADO");
 			//assertEquals("This is the text to be indexed.", hitDoc.get("fieldname"));
+			
 		}
 		oIndexSearcher.close();
 		oDirectory.close();
 		return hits;
+	}
+
+
+	public static ArrayList getScoresCat(String[] urlArray, Categories categories) {
+		// TODO Auto-generated method stub
+		
+		ArrayList scores = null;
+		
+		return scores;
 	}
 
 }
