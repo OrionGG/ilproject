@@ -100,23 +100,23 @@ public class CategoryGenerator {
 		IndexWriter iListWebsWriter = new IndexWriter(dListWebsIndexDirectory, analyzer, true, new IndexWriter.MaxFieldLength(25000));
 
 
-		String nameResource = null;	
-		String sTextResources = null;
-		String sTotalTextSynonym = null;
+		String nameResource = "";	
+		String sTextResources = "";
+		String sTotalTextSynonym = "";
 		//int i = 0; i< 20; i++
 		for(Resource category : urlCategorias){
 
 			//Resource category = urlCategorias.get(i);
 			////PRIMERA PARTE-->>Recursos de DbPedia
-			//getResourcesCategory(analyzer, iDBPediaWriter, sTextResources, category);
+			getResourcesCategory(analyzer, iDBPediaWriter, sTextResources, category);
 
 			///SEGUNDA PARTE--->Texto de WIkipedia
 			System.out.println("\n\nSALIDA DE LA SEGUNDA FASE: ");
 			
-			//getTextFromWikipedia(analyzer, iWikiWriter, sTotalTextSynonym, category);
+			getTextFromWikipedia(analyzer, iWikiWriter, sTotalTextSynonym, category);
 			
 			System.out.println("\n\nSALIDA DE LA TERCERA FASE: ");
-			getTextFromUrls(iListWebsWriter, category);
+			//getTextFromUrls(iListWebsWriter, category);
 
 
 		}
@@ -219,7 +219,7 @@ public class CategoryGenerator {
 		String labelResource=null;
 		System.out.println("\nCATEGORIA = " +category.getLocalName() + "\n");
 		System.out.println("Tiene "+lis.size()+" resources");
-		for(int i=0; i<5 && i<lis.size();i++){
+		for(int i=0; i<20 && i<lis.size();i++){
 			Resource resource =lis.get(i);
 			//if(resource.getLocalName()!=null){
 			// labelResource=resource.getLocalName();
@@ -238,7 +238,7 @@ public class CategoryGenerator {
 			sTextResources=labelResource+" "+sTextResources;
 		}
 
-
+		
 		String sText = showTextAnalized(sTextResources, analyzer);
 
 		System.out.println(sText);
@@ -249,10 +249,13 @@ public class CategoryGenerator {
 
 	private static String showTextAnalized(String sTextResources, Analyzer oAnalyzer)
 			throws IOException {
-		//clean stopwords
-		Reader stringReader = new StringReader(sTextResources); 
-		TokenStream tokenStream = oAnalyzer.tokenStream("defaultFieldName", stringReader);
-		String sText =  (new Analizer.test.TermAnalyzerView()).GetView(tokenStream, 0).trim();
+		String sText = "";
+		if(sTextResources.equals("")){
+			//clean stopwords
+			Reader stringReader = new StringReader(sTextResources); 
+			TokenStream tokenStream = oAnalyzer.tokenStream("defaultFieldName", stringReader);
+			sText =  (new Analizer.test.TermAnalyzerView()).GetView(tokenStream, 0).trim();
+		}
 		return sText;
 	}
 
