@@ -25,6 +25,10 @@ public class DAO {
     private Connection getConnection() throws SQLException {
         return DriverManager.getConnection("jdbc:mysql://localhost:3306/myweb?user=root&password=admin");
     }
+    
+    private Connection getConnectionCategorizedWebs() throws SQLException {
+        return DriverManager.getConnection("jdbc:mysql://localhost:3306/categorizedWebs?user=root&password=admin");
+    }
 
     protected ResultSet executeQuery(String query, Object ...parameters) throws SQLException {
         Connection con = getConnection();

@@ -19,7 +19,7 @@ import encoders.Encode;
 
 public class DAO_MySQL {
 
-	private static Connection conexion;
+	protected static Connection conexion;
 
 	public static void setUp() throws SQLException, ClassNotFoundException {
 		// TODO Auto-generated method stub
@@ -27,7 +27,13 @@ public class DAO_MySQL {
 		    conexion = DriverManager.getConnection("jdbc:mysql://localhost/myweb", "root", "admin");
 	}
 
-	
+	protected static Connection conexionCategorized;
+
+	public static void setUpCatego() throws SQLException, ClassNotFoundException {
+		// TODO Auto-generated method stub
+		   Class.forName("com.mysql.jdbc.Driver");
+		    conexion = DriverManager.getConnection("jdbc:mysql://localhost/myweb", "root", "admin");
+	}
 
     public static boolean readResource(String urlResource) throws SQLException {
 	Statement st = conexion.createStatement();
