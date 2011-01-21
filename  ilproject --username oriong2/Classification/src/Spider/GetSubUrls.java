@@ -40,7 +40,7 @@ public class GetSubUrls {
 		// TODO Auto-generated method stub
 		ApacheURLListerRecursive oApacheURLLister = new ApacheURLListerRecursive();
 		
-		List<String> oList = oApacheURLLister.listAll(sMainUrl, sRestUrl, 2, 10, sSuffix);
+		List<String> oList = oApacheURLLister.listAll(sMainUrl, sRestUrl, 1, 15, sSuffix);
 		return oList;
 	}
 	

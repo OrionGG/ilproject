@@ -35,7 +35,7 @@ public enum Categories {
 	),
 	Philosopher(
 			new UrlByCategory[]{
-					new UrlByCategory("http://www.noticias.com","/noticias/psicologicas","noticias"),
+					new UrlByCategory("http://www.noticias.com","/noticias/psicologicas","psicolog"),
 					new UrlByCategory("http://www.filosofia.org", "/bol/not/index.htm", "filosofia")
 			}
 	),
