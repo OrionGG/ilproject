@@ -73,11 +73,12 @@ public class ApacheURLListerRecursive {
 	 * @param includeDirectories
 	 *            If true include directories in the returned list.
 	 * @return A {@link List} of {@link URL}s.
+	 * @throws IOException 
 	 * @throws IOException
 	 *             If an error occures retrieving the HTML.
 	 */
 	public void retrieveListing(String sMainUrl, URL url, int depth, int wide, String suffix)
-	throws IOException {
+	{
 		sMainUrl = normalizeUrl(sMainUrl);
 		
 		if(depth > 0 ){
@@ -85,10 +86,22 @@ public class ApacheURLListerRecursive {
 			/*        if (!url.getPath().endsWith("/") && !url.getPath().endsWith(".html")) {
             url = new URL(url.getProtocol(), url.getHost(), url.getPort(), url.getPath() + "/");
         }*/
-			BufferedReader r = new BufferedReader(new InputStreamReader(URLHandlerRegistry.getDefault()
-					.openStream(url)));
+			BufferedReader r;
+			try {
+				r = new BufferedReader(new InputStreamReader(URLHandlerRegistry.getDefault()
+						.openStream(url)));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				return;
+			}
 
-			String htmlText = FileUtil.readEntirely(r);
+			String htmlText;
+			try {
+				htmlText = FileUtil.readEntirely(r);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				return;
+			}
 
 			Matcher matcher = PATTERN.matcher(htmlText);
 
