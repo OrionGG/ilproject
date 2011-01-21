@@ -111,11 +111,11 @@ public class CategoryGenerator {
 			getResourcesCategory(analyzer, iDBPediaWriter, sTextResources, category);
 
 			///SEGUNDA PARTE--->Texto de WIkipedia
-			System.out.println("\n\nSALIDA DE LA SEGUNDA FASE: ");
+			//System.out.println("\n\nSALIDA DE LA SEGUNDA FASE: ");
 			
-			getTextFromWikipedia(analyzer, iWikiWriter, sTotalTextSynonym, category);
+			//getTextFromWikipedia(analyzer, iWikiWriter, sTotalTextSynonym, category);
 			
-			System.out.println("\n\nSALIDA DE LA TERCERA FASE: ");
+			//System.out.println("\n\nSALIDA DE LA TERCERA FASE: ");
 			//getTextFromUrls(iListWebsWriter, category);
 
 
@@ -219,7 +219,7 @@ public class CategoryGenerator {
 		String labelResource=null;
 		System.out.println("\nCATEGORIA = " +category.getLocalName() + "\n");
 		System.out.println("Tiene "+lis.size()+" resources");
-		for(int i=0; i<20 && i<lis.size();i++){
+		for(int i=0; i<100 && i<lis.size();i++){
 			Resource resource =lis.get(i);
 			//if(resource.getLocalName()!=null){
 			// labelResource=resource.getLocalName();
@@ -250,7 +250,7 @@ public class CategoryGenerator {
 	private static String showTextAnalized(String sTextResources, Analyzer oAnalyzer)
 			throws IOException {
 		String sText = "";
-		if(sTextResources.equals("")){
+		if(!sTextResources.equals("")){
 			//clean stopwords
 			Reader stringReader = new StringReader(sTextResources); 
 			TokenStream tokenStream = oAnalyzer.tokenStream("defaultFieldName", stringReader);
