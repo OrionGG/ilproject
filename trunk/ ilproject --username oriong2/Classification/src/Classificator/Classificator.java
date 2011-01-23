@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.net.MalformedURLException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -53,11 +54,10 @@ public class Classificator {
 			String sDomainUrl = args[1].toString();
 			
 			if(sOption.equals("-u")){
-				String sText = ExtractText.GetBlogText(sDomainUrl);
-				ArrayList<TopDocs> listTopDocs=classificate(sText,sDomainUrl);
-				TreeMap<Float,Categories> scoreCategory= FinalScoreCalculator.getFinalCategories(listTopDocs);					
+				List<IndexCategScore> listTopDocs = getScoresCat(sDomainUrl);
+				//TreeMap<Float,Categories> scoreCategory= FinalScoreCalculator.getFinalCategories(listTopDocs);					
 			
-				//SAVING TO DB
+				/*//SAVING TO DB
 				Set<Entry<Float, Categories>> valores=scoreCategory.entrySet();
 				
 				for(Entry<Float,Categories> entry: valores){
@@ -66,7 +66,7 @@ public class Classificator {
 						DAOCategorization.storeWebCat(sDomainUrl, cat.toString(), valor);
 					}	
 					
-					
+					*/
 				
 				
 				
@@ -86,8 +86,8 @@ public class Classificator {
 	}
 
 
-	public static List<CategIndexScore>  classificate(String sText, String sDomainUrl) throws CorruptIndexException, IOException, ParseException, SQLException{
-
+	public static List<IndexCategScore>  classificate(String sDomainUrl, String sText) throws CorruptIndexException, IOException, ParseException, SQLException{
+		List<IndexCategScore> lResult = new ArrayList<IndexCategScore>();
 		Map<IndexSearcher, Directory> lIndex = new Hashtable<IndexSearcher, Directory>();
 		
 		lIndex=generateIndexesReader(lIndex);
@@ -110,15 +110,34 @@ public class Classificator {
 		Query query = parser.parse(sText);
 		
 		//Generate a list of top docs archived
-		
+		List<IndexTopDoc> lIndexTopDoc = new ArrayList<IndexTopDoc>(); 
 		//For each index
 		for(Entry<IndexSearcher, Directory> oIndex: lIndex.entrySet()){
 			IndexSearcher oIndexSearcher = oIndex.getKey();
 			Directory oDirectory = oIndex.getValue();
-			CategIndexScore oCategIndexScore = hitDocsByIndex(oIndexSearcher, oDirectory, query,sDomainUrl);
-
+			IndexTopDoc oIndexTopDoc = hitDocsByIndex(oIndexSearcher, oDirectory, query,sDomainUrl);
+			lIndexTopDoc.add(oIndexTopDoc);
 		}
-		return listTopHits;
+		
+
+		int i =0;
+		for(IndexTopDoc oIndexTopDoc : lIndexTopDoc){
+			IndexCategScore oIndexCategScore = PrepareIndexToCross(sDomainUrl, i, oIndexTopDoc);
+			lResult.add(oIndexCategScore);
+			i++;
+		}
+		
+
+		//For each index
+		for(Entry<IndexSearcher, Directory> oIndex: lIndex.entrySet()){
+			IndexSearcher oIndexSearcher = oIndex.getKey();
+			Directory oDirectory = oIndex.getValue();
+			oIndexSearcher.close();
+			oDirectory.close();
+		}
+		
+
+		return lResult;
 	}
 	
 
@@ -148,17 +167,25 @@ public class Classificator {
 	}
 
 
-	private static CategIndexScore hitDocsByIndex(IndexSearcher oIndexSearcher, Directory oDirectory,
-			Query query,String sDomainUrl, int i) throws IOException, CorruptIndexException, SQLException {
+	private static IndexTopDoc hitDocsByIndex(IndexSearcher oIndexSearcher, Directory oDirectory,
+			Query query,String sDomainUrl) throws IOException, CorruptIndexException, SQLException {
 
-		CategIndexScore oResult = new CategIndexScore(oIndexSearcher);
 		TopDocs hits = oIndexSearcher.search(query, 1000); 
+		IndexTopDoc oResult = new IndexTopDoc(oIndexSearcher, hits);
+		return oResult;
+	}
 
+
+	private static IndexCategScore PrepareIndexToCross(String sDomainUrl, int i, IndexTopDoc oIndexTopDoc)
+			throws CorruptIndexException, IOException, SQLException {
+		IndexSearcher oIndexSearcher = oIndexTopDoc.oIndexSearcher;
+		TopDocs hits = oIndexTopDoc.oTopDocs;
 		//////FUNCIONALIDADES POSIBLES PARA LEER EL INDICE
 		//System.out.println("El termino -"+term+"- aparece "+isearcher.docFreq(term)+" veces");
 		System.out.println("Tras ejecutar la query " + hits.scoreDocs.length + " encontrados para");
 		// Iterate through the results:
 		System.out.println("Scores del articulo por categorias: "); 
+		IndexCategScore oResult = new IndexCategScore(oIndexSearcher);
 		for(ScoreDoc oScoreDoc : hits.scoreDocs)
 		{
 			Document hitDoc = oIndexSearcher.doc(oScoreDoc.doc); 
@@ -172,16 +199,30 @@ public class Classificator {
 			//assertEquals("This is the text to be indexed.", hitDoc.get("fieldname"));
 			
 		}
-		oIndexSearcher.close();
-		oDirectory.close();
 		return oResult;
 	}
 
 
 
-	public static List<CategIndexScore> getScoresCat(String sUrl, Categories oCategories) {
-		// TODO Auto-generated method stub
-		return null;
+	public static List<IndexCategScore> getScoresCat(String sUrl) {
+		List<IndexCategScore> oResult = new java.util.ArrayList<IndexCategScore>();
+		String sText = "";
+		try {
+			sText = ExtractText.GetBlogText(sUrl);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			oResult = classificate(sUrl, sText);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return oResult;
 	}
 
 }
