@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -77,7 +78,7 @@ public class ApacheURLListerRecursive {
 	 * @throws IOException
 	 *             If an error occures retrieving the HTML.
 	 */
-	public void retrieveListing(String sMainUrl, URL url, int depth, int wide, String suffix)
+	public void retrieveListing(String sMainUrl, URL url, int depth, int wide, String suffix) 
 	{
 		sMainUrl = normalizeUrl(sMainUrl);
 		
@@ -113,46 +114,62 @@ public class ApacheURLListerRecursive {
 					// the groups were not found (shouldn't happen, really)
 					continue;
 				}
-				
+
+				HttpURLConnection  oHttpURLConnection = null;
 				try{
 					URL uhref = new URL(href);
-					HttpURLConnection  oHttpURLConnection  = (HttpURLConnection)uhref.openConnection();
+					oHttpURLConnection  = (HttpURLConnection)uhref.openConnection();
 					
-					if (!IsAGoobUrl(oHttpURLConnection)){
-						if(!WithMainUrlConcat(sMainUrl, href)){
+					if (!href.startsWith("http") 
+							|| !href.contains(suffix)
+							|| !IsAGoobUrl(oHttpURLConnection)){
+						if(!WithMainUrlConcat(sMainUrl, href, suffix)){
 							continue;
 						}
 					}
 				}
 				catch(Exception ex){
-					if(!WithMainUrlConcat(sMainUrl, href)){
+					if(!WithMainUrlConcat(sMainUrl, href, suffix)){
 						continue;
 					}
 					else{
 						href = sMainUrl + href;
 					}
 				}
+				finally{
+					if(oHttpURLConnection != null)
+						oHttpURLConnection.disconnect();
+				}
 				
 				
 				// handle complete URL listings
 				if (href.startsWith("http:") || href.startsWith("https:")) {
 					try {
-						if (href.contains(suffix) && !href.contains("google") && !urlList.contains(href)) {
+						if (href.contains(suffix) && !href.contains("=http") && !urlList.contains(href)) {
 							urlList.add(href);
 							System.out.println(href);
 							wide--;
 						}
-						if (href.endsWith(".com") || href.endsWith(".es")){
-							URL oUrl = new URL(href);
-							retrieveListing(sMainUrl, oUrl, depth-1,  initialWide, suffix);
-						}
+						//if (href.endsWith(".com") || href.endsWith(".es")){
+						//}
 					} catch (Exception ignore) {
 						// incorrect URL, ignore
 						continue;
 					}
 				}
 			}
-			int a = 0;
+			
+			List<String> urlListCopy =  (List<String>) ((ArrayList) urlList).clone();
+			for(String sUrl :urlListCopy){
+				URL oUrl;
+				try {
+					oUrl = new URL(sUrl);
+					retrieveListing(sMainUrl, oUrl, depth-1,  initialWide/2, suffix);
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
@@ -180,26 +197,35 @@ public class ApacheURLListerRecursive {
 		return bGoodUrl;
 	}
 	
-	private Boolean WithMainUrlConcat(String sMainUrl, String href){
+	private Boolean WithMainUrlConcat(String sMainUrl, String href, String suffix){
 		Boolean bResult = false;
 		href = sMainUrl + href;
 		URL uhref;
-		HttpURLConnection oHttpURLConnection;
+		HttpURLConnection oHttpURLConnection = null;
+		
+		if(!href.contains(suffix)){
+			return bResult;
+		}
 		
 		try{
 			uhref = new URL(href);
 			oHttpURLConnection  = (HttpURLConnection)uhref.openConnection();
+			if (IsAGoobUrl(oHttpURLConnection)){
+				bResult = true;
+			}
+			else{
+				bResult = false;
+			}
 		}
 		catch(Exception ex){
-			return false;
-		}
-		
-		if (IsAGoobUrl(oHttpURLConnection)){
-			bResult = true;
-		}
-		else{
 			bResult = false;
 		}
+		finally{
+			if(oHttpURLConnection != null)
+				oHttpURLConnection.disconnect();
+		}
+		
+		
 		return bResult;
 	}
 	

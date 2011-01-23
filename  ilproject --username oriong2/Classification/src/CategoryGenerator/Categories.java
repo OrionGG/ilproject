@@ -62,7 +62,7 @@ public enum Categories {
 	),
 	MilitaryPerson(
 			new UrlByCategory[]{
-					new UrlByCategory("http://www.soitu.es", "/soitu/tags/portadilla/militares/", "soitu")
+					new UrlByCategory("http://www.soitu.es", "/soitu/tags/portadilla/militares/", "info")
 
 					}
 	),

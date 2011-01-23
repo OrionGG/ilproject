@@ -78,27 +78,11 @@ public class CategoryGenerator {
 
 		
 		
-		File fDBPediaDirectory=new File(".\\resources\\DBPediaIndex");
-		if(fDBPediaDirectory.exists()){
-			fDBPediaDirectory.delete();
-		}
-		Directory dDBPediaIndexDirectory = FSDirectory.open(fDBPediaDirectory,new NoLockFactory());
-		IndexWriter iDBPediaWriter = new IndexWriter(dDBPediaIndexDirectory, analyzer, true, new IndexWriter.MaxFieldLength(25000));
+		//IndexWriter iDBPediaWriter = CreateIndex(analyzer, "DBPediaIndex");
 
-		File fWikiDirectory=new File(".\\resources\\WikiIndex");
-		if(fWikiDirectory.exists()){
-			fWikiDirectory.delete();
-		}
-		Directory dWikiIndexDirectory = FSDirectory.open(fWikiDirectory,new NoLockFactory());
-		IndexWriter iWikiWriter = new IndexWriter(dWikiIndexDirectory, analyzer, true, new IndexWriter.MaxFieldLength(25000));
+		//IndexWriter iWikiWriter = CreateIndex(analyzer, "WikiIndex");
 
-		File fListWebsDirectory=new File(".\\resources\\ListWebsIndex");
-		if(fListWebsDirectory.exists()){
-			fListWebsDirectory.delete();
-		}
-		Directory dListWebsIndexDirectory = FSDirectory.open(fListWebsDirectory,new NoLockFactory());
-		IndexWriter iListWebsWriter = new IndexWriter(dListWebsIndexDirectory, analyzer, true, new IndexWriter.MaxFieldLength(25000));
-
+		IndexWriter iListWebsWriter = CreateIndex(analyzer, "ListWebsIndex");
 
 		String nameResource = "";	
 		String sTextResources = "";
@@ -122,14 +106,29 @@ public class CategoryGenerator {
 		}
 		
 
-		iDBPediaWriter.optimize();
-		iWikiWriter.optimize();
+		//iDBPediaWriter.optimize();
+		//iDBPediaWriter.close();
 		iListWebsWriter.optimize();
-		iDBPediaWriter.close();
-		iWikiWriter.close();
 		iListWebsWriter.close();
+		//iWikiWriter.optimize();
+		//iWikiWriter.close();
+		
+		
+		Classificator.Evaluator.evaluate(listToEvaluate);
 
 
+	}
+
+	private static IndexWriter CreateIndex(SpanishAnalyzer analyzer, String sName)
+			throws IOException, CorruptIndexException,
+			LockObtainFailedException {
+		File fDBPediaDirectory=new File(".\\resources\\" + sName);
+		if(fDBPediaDirectory.exists()){
+			fDBPediaDirectory.delete();
+		}
+		Directory dDBPediaIndexDirectory = FSDirectory.open(fDBPediaDirectory,new NoLockFactory());
+		IndexWriter iDBPediaWriter = new IndexWriter(dDBPediaIndexDirectory, analyzer, true, new IndexWriter.MaxFieldLength(25000));
+		return iDBPediaWriter;
 	}
 
 	private static void getTextFromUrls(IndexWriter iListWebsWriter, Resource category)
@@ -145,10 +144,11 @@ public class CategoryGenerator {
 					List<String> sUrlsSubList =  sUrls.subList(iMaxToText, sUrls.size());
 					listToEvaluate.put(oCategory, sUrlsSubList);
 					
-					sTextUrls = getTextFromUrls(sUrls, iMaxToText) + " ";
+					//sTextUrls = getTextFromUrls(sUrls, iMaxToText) + " ";
 					
 				}
-				AddDocument(iListWebsWriter, category, sTextUrls.trim(), 3);
+				//AddDocument(iListWebsWriter, category, sTextUrls.trim());
+				break;
 			}
 		}
 	}
@@ -204,7 +204,7 @@ public class CategoryGenerator {
 
 		sText = showTextAnalized(sTotalTextWikipedia, analyzer);
 
-		AddDocument(iWikiWriter, category, sText, 3);
+		AddDocument(iWikiWriter, category, sText);
 	}
 
 	private static void getResourcesCategory(SpanishAnalyzer analyzer,
@@ -244,7 +244,7 @@ public class CategoryGenerator {
 		System.out.println(sText);
 
 		
-		AddDocument(iDBPediaWriter, category, sText, 1);
+		AddDocument(iDBPediaWriter, category, sText);
 	}
 
 	private static String showTextAnalized(String sTextResources, Analyzer oAnalyzer)
@@ -260,15 +260,13 @@ public class CategoryGenerator {
 	}
 
 	private static void AddDocument(IndexWriter iwriter, Resource category,
-			String sTotalText, int iPriority) throws CorruptIndexException, IOException {
+			String sTotalText) throws CorruptIndexException, IOException {
 		Document categoria = new Document();
 
 
 		categoria.add( new Field("CategoryName", category.getLocalName(), Field.Store.YES,Field.Index.NO));
 		Field textoField= new Field("Text", sTotalText, Field.Store.YES,Field.Index.ANALYZED,Field.TermVector.YES);
 		categoria.add(textoField ); 
-		Field priorityField= new Field("Priority", String.valueOf(iPriority), Field.Store.YES,Field.Index.NO);
-		categoria.add(priorityField );
 
 
 		iwriter.addDocument(categoria );

@@ -12,7 +12,11 @@ import dao.DAO_MySQL;
 
 
 public class DAOCategorization extends DAO_MySQL{
-	
+	public enum Fields{
+		index,
+		url,
+		score
+	}
 	
 
 	
