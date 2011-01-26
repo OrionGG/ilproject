@@ -62,7 +62,7 @@ public enum Categories {
 	),
 	MilitaryPerson(
 			new UrlByCategory[]{
-					new UrlByCategory("http://www.soitu.es", "/soitu/tags/portadilla/militares/", "info")
+					new UrlByCategory("http://www.soitu.es", "/soitu/tags/portadilla/militares/", "/info")
 
 					}
 	),
@@ -182,7 +182,9 @@ public enum Categories {
 			}
 	),
 	BasketballPlayer(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					new UrlByCategory("http://www.marca.com", "/baloncesto.html", "baloncesto"),
+					}
 	),
 	GolfPlayer(
 			new UrlByCategory[]{}

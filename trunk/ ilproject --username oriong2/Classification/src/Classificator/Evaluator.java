@@ -53,9 +53,12 @@ public class Evaluator {
 				float iIndexScore = oIndexCategScore.hCategScore.get(cat);
 			}*/
 
-			float iIndexScore1 = lCategIndexScore.get(0).hCategScore.get(cat.toString());
-			float iIndexScore2 = lCategIndexScore.get(1).hCategScore.get(cat.toString());
-			float iIndexScore3 = lCategIndexScore.get(2).hCategScore.get(cat.toString());
+			Float iIndexScore1 = lCategIndexScore.get(0).hCategScore.get(cat.toString());
+			if(iIndexScore1 == null) iIndexScore1 = 0.0f;
+			Float iIndexScore2 = lCategIndexScore.get(1).hCategScore.get(cat.toString());
+			if(iIndexScore2 == null) iIndexScore2 = 0.0f;
+			Float iIndexScore3 = lCategIndexScore.get(2).hCategScore.get(cat.toString());
+			if(iIndexScore3 == null) iIndexScore3 = 0.0f;
 
 			double score = FinalScoreCalculator.calculateFinalScore(iIndexScore1, iIndexScore2, iIndexScore3);
 

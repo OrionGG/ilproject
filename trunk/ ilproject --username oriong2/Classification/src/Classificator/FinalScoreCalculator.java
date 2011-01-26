@@ -26,7 +26,7 @@ public class FinalScoreCalculator {
 		return  finalScore;
 	}
 
-	public static void calculateFinalScoreTable() throws SQLException{
+	public static void calculateFinalScoreTable() throws SQLException, ClassNotFoundException{
 
 		Float finalScore=new Float(0);
 		for(Categories category : Categories.allCategories){
