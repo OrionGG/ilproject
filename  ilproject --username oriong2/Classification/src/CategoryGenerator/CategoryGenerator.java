@@ -50,6 +50,7 @@ import encoders.Encode;
 
 import Analizer.BlogSpaAnalyzer;
 import Analizer.SpanishAnalyzer;
+import CategoryGenerator.IndexesWriter.IndexType;
 import GetBlogText.ExtractText;
 import GetBlogText.WikipediaText;
 import Language.Synonym;
@@ -75,15 +76,18 @@ public class CategoryGenerator {
 
 		SpanishAnalyzer analyzer = new SpanishAnalyzer(Version.LUCENE_30, new File (".\\resources\\stopwords\\spanishSmart.txt"));
 		//Property type=ontology.createProperty(rdf,"type");
+		
+		IndexType[] oListofIdexes = new IndexType[]{
+			/*IndexType.DBPedia,
 
+			IndexType.Wikipedia,*/
+
+			IndexType.ListOfWebsIndex
+		};
+
+		IndexesWriter.CreateIndexes(oListofIdexes, analyzer);
 		
 		
-		//IndexWriter iDBPediaWriter = CreateIndex(analyzer, "DBPediaIndex");
-
-		//IndexWriter iWikiWriter = CreateIndex(analyzer, "WikiIndex");
-
-		IndexWriter iListWebsWriter = CreateIndex(analyzer, "ListWebsIndex");
-
 		String nameResource = "";	
 		String sTextResources = "";
 		String sTotalTextSynonym = "";
@@ -92,69 +96,76 @@ public class CategoryGenerator {
 
 			//Resource category = urlCategorias.get(i);
 			////PRIMERA PARTE-->>Recursos de DbPedia
-			//getResourcesCategory(analyzer, iDBPediaWriter, sTextResources, category);
+			//getResourcesCategory(analyzer, IndexesWriter.getIndex(IndexType.DBPedia), sTextResources, category);
 
 			///SEGUNDA PARTE--->Texto de WIkipedia
 			//System.out.println("\n\nSALIDA DE LA SEGUNDA FASE: ");
-			
-			//getTextFromWikipedia(analyzer, iWikiWriter, sTotalTextSynonym, category);
-			
+
+			//getTextFromWikipedia(analyzer, IndexesWriter.getIndex(IndexType.Wikipedia), sTotalTextSynonym, category);
+
 			//System.out.println("\n\nSALIDA DE LA TERCERA FASE: ");
-			getTextFromUrls(iListWebsWriter, category);
+			getTextFromUrlsFromOneCat(IndexesWriter.getIndex(IndexType.ListOfWebsIndex), category);
 
 
 		}
-		
 
-		//iDBPediaWriter.optimize();
-		//iDBPediaWriter.close();
-		iListWebsWriter.optimize();
-		iListWebsWriter.close();
-		//iWikiWriter.optimize();
-		//iWikiWriter.close();
-		
-		
+		IndexesWriter.optimize();
+		IndexesWriter.close();
+
+
+
 		Classificator.Evaluator.evaluate(listToEvaluate);
 
 
 	}
 
-	private static IndexWriter CreateIndex(SpanishAnalyzer analyzer, String sName)
-			throws IOException, CorruptIndexException,
-			LockObtainFailedException {
-		File fDBPediaDirectory=new File(".\\resources\\" + sName);
-		if(fDBPediaDirectory.exists()){
-			fDBPediaDirectory.delete();
-		}
-		Directory dDBPediaIndexDirectory = FSDirectory.open(fDBPediaDirectory,new NoLockFactory());
-		IndexWriter iDBPediaWriter = new IndexWriter(dDBPediaIndexDirectory, analyzer, true, new IndexWriter.MaxFieldLength(25000));
-		return iDBPediaWriter;
-	}
-
 	private static void getTextFromUrls(IndexWriter iListWebsWriter, Resource category)
-			throws MalformedURLException, IOException {
+	throws MalformedURLException, IOException {
 		List<String> sUrls;
-		
+
 		for(Categories oCategory: Categories.allCategories){
 			if(category.getLocalName().equals(oCategory.toString())){
 				String sTextUrls = "";
 				for(UrlByCategory oUrlByCategory : oCategory.getLUrlList()){
-					sUrls = Spider.GetSubUrls.SpiderUrl(oUrlByCategory.sMainUrl, oUrlByCategory.sRestUrl, oUrlByCategory.sSuffixFilter);
+					sUrls = Spider.GetSubUrls.SpiderUrl(oUrlByCategory.sMainUrl, oUrlByCategory.sRestUrl, 1,3, oUrlByCategory.sSuffixFilter);
 					int iMaxToText =(int) (sUrls.size() * 0.8);
-					List<String> sUrlsSubList =  sUrls.subList(iMaxToText, sUrls.size());
-					listToEvaluate.put(oCategory, sUrlsSubList);
 					
-					//sTextUrls = getTextFromUrls(sUrls, iMaxToText) + " ";
-					
+					List<String> sUrlsSubListToIndex =  sUrls.subList(0, iMaxToText);
+					List<String> sUrlsSubListToEval =  sUrls.subList(iMaxToText, sUrls.size());
+					listToEvaluate.put(oCategory, sUrlsSubListToEval);
+
+					sTextUrls = getTextFromUrls(sUrlsSubListToIndex, iMaxToText) + " ";
+
 				}
-				//AddDocument(iListWebsWriter, category, sTextUrls.trim());
+				AddDocument(iListWebsWriter, category, sTextUrls.trim());
 				break;
 			}
 		}
 	}
+	
+	private static void getTextFromUrlsFromOneCat(IndexWriter iListWebsWriter, Resource category)
+	throws MalformedURLException, IOException {
+		List<String> sUrls;
+
+		Categories oCategory = Categories.FictionalCharacter;
+			if(category.getLocalName().equals(oCategory.toString())){
+				String sTextUrls = "";
+				List<String> sUrlsSubListToEval = new java.util.ArrayList<String>();
+				for(UrlByCategory oUrlByCategory : oCategory.getLUrlList()){
+					sUrls = Spider.GetSubUrls.SpiderUrl(oUrlByCategory.sMainUrl, oUrlByCategory.sRestUrl, 1,3, oUrlByCategory.sSuffixFilter);
+					int iMaxToText =(int) (sUrls.size() * 0.8);
+					
+					sUrlsSubListToEval.addAll(sUrls.subList(iMaxToText, sUrls.size()));
+					
+
+					
+				}
+				listToEvaluate.put(oCategory, sUrlsSubListToEval);
+			}
+		}
 
 	private static String getTextFromUrls(List<String> sUrls, int maxToText) throws IOException,
-			MalformedURLException {
+	MalformedURLException {
 		String sText="";
 		for(int i = 0; i<maxToText;i++){
 			String sUrlSub = sUrls.get(i);
@@ -165,7 +176,7 @@ public class CategoryGenerator {
 
 	private static void getTextFromWikipedia(SpanishAnalyzer analyzer,
 			IndexWriter iWikiWriter, String sTotalTextSynonym, Resource category)
-			throws Exception, IOException, JWNLException, CorruptIndexException {
+	throws Exception, IOException, JWNLException, CorruptIndexException {
 		String sText;
 		WikipediaText oWikipediaText = new WikipediaText();
 		String sTextWikipedia= oWikipediaText.GetTextFromWikipedia(category.getLocalName(), true);
@@ -178,7 +189,7 @@ public class CategoryGenerator {
 		//AddDocument(iWikiWriter, category, sTextWikipedia, 2);
 		String sTextWikipediaSynonym = "";
 		Set<String> oSyn = Synonym.lookupSynonyms(category.getLocalName());
-		
+
 
 		System.out.println("num sinonimos: " + oSyn.size());
 		for(String sWord:oSyn){
@@ -190,7 +201,7 @@ public class CategoryGenerator {
 				sText = showTextAnalized(sTextWikipediaSynonym, analyzer);
 
 				System.out.println(sText);
-				
+
 				sTotalTextSynonym += " " + sTextWikipediaSynonym;
 			}
 			catch(Exception e){
@@ -198,7 +209,7 @@ public class CategoryGenerator {
 
 			}
 		}
-		
+
 		String sTotalTextWikipedia =  sTextWikipedia + " "+ sTextWikipediaSynonym;
 
 
@@ -214,7 +225,7 @@ public class CategoryGenerator {
 		String pathCategory=category.getURI();
 
 		List<Resource> lis=DbPedia.getResourcesOfType(pathCategory);
-		
+
 		System.out.println("\n\nSALIDA DE LA PRIMERA FASE: ");
 		String labelResource=null;
 		System.out.println("\nCATEGORIA = " +category.getLocalName() + "\n");
@@ -238,17 +249,17 @@ public class CategoryGenerator {
 			sTextResources=labelResource+" "+sTextResources;
 		}
 
-		
+
 		String sText = showTextAnalized(sTextResources, analyzer);
 
 		System.out.println(sText);
 
-		
+
 		AddDocument(iDBPediaWriter, category, sText);
 	}
 
 	private static String showTextAnalized(String sTextResources, Analyzer oAnalyzer)
-			throws IOException {
+	throws IOException {
 		String sText = "";
 		if(!sTextResources.equals("")){
 			//clean stopwords
@@ -261,15 +272,17 @@ public class CategoryGenerator {
 
 	private static void AddDocument(IndexWriter iwriter, Resource category,
 			String sTotalText) throws CorruptIndexException, IOException {
-		Document categoria = new Document();
+		if(iwriter != null){
+			Document categoria = new Document();
 
 
-		categoria.add( new Field("CategoryName", category.getLocalName(), Field.Store.YES,Field.Index.NO));
-		Field textoField= new Field("Text", sTotalText, Field.Store.YES,Field.Index.ANALYZED,Field.TermVector.YES);
-		categoria.add(textoField ); 
+			categoria.add( new Field("CategoryName", category.getLocalName(), Field.Store.YES,Field.Index.NO));
+			Field textoField= new Field("Text", sTotalText, Field.Store.YES,Field.Index.ANALYZED,Field.TermVector.YES);
+			categoria.add(textoField ); 
 
 
-		iwriter.addDocument(categoria );
+			iwriter.addDocument(categoria );
+		}
 
 	}
 

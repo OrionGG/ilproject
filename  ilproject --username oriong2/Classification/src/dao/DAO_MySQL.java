@@ -27,14 +27,6 @@ public class DAO_MySQL {
 		    conexion = DriverManager.getConnection("jdbc:mysql://localhost/myweb", "root", "admin");
 	}
 
-	protected static Connection conexionCategorized;
-
-	public static void setUpCatego() throws SQLException, ClassNotFoundException {
-		// TODO Auto-generated method stub
-		   Class.forName("com.mysql.jdbc.Driver");
-		    conexion = DriverManager.getConnection("jdbc:mysql://localhost/myweb", "root", "admin");
-	}
-
     public static boolean readResource(String urlResource) throws SQLException {
 	Statement st = conexion.createStatement();
 	st.executeUpdate("SELECT (name,url,relation,resource) FROM resources WHERE url='"+urlResource+"')");

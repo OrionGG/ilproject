@@ -86,7 +86,7 @@ public class Classificator {
 	}
 
 
-	public static List<IndexCategScore>  classificate(String sDomainUrl, String sText) throws CorruptIndexException, IOException, ParseException, SQLException{
+	public static List<IndexCategScore>  classificate(String sDomainUrl, String sText) throws CorruptIndexException, IOException, ParseException, SQLException, ClassNotFoundException{
 		List<IndexCategScore> lResult = new ArrayList<IndexCategScore>();
 		Map<IndexSearcher, Directory> lIndex = new Hashtable<IndexSearcher, Directory>();
 		
@@ -161,7 +161,7 @@ public class Classificator {
 		Directory dListWebsIndexDirectory = FSDirectory.open(fListWebsDirectory,new NoLockFactory());
 		// Now search the index:
 		IndexSearcher iListWebsSearcher = new IndexSearcher(dListWebsIndexDirectory, true); // read-only=true
-		lIndex.put(iWikiSearcher, dListWebsIndexDirectory);
+		lIndex.put(iListWebsSearcher, dListWebsIndexDirectory);
 
 		return lIndex;
 	}
@@ -177,7 +177,7 @@ public class Classificator {
 
 
 	private static IndexCategScore PrepareIndexToCross(String sDomainUrl, int i, IndexTopDoc oIndexTopDoc)
-			throws CorruptIndexException, IOException, SQLException {
+			throws CorruptIndexException, IOException, SQLException, ClassNotFoundException {
 		IndexSearcher oIndexSearcher = oIndexTopDoc.oIndexSearcher;
 		TopDocs hits = oIndexTopDoc.oTopDocs;
 		//////FUNCIONALIDADES POSIBLES PARA LEER EL INDICE
@@ -192,7 +192,7 @@ public class Classificator {
 			String sCategoryName = hitDoc.getField("CategoryName").stringValue();
 
 			////SAVING TO DB TEMPORARY SCORES
-			DAOCategorization.storeEvaWeb(sDomainUrl,i, sCategoryName,oScoreDoc.score);
+			//DAOCategorization.storeEvaWeb(sDomainUrl,i, sCategoryName,oScoreDoc.score);
 			oResult.hCategScore.put(sCategoryName, oScoreDoc.score);
 		
 			System.out.println("     "+hitDoc.getField("CategoryName").stringValue() + " "+ oScoreDoc.score+"->ALMACENADO");
