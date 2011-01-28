@@ -192,7 +192,7 @@ public class Classificator {
 			String sCategoryName = hitDoc.getField("CategoryName").stringValue();
 
 			////SAVING TO DB TEMPORARY SCORES
-			//DAOCategorization.storeEvaWeb(sDomainUrl,i, sCategoryName,oScoreDoc.score);
+			DAOCategorization.storeEvaWeb(sDomainUrl,i, sCategoryName,oScoreDoc.score);
 			oResult.hCategScore.put(sCategoryName, oScoreDoc.score);
 		
 			System.out.println("     "+hitDoc.getField("CategoryName").stringValue() + " "+ oScoreDoc.score+"->ALMACENADO");

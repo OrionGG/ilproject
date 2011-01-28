@@ -55,10 +55,10 @@ public class ApacheURLListerRecursive {
 	 * @throws IOException
 	 *             If an error occures retrieving the HTML.
 	 */
-	public List<String> listAll(String sMainUrl, String sRestUrl, int depth, int wide, String suffix) throws IOException { 
+	public List<String> listAll(String sMainUrl, String sRestUrl, int depth, int wide,int iChildrenWide, String suffix) throws IOException { 
 		URL url = new URL(sMainUrl + sRestUrl);
 		initialWide = wide;
-		retrieveListing(sMainUrl, url, depth, wide, suffix);
+		retrieveListing(sMainUrl, url, depth, wide,iChildrenWide, suffix);
 		return urlList;
 	}
 
@@ -78,7 +78,7 @@ public class ApacheURLListerRecursive {
 	 * @throws IOException
 	 *             If an error occures retrieving the HTML.
 	 */
-	public void retrieveListing(String sMainUrl, URL url, int depth, int wide, String suffix) 
+	public void retrieveListing(String sMainUrl, URL url, int depth, int wide,int iChildrenWide, String suffix) 
 	{
 		sMainUrl = normalizeUrl(sMainUrl);
 		
@@ -110,7 +110,7 @@ public class ApacheURLListerRecursive {
 				// get the href text and the displayed text
 				String href = matcher.group(1);
 
-				if (href == null) {
+				if (!validURL(href)) {
 					// the groups were not found (shouldn't happen, really)
 					continue;
 				}
@@ -145,7 +145,7 @@ public class ApacheURLListerRecursive {
 				// handle complete URL listings
 				if (href.startsWith("http:") || href.startsWith("https:")) {
 					try {
-						if (href.contains(suffix) && !href.contains("=http") && !urlList.contains(href)) {
+						if (href.contains(suffix) && !(href.lastIndexOf("http")>1) && !urlList.contains(href)) {
 							urlList.add(href);
 							System.out.println(href);
 							wide--;
@@ -164,7 +164,7 @@ public class ApacheURLListerRecursive {
 				URL oUrl;
 				try {
 					oUrl = new URL(sUrl);
-					retrieveListing(sMainUrl, oUrl, depth-1,  initialWide/2, suffix);
+					retrieveListing(sMainUrl, oUrl, depth-1,  iChildrenWide, iChildrenWide, suffix);
 				} catch (MalformedURLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -173,9 +173,16 @@ public class ApacheURLListerRecursive {
 		}
 	}
 
+	private boolean validURL(String href) {
+		return href != null
+		&& !(href.lastIndexOf("http")>1)
+		&&  !urlList.contains(href) ;
+	}
+
 	private Boolean IsAGoobUrl(HttpURLConnection oHttpURLConnection)
 	{
-		Boolean bGoodUrl = false;
+		Boolean bGoodUrl = false;	
+		
 		int iCode;
 		try{
 			iCode = oHttpURLConnection.getResponseCode();
@@ -202,8 +209,8 @@ public class ApacheURLListerRecursive {
 		href = sMainUrl + href;
 		URL uhref;
 		HttpURLConnection oHttpURLConnection = null;
-		
-		if(!href.contains(suffix)){
+
+		if(!href.contains(suffix) || !validURL(href)){
 			return bResult;
 		}
 		

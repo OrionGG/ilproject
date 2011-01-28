@@ -18,7 +18,7 @@ public class IndexesWriter {
 	public enum IndexType{
 		DBPediaIndex,
 		WikipediaIndex,
-		ListOfWebsIndex
+		ListWebsIndex
 	}
 	static Hashtable<String, IndexWriter> IndexHash = new Hashtable<String, IndexWriter>();
 	
