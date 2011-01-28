@@ -51,6 +51,8 @@ import encoders.Encode;
 import Analizer.BlogSpaAnalyzer;
 import Analizer.SpanishAnalyzer;
 import CategoryGenerator.IndexesWriter.IndexType;
+import DBLayer.DAOCategorization;
+import DBLayer.DAOUrlCategory;
 import GetBlogText.ExtractText;
 import GetBlogText.WikipediaText;
 import Language.Synonym;
@@ -58,8 +60,12 @@ import Language.Traductor;
 
 
 public class CategoryGenerator {
+	public enum SourceOfData{
+		Internet,
+		DB
+	}
 
-
+	private static SourceOfData getSourceOfData = SourceOfData.DB;
 	private static String rdfs = "http://www.w3.org/2000/01/rdf-schema#";
 	private static 	String rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns/#";
 	private static String thing="http://www.w3.org/2002/07/owl#Thing";
@@ -76,18 +82,18 @@ public class CategoryGenerator {
 
 		SpanishAnalyzer analyzer = new SpanishAnalyzer(Version.LUCENE_30, new File (".\\resources\\stopwords\\spanishSmart.txt"));
 		//Property type=ontology.createProperty(rdf,"type");
-		
+
 		IndexType[] oListofIdexes = new IndexType[]{
-			/*IndexType.DBPedia,
+				/*IndexType.DBPedia,
 
 			IndexType.Wikipedia,*/
 
-			IndexType.ListWebsIndex
+				//IndexType.ListWebsIndex
 		};
 
-		IndexesWriter.CreateIndexes(oListofIdexes, analyzer);
-		
-		
+		//IndexesWriter.CreateIndexes(oListofIdexes, analyzer);
+
+
 		String nameResource = "";	
 		String sTextResources = "";
 		String sTotalTextSynonym = "";
@@ -104,14 +110,15 @@ public class CategoryGenerator {
 			//getTextFromWikipedia(analyzer, IndexesWriter.getIndex(IndexType.Wikipedia), sTotalTextSynonym, category);
 
 			//System.out.println("\n\nSALIDA DE LA TERCERA FASE: ");
-			//getTextFromUrls(IndexesWriter.getIndex(IndexType.ListWebsIndex), category);
-			getTextFromUrlsFromOneCat(IndexesWriter.getIndex(IndexType.ListWebsIndex), category);
+			IndexWriter iListWebsWriter = IndexesWriter.getIndex(IndexType.ListWebsIndex);
+			getTextFromUrls(iListWebsWriter, category);
+			//getTextFromUrlsFromOneCat(category);
 
 
 		}
 
-		IndexesWriter.optimize();
-		IndexesWriter.close();
+		//IndexesWriter.optimize();
+		//IndexesWriter.close();
 
 
 
@@ -122,48 +129,53 @@ public class CategoryGenerator {
 
 	private static void getTextFromUrls(IndexWriter iListWebsWriter, Resource category)
 	throws MalformedURLException, IOException {
-		List<String> sUrls;
+		List<String> sUrls = new java.util.ArrayList<String>();
 
-		for(Categories oCategory: Categories.allCategories){
-			if(category.getLocalName().equals(oCategory.toString())){
-				String sTextUrls = "";
-				for(UrlByCategory oUrlByCategory : oCategory.getLUrlList()){
-					sUrls = Spider.GetSubUrls.SpiderUrl(oUrlByCategory.sMainUrl, oUrlByCategory.sRestUrl, 2,40,1, oUrlByCategory.sSuffixFilter);
-					int iMaxToText =(int) (sUrls.size() * 0.8);
-					
-					List<String> sUrlsSubListToIndex =  sUrls.subList(0, iMaxToText);
-					List<String> sUrlsSubListToEval =  sUrls.subList(iMaxToText, sUrls.size());
-					listToEvaluate.put(oCategory, sUrlsSubListToEval);
-
-					sTextUrls = getTextFromUrls(sUrlsSubListToIndex, iMaxToText) + " ";
-
-				}
-				AddDocument(iListWebsWriter, category, sTextUrls.trim());
-				break;
+		Categories oCategory = StringToCategories.getCategory(category.getLocalName());
+		String sTextUrls = "";		
+		//Esto es para o sacar las urls de internet rastreando con el spider
+		//o cogerlas de la base de datos donde previamente las hemos guardado don StoreAllUrls
+		switch(getSourceOfData){
+		case Internet:
+			for(UrlByCategory oUrlByCategory : oCategory.getLUrlList()){
+				sUrls.addAll(Spider.GetSubUrls.SpiderUrl(oUrlByCategory.sMainUrl, oUrlByCategory.sRestUrl, 2,40,1, oUrlByCategory.sSuffixFilter));
 			}
+			break;						
+		case DB:
+			sUrls = DAOUrlCategory.getInstance().getUrlsCategory(oCategory);
+			break;
 		}
+
+		int iMaxToText =(int) (sUrls.size() * 0.8);
+
+		List<String> sUrlsSubListToIndex =  sUrls.subList(0, iMaxToText);
+		List<String> sUrlsSubListToEval =  sUrls.subList(iMaxToText, sUrls.size());
+		listToEvaluate.put(oCategory, sUrlsSubListToEval);
+
+		sTextUrls = getTextFromUrls(sUrlsSubListToIndex, iMaxToText) + " ";
+		AddDocument(iListWebsWriter, category, sTextUrls.trim());
 	}
-	
-	private static void getTextFromUrlsFromOneCat(IndexWriter iListWebsWriter, Resource category)
+
+	private static void getTextFromUrlsFromOneCat( Resource category)
 	throws MalformedURLException, IOException {
-		List<String> sUrls;
+		List<String> sUrls = new java.util.ArrayList<String>();
 
 		Categories oCategory = Categories.FictionalCharacter;
-			if(category.getLocalName().equals(oCategory.toString())){
-				String sTextUrls = "";
-				List<String> sUrlsSubListToEval = new java.util.ArrayList<String>();
-				for(UrlByCategory oUrlByCategory : oCategory.getLUrlList()){
-					sUrls = Spider.GetSubUrls.SpiderUrl(oUrlByCategory.sMainUrl, oUrlByCategory.sRestUrl, 1,3,0, oUrlByCategory.sSuffixFilter);
-					int iMaxToText =(int) (sUrls.size() * 0.8);
-					
-					sUrlsSubListToEval.addAll(sUrls.subList(iMaxToText, sUrls.size()));
-					
+		if(category.getLocalName().equals(oCategory.toString())){
+			String sTextUrls = "";
+			List<String> sUrlsSubListToEval = new java.util.ArrayList<String>();
+			for(UrlByCategory oUrlByCategory : oCategory.getLUrlList()){
+				sUrls.addAll(Spider.GetSubUrls.SpiderUrl(oUrlByCategory.sMainUrl, oUrlByCategory.sRestUrl, 1,3,0, oUrlByCategory.sSuffixFilter));
 
-					
-				}
-				listToEvaluate.put(oCategory, sUrlsSubListToEval);
+
 			}
+
+			int iMaxToText =(int) (sUrls.size() * 0.8);
+
+			sUrlsSubListToEval.addAll(sUrls.subList(iMaxToText, sUrls.size()));
+			listToEvaluate.put(oCategory, sUrlsSubListToEval);
 		}
+	}
 
 	private static String getTextFromUrls(List<String> sUrls, int maxToText) throws IOException,
 	MalformedURLException {

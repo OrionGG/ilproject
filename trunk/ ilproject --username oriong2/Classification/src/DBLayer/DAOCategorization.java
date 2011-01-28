@@ -15,7 +15,7 @@ import dao.DAO_MySQL;
 
 public class DAOCategorization {
 	public enum Fields{
-		index,
+		indextype,
 		url,
 		score
 	}
@@ -26,34 +26,65 @@ public class DAOCategorization {
 
 	public static void setUpCatego() throws SQLException, ClassNotFoundException {
 		// TODO Auto-generated method stub
-		   Class.forName("com.mysql.jdbc.Driver");
-		   conexionCategorized = DriverManager.getConnection("jdbc:mysql://localhost:3306/categorizedWebs"+"?user=root");
+		Class.forName("com.mysql.jdbc.Driver");
+		conexionCategorized = DriverManager.getConnection("jdbc:mysql://localhost:3306/categorizedWebs","root","admin");
 	}
 
 	public static ResultSet getEvaWeb(Categories category) throws SQLException, ClassNotFoundException {
 		// TODO Auto-generated method stub
 		setUpCatego();
 		Statement st = conexionCategorized.createStatement();
-		String query="SELECT url,index,score FROM eva_web WHERE category='"+category+"' ORDER BY value url,index";
+		String query="SELECT url,indextype,score FROM eva_web WHERE category='"+category+"' ORDER BY value url,index";
 		System.out.println(query);
-		ResultSet rs=st.executeQuery(query);
+		ResultSet rs = st.executeQuery(query);
 
 		return rs;
 	}
 
-	public static void storeWebCat(String url, String category, Float score) throws SQLException, ClassNotFoundException {
+	public static void storeWebCat(String url, String category, Float score)  {
 
-		setUpCatego();
-		Statement st = conexionCategorized.createStatement();
-		st.executeUpdate("INSERT INTO web_cat(url,category,score) VALUES ('"+url+"','"+category+"','"+score+"')");
+		try {
+			setUpCatego();
+			Statement st = conexionCategorized.createStatement();
+			st.executeUpdate("INSERT INTO web_cat(url,category,score) VALUES ('"+url+"','"+category+"','"+score+"')");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally{
+			try {
+				conexionCategorized.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 
 	}
 
-	public static void storeEvaWeb(String domainUrl, int i, String stringValue,	float score) throws SQLException, ClassNotFoundException {
-		setUpCatego();
-		Statement st = conexionCategorized.createStatement();
-		st.executeUpdate("INSERT INTO web_cat_eva(url,index,category,score) VALUES ('"+domainUrl+"','"+i+"','"+stringValue+"','"+score+"')");
+	public static void storeEvaWeb(String domainUrl, int i, String stringValue,	float score)  {
+
+		try {
+			setUpCatego();
+			Statement st = conexionCategorized.createStatement();
+			String sql = "INSERT INTO web_cat_eva(url,indextype,category,score) VALUES ('"+domainUrl+"','"+i+"','"+stringValue+"','"+score+"')";
+			st.executeUpdate(sql);
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally{
+			try {
+				conexionCategorized.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 
 	}
+
+
 
 }

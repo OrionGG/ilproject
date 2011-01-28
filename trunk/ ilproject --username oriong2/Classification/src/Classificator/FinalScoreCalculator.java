@@ -38,7 +38,7 @@ public class FinalScoreCalculator {
 			while(rs.next()){
 				String newUrl = rs.getString(DAOCategorization.Fields.url.toString());
 				if(lastUrl.equals(newUrl)){
-					int iIndex = rs.getInt(DAOCategorization.Fields.index.toString());
+					int iIndex = rs.getInt(DAOCategorization.Fields.indextype.toString());
 					float score = rs.getFloat(DAOCategorization.Fields.score.toString());
 					hIndexScore.put(iIndex, score);
 				}
