@@ -26,6 +26,7 @@ public class Evaluator {
 				lCategIndexScore = Classificator.getScoresCat(sUrl);
 
 				TreeMap<Double, Categories> oTreeMap = IndexShortedCross(lCategIndexScore);
+				System.out.println("");
 				System.out.println("URL: "+ sUrl);
 				System.out.println("");
 

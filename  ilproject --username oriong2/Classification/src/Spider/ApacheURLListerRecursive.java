@@ -59,7 +59,7 @@ public class ApacheURLListerRecursive {
 		URL url = new URL(sMainUrl + sRestUrl);
 		initialWide = wide;
 		retrieveListing(sMainUrl, url, depth, wide,iChildrenWide, suffix);
-		return urlList;
+		return getUrlList();
 	}
 
 	/**
@@ -145,8 +145,8 @@ public class ApacheURLListerRecursive {
 				// handle complete URL listings
 				if (href.startsWith("http:") || href.startsWith("https:")) {
 					try {
-						if (href.contains(suffix) && !(href.lastIndexOf("http")>1) && !urlList.contains(href)) {
-							urlList.add(href);
+						if (href.contains(suffix) && !(href.lastIndexOf("http")>1) && !getUrlList().contains(href)) {
+							getUrlList().add(href);
 							System.out.println(href);
 							wide--;
 						}
@@ -159,7 +159,7 @@ public class ApacheURLListerRecursive {
 				}
 			}
 			
-			List<String> urlListCopy =  (List<String>) ((ArrayList) urlList).clone();
+			List<String> urlListCopy =  (List<String>) ((ArrayList) getUrlList()).clone();
 			for(String sUrl :urlListCopy){
 				URL oUrl;
 				try {
@@ -176,7 +176,7 @@ public class ApacheURLListerRecursive {
 	private boolean validURL(String href) {
 		return href != null
 		&& !(href.lastIndexOf("http")>1)
-		&&  !urlList.contains(href) ;
+		&&  !getUrlList().contains(href) ;
 	}
 
 	private Boolean IsAGoobUrl(HttpURLConnection oHttpURLConnection)
@@ -243,5 +243,13 @@ public class ApacheURLListerRecursive {
 		}
 		sUrl = sUrlNormalized.toString();
 		return sUrl;
+	}
+
+	public void setUrlList(List<String> urlList) {
+		this.urlList = urlList;
+	}
+
+	private List<String> getUrlList() {
+		return urlList;
 	}
 }

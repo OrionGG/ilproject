@@ -34,8 +34,9 @@ public class IndexesWriter {
 	throws IOException, CorruptIndexException,
 	LockObtainFailedException {
 		File fDirectory=new File(".\\resources\\" + sName);
+		boolean  success = false;
 		if(fDirectory.exists()){
-			fDirectory.delete();
+			success = fDirectory.delete();
 		}
 		Directory dDBPediaIndexDirectory = FSDirectory.open(fDirectory,new NoLockFactory());
 		IndexWriter iWriter = new IndexWriter(dDBPediaIndexDirectory, analyzer, true, new IndexWriter.MaxFieldLength(25000));
@@ -43,7 +44,7 @@ public class IndexesWriter {
 	}
 	
 	public static IndexWriter getIndex(IndexType oIndexType){
-		IndexWriter oResult = IndexHash.get(oIndexType);
+		IndexWriter oResult = IndexHash.get(oIndexType.toString());
 		return oResult;
 		
 	}

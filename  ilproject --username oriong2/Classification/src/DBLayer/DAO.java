@@ -12,7 +12,7 @@ import java.sql.*;
  * @author chemi
  */
 public class DAO {
-	public static final String SERVERNAME="cat";
+	public String SERVERNAME="cat";
 
 
     public DAO() {
@@ -25,7 +25,7 @@ public class DAO {
     }
 
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:mysql://localhost:3306/"+SERVERNAME+"?user=root");
+        return DriverManager.getConnection("jdbc:mysql://localhost:3306/"+SERVERNAME,"root", "admin");
     }
 
     protected ResultSet executeQuery(String query, Object ...parameters) throws SQLException {

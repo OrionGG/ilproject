@@ -3,6 +3,8 @@ package Spider;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,11 +47,7 @@ public class GetSubUrls {
 	}
 	
 	public static List<String> SpiderUrl(String sMainUrl, String sRestUrl, int depth, int wide,int iChildrenWide, String sSuffix) throws MalformedURLException, IOException {
-		// TODO Auto-generated method stub
-		ApacheURLListerRecursive oApacheURLLister = new ApacheURLListerRecursive();
-		
-		List<String> oList = oApacheURLLister.listAll(sMainUrl, sRestUrl, depth, wide,iChildrenWide, sSuffix);
-		return oList;
+		return SpiderUrl(sMainUrl, sRestUrl, depth,wide,iChildrenWide, sSuffix, new ArrayList<String>());
 	}
 	
 	public static List<String> DefaultSpiderUrl(String sMainUrl, String sRestUrl) throws MalformedURLException, IOException {
@@ -58,6 +56,19 @@ public class GetSubUrls {
 		//URL oURL = new URL("http://www.blogia.com");
 		
 		List<String> oList = oApacheURLLister.listAll(sMainUrl, sRestUrl, 2, 10,1, "");
+		return oList;
+	}
+
+	public static List<String> SpiderUrl(String sMainUrl,
+			String sRestUrl, int depth, int wide,int iChildrenWide, String sSuffixFilter,
+			List<String> urlList) throws IOException {
+		// TODO Auto-generated method stub
+		ApacheURLListerRecursive oApacheURLLister = new ApacheURLListerRecursive();
+		oApacheURLLister.setUrlList(urlList);
+		
+		
+		List<String> oList = oApacheURLLister.listAll(sMainUrl, sRestUrl, depth, wide,iChildrenWide, sSuffixFilter);
+		oList.removeAll(urlList);
 		return oList;
 	}
 
