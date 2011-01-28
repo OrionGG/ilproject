@@ -82,7 +82,7 @@ public class CategoryGenerator {
 
 			IndexType.Wikipedia,*/
 
-			IndexType.ListOfWebsIndex
+			IndexType.ListWebsIndex
 		};
 
 		IndexesWriter.CreateIndexes(oListofIdexes, analyzer);
@@ -104,7 +104,8 @@ public class CategoryGenerator {
 			//getTextFromWikipedia(analyzer, IndexesWriter.getIndex(IndexType.Wikipedia), sTotalTextSynonym, category);
 
 			//System.out.println("\n\nSALIDA DE LA TERCERA FASE: ");
-			getTextFromUrlsFromOneCat(IndexesWriter.getIndex(IndexType.ListOfWebsIndex), category);
+			//getTextFromUrls(IndexesWriter.getIndex(IndexType.ListWebsIndex), category);
+			getTextFromUrlsFromOneCat(IndexesWriter.getIndex(IndexType.ListWebsIndex), category);
 
 
 		}
@@ -127,7 +128,7 @@ public class CategoryGenerator {
 			if(category.getLocalName().equals(oCategory.toString())){
 				String sTextUrls = "";
 				for(UrlByCategory oUrlByCategory : oCategory.getLUrlList()){
-					sUrls = Spider.GetSubUrls.SpiderUrl(oUrlByCategory.sMainUrl, oUrlByCategory.sRestUrl, 1,3, oUrlByCategory.sSuffixFilter);
+					sUrls = Spider.GetSubUrls.SpiderUrl(oUrlByCategory.sMainUrl, oUrlByCategory.sRestUrl, 2,40,1, oUrlByCategory.sSuffixFilter);
 					int iMaxToText =(int) (sUrls.size() * 0.8);
 					
 					List<String> sUrlsSubListToIndex =  sUrls.subList(0, iMaxToText);
@@ -152,7 +153,7 @@ public class CategoryGenerator {
 				String sTextUrls = "";
 				List<String> sUrlsSubListToEval = new java.util.ArrayList<String>();
 				for(UrlByCategory oUrlByCategory : oCategory.getLUrlList()){
-					sUrls = Spider.GetSubUrls.SpiderUrl(oUrlByCategory.sMainUrl, oUrlByCategory.sRestUrl, 1,3, oUrlByCategory.sSuffixFilter);
+					sUrls = Spider.GetSubUrls.SpiderUrl(oUrlByCategory.sMainUrl, oUrlByCategory.sRestUrl, 1,3,0, oUrlByCategory.sSuffixFilter);
 					int iMaxToText =(int) (sUrls.size() * 0.8);
 					
 					sUrlsSubListToEval.addAll(sUrls.subList(iMaxToText, sUrls.size()));
