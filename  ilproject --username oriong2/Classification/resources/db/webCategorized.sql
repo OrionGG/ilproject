@@ -25,13 +25,13 @@ DROP TABLE IF EXISTS `scored_intermedied`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `scored_intermedied` (
-  `idscored_intermedied` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `url` varchar(2000) DEFAULT NULL,
   `indextype` int(11) DEFAULT NULL,
   `category` varchar(300) DEFAULT NULL,
   `score` mediumtext,
-  PRIMARY KEY (`idscored_intermedied`),
-  UNIQUE KEY `idscored_intermedied_UNIQUE` (`idscored_intermedied`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idscored_intermedied_UNIQUE` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2648 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -53,11 +53,11 @@ DROP TABLE IF EXISTS `urls_classified`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `urls_classified` (
-  `idurls_rastreated` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `url` varchar(2000) DEFAULT NULL,
   `category` varchar(300) DEFAULT NULL,
   `score` mediumblob,
-  PRIMARY KEY (`idurls_rastreated`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -78,12 +78,12 @@ DROP TABLE IF EXISTS `urls_rastreated`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `urls_rastreated` (
-  `idurls_classified` int(11) NOT NULL AUTO_INCREMENT,
-  `URLNAME` text,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `URL` text,
   `CATEGORYTYPE` int(11) DEFAULT NULL,
   `STATE` int(11) DEFAULT NULL,
-  PRIMARY KEY (`idurls_classified`),
-  UNIQUE KEY `idurls_classified_UNIQUE` (`idurls_classified`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idurls_classified_UNIQUE` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2148 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -105,4 +105,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2011-01-30  0:42:41
+-- Dump completed on 2011-01-30  0:48:47
