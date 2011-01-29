@@ -16,6 +16,11 @@ public class Evaluator {
 
 	public static void evaluate(Hashtable<Categories,List<String>> urlsCategorizadas){
 
+		
+		//read DB
+		
+		
+		
 		//entryset
 		for(Entry<Categories,List<String>> oEntry:urlsCategorizadas.entrySet()){
 			Categories oCategories = oEntry.getKey();
@@ -25,17 +30,17 @@ public class Evaluator {
 			for(String sUrl: oEntry.getValue()){
 				lCategIndexScore = Classificator.getScoresCat(sUrl);
 
-				TreeMap<Double, Categories> oTreeMap = IndexShortedCross(lCategIndexScore);
+				TreeMap<Double, Categories> oTreeMap = indexShortedCross(lCategIndexScore);
 				System.out.println("");
 				System.out.println("URL: "+ sUrl);
 				System.out.println("");
 
-				ShowFinalResults(oTreeMap);
+				showFinalResults(oTreeMap);
 			}
 		}
 	}
 
-	private static void ShowFinalResults(TreeMap<Double, Categories> oTreeMap) {
+	public static void showFinalResults(TreeMap<Double, Categories> oTreeMap) {
 		int i= 0;
 		for(Entry<Double,Categories> oTreeMapEntry: oTreeMap.entrySet()){
 			double dScore =  oTreeMapEntry.getKey();
@@ -47,7 +52,7 @@ public class Evaluator {
 		}
 	}
 
-	private static TreeMap<Double, Categories> IndexShortedCross(List<IndexCategScore> lCategIndexScore) {
+	public static TreeMap<Double, Categories> indexShortedCross(List<IndexCategScore> lCategIndexScore) {
 		TreeMap<Double,Categories> oTreeMap = new TreeMap<Double,Categories>(Collections.reverseOrder()); 
 		for(Categories cat:Categories.allCategories){
 			/*for(IndexCategScore oIndexCategScore: lCategIndexScore){

@@ -1,6 +1,6 @@
 
 package Classificator;
-
+import Classificator.Evaluator;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
@@ -34,14 +34,21 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.NoLockFactory;
 import org.apache.lucene.util.Version;
 
+import com.hp.hpl.jena.rdf.model.Resource;
+
 import dao.DAO_MySQL;
 
 
 import Analizer.SpanishAnalyzer;
 import CategoryGenerator.Categories;
+import CategoryGenerator.IndexesGenerator;
+import CategoryGenerator.IndexesWriter;
+import CategoryGenerator.StringToCategories;
+import CategoryGenerator.UrlByCategory;
+import CategoryGenerator.IndexesWriter.IndexType;
 import DBLayer.DAOCategorization;
 import DBLayer.DAOUrl;
-import GetBlogText.ExtractText;
+import GetText.ExtractText;
 import Spider.GetSubUrls;
 
 public class Classificator {
@@ -55,6 +62,13 @@ public class Classificator {
 			
 			if(sOption.equals("-u")){
 				List<IndexCategScore> listTopDocs = getScoresCat(sDomainUrl);
+			
+				TreeMap<Double, Categories> oTreeMap = Evaluator.indexShortedCross(listTopDocs);
+				System.out.println("");
+			//	System.out.println("URL: "+ sUrl);
+				System.out.println("");
+
+				Evaluator.showFinalResults(oTreeMap);
 				//TreeMap<Float,Categories> scoreCategory= FinalScoreCalculator.getFinalCategories(listTopDocs);					
 			
 				/*//SAVING TO DB
@@ -67,9 +81,6 @@ public class Classificator {
 					}	
 					
 					*/
-				
-				
-				
 			}
 			else if(sOption.equals("-l")){
 				String sUrl = args[2].toString();
@@ -80,6 +91,46 @@ public class Classificator {
 					oDAOUrl.insertOrUpdateUrl(sSubUrl, sText);
 					classificate(sText,sDomainUrl);
 				}
+			}else{
+				
+				////GETTING THE URLS FROM THE CATEGORY GENERATOR
+				
+				
+				ArrayList<Resource> urlCategorias=IndexesGenerator.getFatherCategoriesInternet();
+		
+				for(Resource category : urlCategorias){
+					Categories oCategory = StringToCategories.getCategory(category.getLocalName());
+					List<String> sUrls = new java.util.ArrayList<String>();
+					for(UrlByCategory oUrlByCategory : oCategory.getLUrlList()){
+						
+						sUrls.addAll(Spider.GetSubUrls.SpiderUrl(oUrlByCategory.sMainUrl, oUrlByCategory.sRestUrl, 2,40,1, oUrlByCategory.sSuffixFilter));
+					
+					}
+								
+					for(String sSubUrl : sUrls){
+						String sText = ExtractText.GetBlogText(sSubUrl);
+						DAOUrl oDAOUrl = new DAOUrl();
+						
+						
+						List<IndexCategScore> listTopDocs = getScoresCat(sDomainUrl);
+						
+						TreeMap<Double, Categories> oTreeMap = Evaluator.indexShortedCross(listTopDocs);
+						System.out.println("");
+					//	System.out.println("URL: "+ sUrl);
+						System.out.println("");
+
+						Evaluator.showFinalResults(oTreeMap);
+						
+						
+						
+						
+						
+						classificate(sText,sDomainUrl);
+					}
+
+				}
+				
+	
 			}
 		}
 

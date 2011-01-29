@@ -41,12 +41,12 @@ public class DAOCategorization {
 		return rs;
 	}
 
-	public static void storeWebCat(String url, String category, Float score)  {
+	public static void storeWebCat(String url, String category)  {
 
 		try {
 			setUpCatego();
 			Statement st = conexionCategorized.createStatement();
-			st.executeUpdate("INSERT INTO web_cat(url,category,score) VALUES ('"+url+"','"+category+"','"+score+"')");
+			st.executeUpdate("INSERT INTO web_cat(url,category) VALUES ('"+url+"','"+category+"')");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -11,12 +11,15 @@ public enum Categories {
 	),
 	FictionalCharacter(
 			new UrlByCategory[]{
+					
+						new UrlByCategory("http://www.mangaes.com/","/noticias/anime-japon/", ""),
 					new UrlByCategory("http://marcaplayer.com", "/", "marcaplayer")
 			}
 	),
 	Judge(
 			new UrlByCategory[]{
-					new UrlByCategory("http://www.europapress.es", "/economia/legal-00345/", "legal")
+					new UrlByCategory("http://www.europapress.es", "/economia/legal-00345/", "legal"),
+					new UrlByCategory("	http://noticias.juridicas.com/","", ""),
 			}
 	),
 	PokerPlayer(
@@ -27,11 +30,15 @@ public enum Categories {
 	),
 	Model(
 			new UrlByCategory[]{
-					new UrlByCategory("http://www.abc.es", "/estilo-moda/modelos-pasarela-modas.asp", "moda")
-			}
+					new UrlByCategory("http://www.abc.es", "/estilo-moda/modelos-pasarela-modas.asp", "moda"),
+					new UrlByCategory("http://www.estiloymoda.com","/noticias/", ""),
+			}	
 	),
 	PlayboyPlaymate(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					new UrlByCategory("http://www.20minutos.es/", "minuteca/sexo", "sexo")
+					
+			}
 	),
 	Philosopher(
 			new UrlByCategory[]{
@@ -46,7 +53,8 @@ public enum Categories {
 	),
 	Criminal(
 			new UrlByCategory[]{
-					new UrlByCategory("http://www.noticias.com", "/noticias/sucesos", "sucesos")
+					new UrlByCategory("http://www.noticias.com", "/noticias/sucesos", "sucesos"),
+					new UrlByCategory("http://www.lavanguardia.es","/sucesos/index.html", "sucesos"),
 			}
 	),
 	Monarch(
@@ -67,7 +75,11 @@ public enum Categories {
 					}
 	),
 	Politician(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					
+					new UrlByCategory("http://www.lavanguardia.es","/politica/index.html", "/politica/"),
+					
+			}
 	),
 	Astronaut(
 			new UrlByCategory[]{
@@ -85,15 +97,20 @@ public enum Categories {
 	),
 	Scientist(
 			new UrlByCategory[]{
-					new UrlByCategory("http://www.elpais.com", "/tecnologia/", "tecnologia"),
+					
 					new UrlByCategory("http://www.elpais.com", "/sociedad/ciencia/" , "ciencia"),
 					new UrlByCategory("http://www.elmundo.es", "/elmundo/ciencia.html ", "ciencia"),
-					new UrlByCategory("http://www.elmundo.es", "/elmundo/navegante.html", "navegante")
+				
 
 			}
 	),
 	Journalist(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					new UrlByCategory("http://www.lavanguardia.es","/comunicacion/index.html", "comunicacion"),
+			
+			
+					
+			}
 	),
 	Architect(
 			new UrlByCategory[]{
@@ -101,17 +118,29 @@ public enum Categories {
 			}
 	),
 	Ambassador(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+			//NATURALEZA
+					new UrlByCategory("http://www.larazon.es/","secciones/verde", ""),
+		
+						
+			}
 	),
 	SoccerManager(
+			//TECNOLOGIA
 			new UrlByCategory[]{
-					new UrlByCategory("http://www.as.com", "/futbol/", "futbol"),
-					new UrlByCategory("http://www.elmundo.es", "/elmundodeporte/futbol.html", "futbol"),
-					new UrlByCategory("http://www.elpais.com", "/deportes/futbol/", "futbol")
+					new UrlByCategory("http://www.elpais.com", "/tecnologia/", "tecnologia"),
+					new UrlByCategory("http://www.elmundo.es", "/elmundo/navegante.html", "navegante"),
+					new UrlByCategory("http://noticias.lainformacion.com","/tecnologia", "tecnologia"),
 			}
 	),
 	CollegeCoach(
-			new UrlByCategory[]{}
+			//SALUD
+			new UrlByCategory[]{
+			
+					
+							new UrlByCategory("http://www.larazon.es","/secciones/a-tu-salud/", ""),
+							new UrlByCategory("http://www.elmundo.es","/elmundosalud/index.html", ""),
+			}
 	),
 	NascarDriver(
 			new UrlByCategory[]{
@@ -132,7 +161,9 @@ public enum Categories {
 					}
 	),
 	IceHockeyPlayer(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					
+			}
 	),
 	Cyclist(
 			new UrlByCategory[]{
@@ -141,6 +172,7 @@ public enum Categories {
 	),
 	BadmintonPlayer(
 			new UrlByCategory[]{}
+
 	),
 	GridironFootballPlayer(
 			new UrlByCategory[]{}
@@ -152,7 +184,10 @@ public enum Categories {
 			}
 	),
 	Wrestler(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+				
+						new UrlByCategory("http://www.mundowrestling.com/","", ""),
+			}
 	),
 	FormulaOneRacer(
 			new UrlByCategory[]{
@@ -183,17 +218,33 @@ public enum Categories {
 	),
 	BasketballPlayer(
 			new UrlByCategory[]{
+					new UrlByCategory("http://www.lavanguardia.es","/especiales/nba/index.html", ""),
 					new UrlByCategory("http://www.marca.com", "/baloncesto.html", "baloncesto"),
 					}
 	),
 	GolfPlayer(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					
+			
+						new UrlByCategory("http://es.eurosport.yahoo.com/","/golf/", ""),
+					
+						new UrlByCategory("http://www.degolf.org","/noticias/", ""),
+						
+			}
 	),
 	SoccerPlayer(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					new UrlByCategory("http://www.as.com", "/futbol/", "futbol"),
+					new UrlByCategory("http://www.elmundo.es", "/elmundodeporte/futbol.html", "futbol"),
+					new UrlByCategory("http://www.elpais.com", "/deportes/futbol/", "futbol")
+			}
 	),
 	Cricketer(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					
+					///VELA PA ORION
+					new UrlByCategory("http://www.lavanguardia.es","/deportes/barcelona-world-race/index.html", ""),
+			}
 	),
 	Actor(
 			new UrlByCategory[]{
@@ -208,7 +259,10 @@ public enum Categories {
 			}
 	),
 	Comedian(
-			new UrlByCategory[]{}
+			new UrlByCategory[]{
+					new UrlByCategory("http://www.eljueves.es", "/categoria/24/prensa_seria.html/", ""),
+			
+			}
 	),
 	Writer(
 			new UrlByCategory[]{
