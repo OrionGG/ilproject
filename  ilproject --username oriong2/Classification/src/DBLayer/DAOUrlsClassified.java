@@ -4,8 +4,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.TreeMap;
 
 import dominio.Category;
+import dominio.Url;
 
 
 public class DAOUrlsClassified extends DAOWebsClassified{
@@ -33,6 +35,7 @@ public class DAOUrlsClassified extends DAOWebsClassified{
 		Category oCategory = Category.values()[iEnum];
 		return oCategory;
 	}
+	
 	public void saveUrls(String url, String category)  {
 
 		try {
@@ -45,11 +48,16 @@ public class DAOUrlsClassified extends DAOWebsClassified{
 	}
 
 
-	public List<String> getUrlsCategory(dominio.Category oCategory) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
+	public  TreeMap <Float,Category>  getScoresCategory(Url url ) {
+		String query="SELECT score,category FROM urls_classified WHERE url='"+url+"' ORDER BY score";
+		
+		ResultSet rs = executeQuery(query);
+		for(rs)
+		int iEnum = rs.getInt(Fields.CATEGORYTYPE.toString());
+		Category oCategory = Category.values()[iEnum];
+		return oCategory;
+	}
 	
 
 	

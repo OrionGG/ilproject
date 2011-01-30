@@ -84,8 +84,8 @@ public class DAOUrlsRastreated extends DAOWebsClassified {
 			}
 	     }
 	    
-	    public List<String> getUrlsCategory(Category oCategory) {
-	    	List<String> lUrls = new java.util.ArrayList<String>();
+	    public List<String> selectUrlsCategory(Category oCategory) {
+	    	List<String> lUrls = new ArrayList<String>();
 			try {
 				ResultSet oResultSet = executeQuery("SELECT url FROM urls_rastreated WHERE category=?",oCategory.ordinal());
 				while(oResultSet.next()){
@@ -109,23 +109,7 @@ public class DAOUrlsRastreated extends DAOWebsClassified {
 			}
 			
 		}
-
-		public TreeMap<String,Integer> selectUrlsCategory( State eState) {
-			TreeMap<String,Integer> tUrls = new TreeMap<String,Integer>();
-			try {
-				ResultSet oResultSet = executeQuery("SELECT url,category FROM urls_rastreated WHERE state=?",eState.ordinal());
-				while(oResultSet.next()){
-					String sUrl = oResultSet.getString("url");
-					int category = oResultSet.getInt("category");
-					tUrls.put(sUrl,category);
-				}
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return tUrls;
-		}
-		public List<String> selectUrls( State eState) {
+		public List<String> selectUrls(State eState) {
 			List<String> lUrls = new java.util.ArrayList<String>();
 			try {
 				ResultSet oResultSet = executeQuery("SELECT url FROM urls_rastreated WHERE state=?",eState.ordinal());
@@ -139,4 +123,21 @@ public class DAOUrlsRastreated extends DAOWebsClassified {
 			}
 			return lUrls;
 		}
+		public TreeMap<String,Category> selectUrlsCategory( State eState) {
+			TreeMap<String,Category> tUrls = new TreeMap<String,Category>();
+			try {
+				ResultSet oResultSet = executeQuery("SELECT url,category FROM urls_rastreated WHERE state=?",eState.ordinal());
+				while(oResultSet.next()){
+					String sUrl = oResultSet.getString("url");
+					int category = oResultSet.getInt("category");
+					Category oCategory = Category.values()[category];
+					tUrls.put(sUrl,oCategory);
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return tUrls;
+		}
+
 }
