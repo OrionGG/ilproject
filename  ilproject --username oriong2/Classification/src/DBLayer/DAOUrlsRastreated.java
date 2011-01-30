@@ -7,6 +7,7 @@ import java.util.List;
 
 import CategoryGenerator.Categories;
 import DBLayer.DAOUrlsClassified.Fields;
+import DBLayer.DAOUrlsRastreated.State;
 
 public class DAOUrlsRastreated extends DAOWebsClassified {
 	public enum State{
@@ -106,5 +107,21 @@ public class DAOUrlsRastreated extends DAOWebsClassified {
 				e.printStackTrace();
 			}
 			
+		}
+
+
+		public List<String> selectUrls(String string, State eState) {
+			List<String> lUrls = new java.util.ArrayList<String>();
+			try {
+				ResultSet oResultSet = executeQuery("SELECT url FROM urls_rastreated WHERE state=?",eState.ordinal());
+				while(oResultSet.next()){
+					String sUrl = oResultSet.getString("url");
+					lUrls.add(sUrl);
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return lUrls;
 		}
 }
