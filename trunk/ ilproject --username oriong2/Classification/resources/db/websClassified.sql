@@ -1,5 +1,5 @@
-CREATE DATABASE  IF NOT EXISTS `websclassified` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `webclassified`;
+CREATE DATABASE  IF NOT EXISTS `WebsClassified` /*!40100 DEFAULT CHARACTER SET latin1 */;
+USE `WebsClassified`;
 -- MySQL dump 10.13  Distrib 5.1.40, for Win32 (ia32)
 --
 -- Host: localhost    Database: websclassified
@@ -60,9 +60,9 @@ DROP TABLE IF EXISTS `urls_rastreated`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `urls_rastreated` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `URL` text,
-  `CATEGORYTYPE` int(11) DEFAULT NULL,
-  `STATE` int(11) DEFAULT NULL,
+  `url` text,
+  `category` int(11) DEFAULT NULL,
+  `state` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `idurls_classified_UNIQUE` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2148 DEFAULT CHARSET=latin1;

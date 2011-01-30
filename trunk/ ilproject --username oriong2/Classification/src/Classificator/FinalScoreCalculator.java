@@ -31,7 +31,7 @@ public class FinalScoreCalculator {
 		return  finalScore;
 	}
 
-	public static void calculateFinalScoreTable() throws SQLException, ClassNotFoundException{
+	public static void fillUrlsClassifiedTable() throws SQLException, ClassNotFoundException{
 
 		//lista de ulrs a las que le hemos calculado el score final
 		List<String> lUrlsWithFinalScore = new ArrayList();
