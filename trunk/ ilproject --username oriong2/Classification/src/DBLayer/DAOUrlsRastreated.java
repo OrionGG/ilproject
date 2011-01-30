@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.TreeMap;
 
 import CategoryGenerator.Categories;
 import DBLayer.DAOUrlsClassified.Fields;
@@ -109,7 +110,21 @@ public class DAOUrlsRastreated extends DAOWebsClassified {
 			
 		}
 
-
+		public TreeMap<String,Integer> selectUrlsCategory( State eState) {
+			TreeMap<String,Integer> tUrls = new TreeMap<String,Integer>();
+			try {
+				ResultSet oResultSet = executeQuery("SELECT url,category FROM urls_rastreated WHERE state=?",eState.ordinal());
+				while(oResultSet.next()){
+					String sUrl = oResultSet.getString("url");
+					int category = oResultSet.getInt("category");
+					tUrls.put(sUrl,category);
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return tUrls;
+		}
 		public List<String> selectUrls( State eState) {
 			List<String> lUrls = new java.util.ArrayList<String>();
 			try {

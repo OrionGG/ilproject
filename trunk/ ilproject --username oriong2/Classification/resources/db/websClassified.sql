@@ -1,8 +1,8 @@
-CREATE DATABASE  IF NOT EXISTS `webclassified` /*!40100 DEFAULT CHARACTER SET latin1 */;
+CREATE DATABASE  IF NOT EXISTS `websclassified` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `webclassified`;
 -- MySQL dump 10.13  Distrib 5.1.40, for Win32 (ia32)
 --
--- Host: localhost    Database: webclassified
+-- Host: localhost    Database: websclassified
 -- ------------------------------------------------------
 -- Server version	5.5.8
 

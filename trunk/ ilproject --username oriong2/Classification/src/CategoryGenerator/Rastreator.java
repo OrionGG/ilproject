@@ -26,8 +26,8 @@ public class Rastreator {
 		getListToIndexToClassify(sUrlsSubListToIndex, sUrlsSubListToClassify);
 		
 		
-		saveUrlState(sUrlsSubListToIndex, State.toIndex);
-		saveUrlState(sUrlsSubListToClassify, State.toClassify);
+		saveUrlState(sUrlsSubListToIndex, State.ToIndex);
+		saveUrlState(sUrlsSubListToClassify, State.ToClassify);
 
 
 	}
