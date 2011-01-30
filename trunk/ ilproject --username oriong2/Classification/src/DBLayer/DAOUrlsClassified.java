@@ -36,10 +36,10 @@ public class DAOUrlsClassified extends DAOWebsClassified{
 		return oCategory;
 	}
 	
-	public void saveUrls(String url, String category)  {
+	public void saveUrl(String url, Category oCategory, float score)  {
 
 		try {
-			executeUpdate("INSERT INTO urls_classified(url,category) VALUES ('"+url+"','"+category+"')");
+			executeUpdate("INSERT INTO urls_classified(url,category,score) VALUES (?, ?, ?)", url, oCategory.ordinal(), score);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

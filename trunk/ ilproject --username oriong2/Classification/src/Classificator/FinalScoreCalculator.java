@@ -15,8 +15,10 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 
 import dominio.Category;
+import CategoryGenerator.IndexesWriter;
 import DBLayer.DAOScoresIntermediate;
 import DBLayer.DAOScoresIntermediate;
+import DBLayer.DAOUrlsClassified;
 
 public class FinalScoreCalculator {
 	private static float weightDbpedia=new Float(0.2);	
@@ -24,37 +26,62 @@ public class FinalScoreCalculator {
 	private static float weightNews= new Float(0.6);
 
 
-	public static Float calculateFinalScore(float score1, float score2, float score3){
+	public static float calculateFinalScore(float score1, float score2, float score3){
 		float finalScore = score1 * weightWiki + score2 * weightDbpedia + score3 * weightNews;
 		return  finalScore;
 	}
 
 	public static void calculateFinalScoreTable() throws SQLException, ClassNotFoundException{
 
-		Float finalScore = new Float(0);
+		//lista de ulrs a las que le hemos calculado el score final
+		List<String> lUrlsWithFinalScore = new ArrayList();
 		for(Category category : Category.values()){
-			ResultSet rs= DAOScoresIntermediate.getInstance().selectUrlsFromCategory(category);
-			String lastUrl=rs.getString(DAOScoresIntermediate.Fields.url.toString());
-
-			Hashtable<Integer, Float> hIndexScore = new Hashtable<Integer, Float>();
-
-			while(rs.next()){
-				String newUrl = rs.getString(DAOScoresIntermediate.Fields.url.toString());
-				if(lastUrl.equals(newUrl)){
-					int iIndex = rs.getInt(DAOScoresIntermediate.Fields.indextype.toString());
-					float score = rs.getFloat(DAOScoresIntermediate.Fields.score.toString());
-					hIndexScore.put(iIndex, score);
-				}
+			ResultSet rs = DAOScoresIntermediate.getInstance().selectUrlsFromCategory(category);
+			String lastUrl = rs.getString(DAOScoresIntermediate.Fields.url.toString());
+			
+			if(lUrlsWithFinalScore.contains(lastUrl)){
+				//esta url ya ha sido procesada por lo que pasamos a la siguiente
+				continue;
 			}
-			finalScore = calculateFinalScore(hIndexScore);	
-			DAOScoresIntermediate.getInstance().saveUrl(lastUrl, category.ordinal(), finalScore);
-			lastUrl = rs.getString(DAOScoresIntermediate.Fields.url.toString());
+			else{
+				//incluir la url en la lista de procesadas
+				lUrlsWithFinalScore.add(lastUrl);
+			}
+			
+			Hashtable<Integer, Float> hIndexScore = getIntermediateScoresByUrl(rs, lastUrl);
+			
+			calculeAndSaveFinalScore(category, lastUrl, hIndexScore);
 		}
 
 	}
 
+	private static void calculeAndSaveFinalScore(Category category, String lastUrl, 
+			Hashtable<Integer, Float> hIndexScore) {
+		float finalScore = calculateFinalScore(hIndexScore);	
+		DAOUrlsClassified.getInstance().saveUrl(lastUrl, category, finalScore);
+	}
+	
+	private static Hashtable<Integer, Float> getIntermediateScoresByUrl(ResultSet oResultSet, String sUrl) throws SQLException{
+		Hashtable<Integer, Float> hIndexScore = new Hashtable<Integer, Float>();
+
+		int i = 0;
+		//numero de indices que tenemos, normalmente tendremos 3
+		int MaxIndexNum = IndexesWriter.IndexType.values().length;
+		while(oResultSet.next() && i < MaxIndexNum){
+			String newUrl = oResultSet.getString(DAOScoresIntermediate.Fields.url.toString());
+			if(sUrl.equals(newUrl)){
+				int iIndex = oResultSet.getInt(DAOScoresIntermediate.Fields.indextype.toString());
+				float score = oResultSet.getFloat(DAOScoresIntermediate.Fields.score.toString());
+				hIndexScore.put(iIndex, score);
+				i++;
+			}
+		}
+		
+		return hIndexScore;
+	}
+
 	private static float calculateFinalScore(Hashtable<Integer, Float> hIndexScore) {
-		float fTotalScore = calculateFinalScore(hIndexScore.get(1), hIndexScore.get(2), hIndexScore.get(3));
+		float fTotalScore = calculateFinalScore(hIndexScore.get(0), hIndexScore.get(1), hIndexScore.get(2));
 		return fTotalScore;
 	}
 
@@ -73,9 +100,6 @@ public class FinalScoreCalculator {
 	public static TreeMap<Double, Category> indexShortedCross(List<IndexCategScore> lCategIndexScore) {
 		TreeMap<Double,Category> oTreeMap = new TreeMap<Double,Category>(Collections.reverseOrder()); 
 		for(Category cat:Category.values()){
-			/*for(IndexCategScore oIndexCategScore: lCategIndexScore){
-				float iIndexScore = oIndexCategScore.hCategScore.get(cat);
-			}*/
 
 			Float iIndexScore1 = lCategIndexScore.get(0).hCategScore.get(cat.toString());
 			if(iIndexScore1 == null) iIndexScore1 = 0.0f;
