@@ -51,7 +51,6 @@ import dao.DAO;
 import dao.DAO_Model;
 import dominio.Category;
 import dominio.DbPedia;
-import dominio.StringToCategories;
 import dominio.UrlForFiltering;
 import encoders.Encode;
 
@@ -226,7 +225,7 @@ public class IndexesGenerator {
 	
 		
 		//Obtener objeto category
-		Category oCategory = StringToCategory.getCategory(category.getLocalName());
+		Category oCategory = Category.valueOf(category.getLocalName());
 		
 			
 		List<String> listUrls = new ArrayList<String>();

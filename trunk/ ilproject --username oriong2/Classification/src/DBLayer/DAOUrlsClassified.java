@@ -5,7 +5,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-import org.apache.log4j.Category;
+import dominio.Category;
+
 
 public class DAOUrlsClassified extends DAOWebsClassified{
 	public enum Fields{
@@ -21,16 +22,16 @@ public class DAOUrlsClassified extends DAOWebsClassified{
 		}
 		return oInstance;
 	}
+	
 
 	
 	public Category selectUrl(String url) throws SQLException, ClassNotFoundException {
 		String query="SELECT category FROM urls_classified WHERE url='"+url+"'";
 		System.out.println(query);
 		ResultSet rs = executeQuery(query);
-		Category Category=null;
-		Category=rs.getInt(0);
-		Category.ordinal();
-		return Category;
+		int iEnum = rs.getInt(Fields.CATEGORYTYPE.toString());
+		Category oCategory = Category.values()[iEnum];
+		return oCategory;
 	}
 	public void saveUrls(String url, String category)  {
 

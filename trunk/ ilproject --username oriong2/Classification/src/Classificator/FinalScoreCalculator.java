@@ -32,7 +32,7 @@ public class FinalScoreCalculator {
 	public static void calculateFinalScoreTable() throws SQLException, ClassNotFoundException{
 
 		Float finalScore = new Float(0);
-		for(Category category : Category.allCategories){
+		for(Category category : Category.values()){
 			ResultSet rs= DAOScoresIntermediate.getInstance().selectUrlsFromCategory(category);
 			String lastUrl=rs.getString(DAOScoresIntermediate.Fields.url.toString());
 
@@ -72,7 +72,7 @@ public class FinalScoreCalculator {
 
 	public static TreeMap<Double, Category> indexShortedCross(List<IndexCategScore> lCategIndexScore) {
 		TreeMap<Double,Category> oTreeMap = new TreeMap<Double,Category>(Collections.reverseOrder()); 
-		for(Category cat:Category.allCategories){
+		for(Category cat:Category.values()){
 			/*for(IndexCategScore oIndexCategScore: lCategIndexScore){
 				float iIndexScore = oIndexCategScore.hCategScore.get(cat);
 			}*/
