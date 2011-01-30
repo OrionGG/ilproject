@@ -57,6 +57,7 @@ import Analizer.SpanishAnalyzer;
 import CategoryGenerator.IndexesWriter.IndexType;
 import DBLayer.DAOCategorization;
 import DBLayer.DAOUrlCategory;
+import DBLayer.DAOWebsClassified;
 import GetText.ExtractText;
 import GetText.WikipediaText;
 import Language.Synonym;
@@ -238,23 +239,13 @@ public class IndexesGenerator {
 		Categories oCategory = StringToCategories.getCategory(category.getLocalName());
 		
 			
-		List<String> sUrls = new java.util.ArrayList<String>();
+		List<String> sUrls = new ArrayList<String>();
 		//Esto es para o sacar las urls de internet rastreando con el spider
 		//o cogerlas de la base de datos donde previamente las hemos guardado con StoreAllUrls
 		
 		///POR DEFECTO DB
-		switch(getSourceOfData){
-			
-			case Internet:
-				for(UrlByCategory oUrlByCategory : oCategory.getLUrlList()){
-					
-					sUrls.addAll(Spider.GetSubUrls.SpiderUrl(oUrlByCategory.sMainUrl, oUrlByCategory.sRestUrl, 2,40,1, oUrlByCategory.sSuffixFilter));
-				}
-				break;						
-			case DB:
-				sUrls = DAOUrlCategory.getInstance().getUrlsCategory(oCategory);
-				break;
-		}
+		sUrls = DAOWebsClassified.getInstance().getUrlsCategory(oCategory);
+	
 
 		int iMaxToText =(int) (sUrls.size() * 0.8);
 

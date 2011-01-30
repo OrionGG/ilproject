@@ -7,8 +7,8 @@ import CategoryGenerator.Categories;
 
 
 
-import DBLayer.DAOCategorization;
 
+import DBLayer.*; 
 
 
 public class Evaluator {
