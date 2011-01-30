@@ -15,25 +15,22 @@ public class DAOUrlsClassified extends DAOWebsClassified{
 		CATEGORYTYPE
 	}
 	
+	private static DAOUrlsClassified oInstance;
+	public static DAOUrlsClassified getInstance(){
+		if(oInstance == null){
+			oInstance = new DAOUrlsClassified();
+		}
+		return oInstance;
+	}
 
 
-	public static void saveUrls(String url, String category)  {
+	public void saveUrls(String url, String category)  {
 
 		try {
-			setUpCatego();
-			Statement st = conexionCategorized.createStatement();
-			st.executeUpdate("INSERT INTO urls_classified(url,category) VALUES ('"+url+"','"+category+"')");
+			executeUpdate("INSERT INTO urls_classified(url,category) VALUES ('"+url+"','"+category+"')");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		finally{
-			try {
-				conexionCategorized.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 
 	}
