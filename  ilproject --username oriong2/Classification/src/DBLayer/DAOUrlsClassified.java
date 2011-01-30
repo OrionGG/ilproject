@@ -49,14 +49,17 @@ public class DAOUrlsClassified extends DAOWebsClassified{
 
 
 
-	public  TreeMap <Float,Category>  getScoresCategory(Url url ) {
+	public  TreeMap <Float,Category>  selectCategoryScores(Url url ) throws SQLException {
 		String query="SELECT score,category FROM urls_classified WHERE url='"+url+"' ORDER BY score";
 		
 		ResultSet rs = executeQuery(query);
-		for(rs)
-		int iEnum = rs.getInt(Fields.CATEGORYTYPE.toString());
-		Category oCategory = Category.values()[iEnum];
-		return oCategory;
+		TreeMap <Float,Category> categoryScores=new TreeMap<Float, Category>();
+		while(rs.next()){
+			//Fill the score Category with the info form DB---already oredeereed by score
+			categoryScores.put(rs.getFloat("score"),  Category.values()[rs.getInt("category")]);
+		}
+
+		return categoryScores;
 	}
 	
 

@@ -26,7 +26,9 @@ public class FinalScoreCalculator {
 	private static float weightNews= new Float(0.6);
 
 
+
 	public static float calculateFinalScore(float score1, float score2, float score3){
+
 		float finalScore = score1 * weightWiki + score2 * weightDbpedia + score3 * weightNews;
 		return  finalScore;
 	}
@@ -113,6 +115,31 @@ public class FinalScoreCalculator {
 			oTreeMap.put(score, cat);
 		}
 		return oTreeMap;
+	}
+
+	
+	public static float getWeightDbpedia() {
+		return weightDbpedia;
+	}
+
+	public static void setWeightDbpedia(float weightDbpedia) {
+		FinalScoreCalculator.weightDbpedia = weightDbpedia;
+	}
+
+	public static float getWeightWiki() {
+		return weightWiki;
+	}
+
+	public static void setWeightWiki(float weightWiki) {
+		FinalScoreCalculator.weightWiki = weightWiki;
+	}
+
+	public static float getWeightNews() {
+		return weightNews;
+	}
+
+	public static void setWeightNews(float weightNews) {
+		FinalScoreCalculator.weightNews = weightNews;
 	}
 
 }
