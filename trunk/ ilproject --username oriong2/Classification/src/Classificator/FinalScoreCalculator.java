@@ -13,7 +13,8 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 
 import CategoryGenerator.Categories;
-import DBLayer.DAOCategorization;
+import DBLayer.DAOScoresIntermediate;
+import DBLayer.DAOScoresIntermediate;
 
 public class FinalScoreCalculator {
 	private static float weightDbpedia=new Float(0.2);	
@@ -30,22 +31,22 @@ public class FinalScoreCalculator {
 
 		Float finalScore=new Float(0);
 		for(Categories category : Categories.allCategories){
-			ResultSet rs= DAOCategorization.getEvaWeb(category);
-			String lastUrl=rs.getString(DAOCategorization.Fields.url.toString());
+			ResultSet rs= DAOScoresIntermediate.selectUrlsFromCategory(category);
+			String lastUrl=rs.getString(DAOScoresIntermediate.Fields.url.toString());
 
 			Hashtable<Integer, Float> hIndexScore = new Hashtable<Integer, Float>();
 
 			while(rs.next()){
-				String newUrl = rs.getString(DAOCategorization.Fields.url.toString());
+				String newUrl = rs.getString(DAOScoresIntermediate.Fields.url.toString());
 				if(lastUrl.equals(newUrl)){
-					int iIndex = rs.getInt(DAOCategorization.Fields.indextype.toString());
-					float score = rs.getFloat(DAOCategorization.Fields.score.toString());
+					int iIndex = rs.getInt(DAOScoresIntermediate.Fields.indextype.toString());
+					float score = rs.getFloat(DAOScoresIntermediate.Fields.score.toString());
 					hIndexScore.put(iIndex, score);
 				}
 			}
 			finalScore = calculateFinalScore(hIndexScore);	
-			DAOCategorization.storeWebCat(lastUrl, category.toString(), finalScore);
-			lastUrl = rs.getString(DAOCategorization.Fields.url.toString());
+			DAOScoresIntermediate.saveUrl(lastUrl, category.ordinal(), finalScore);
+			lastUrl = rs.getString(DAOScoresIntermediate.Fields.url.toString());
 		}
 
 	}

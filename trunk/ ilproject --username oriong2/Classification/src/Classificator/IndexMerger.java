@@ -1,6 +1,7 @@
 package Classificator;
 
 	import java.io.File;
+
 	import java.io.IOException;
 	import java.util.Date;
 	 
@@ -9,9 +10,11 @@ package Classificator;
 	import org.apache.lucene.store.Directory;
 	import org.apache.lucene.store.FSDirectory;
 	 
+	@Deprecated
 	public class IndexMerger {
 	
 	    /** Index all text files under a directory. */
+
     public static void main(String[] args) {
 	
 	       if(args.length != 2){
@@ -37,6 +40,8 @@ package Classificator;
 	        Date start = new Date();
 	
 	        try {
+	        /*	
+	        
 	            IndexWriter writer = new IndexWriter(INDEX_DIR, new StandardAnalyzer(),  true);
 	            writer.setMergeFactor(1000);
 	           writer.setRAMBufferSizeMB(50);
@@ -62,9 +67,10 @@ package Classificator;
 	           Date end = new Date();
            System.out.println("It took: "+((end.getTime() - start.getTime()) / 1000)
 	                                            + "\"");
-	 
-	        } catch (IOException e) {
+	         	*/
+	        } catch (Exception e) {
 	            e.printStackTrace();
 	        }
 
 }
+    }

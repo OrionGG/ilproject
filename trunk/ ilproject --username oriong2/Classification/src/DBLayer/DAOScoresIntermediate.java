@@ -7,6 +7,13 @@ import java.sql.Statement;
 import CategoryGenerator.Categories;
 
 public class DAOScoresIntermediate extends DAOWebsClassified{
+	
+	public enum Fields{
+		indextype,
+		score,
+		url
+	}
+	
 	public static ResultSet selectUrlsFromCategory(Categories category) throws SQLException, ClassNotFoundException {
 		// TODO Auto-generated method stub
 		setUpCatego();
@@ -17,12 +24,12 @@ public class DAOScoresIntermediate extends DAOWebsClassified{
 
 		return rs;
 	}
-	public static void saveUrl(String domainUrl, int i, String stringValue,	float score)  {
+	public static void saveUrl(String domainUrl, int i, float score)  {
 
 		try {
 			setUpCatego();
 			Statement st = conexionCategorized.createStatement();
-			String sql = "INSERT INTO scores_intermediate(url,indextype,category,score) VALUES ('"+domainUrl+"','"+i+"','"+stringValue+"','"+score+"')";
+			String sql = "INSERT INTO scores_intermediate(url,indextype,score) VALUES ('"+domainUrl+"','"+i+"','"+score+"')";
 			st.executeUpdate(sql);
 
 		} catch (Exception e) {

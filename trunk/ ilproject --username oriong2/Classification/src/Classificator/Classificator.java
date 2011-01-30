@@ -46,7 +46,8 @@ import CategoryGenerator.IndexesWriter;
 import CategoryGenerator.StringToCategories;
 import CategoryGenerator.UrlByCategory;
 import CategoryGenerator.IndexesWriter.IndexType;
-import DBLayer.DAOCategorization;
+import DBLayer.DAOScoresIntermediate;
+import DBLayer.DAOWebsClassified;
 import DBLayer.DAOUrl;
 import GetText.ExtractText;
 import Spider.GetSubUrls;
@@ -243,7 +244,7 @@ public class Classificator {
 			String sCategoryName = hitDoc.getField("CategoryName").stringValue();
 
 			////SAVING TO DB TEMPORARY SCORES
-			DAOCategorization.storeEvaWeb(sDomainUrl,i, sCategoryName,oScoreDoc.score);
+			DAOScoresIntermediate.saveUrl(sDomainUrl,i, oScoreDoc.score);
 			oResult.hCategScore.put(sCategoryName, oScoreDoc.score);
 		
 			System.out.println("     "+hitDoc.getField("CategoryName").stringValue() + " "+ oScoreDoc.score+"->ALMACENADO");
