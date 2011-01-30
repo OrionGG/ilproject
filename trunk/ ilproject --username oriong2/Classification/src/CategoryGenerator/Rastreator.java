@@ -40,8 +40,9 @@ public class Rastreator {
 			List<String> sUrlsSubListToIndex,
 			List<String> sUrlsSubListToClassify) {
 		
+		
 		for(Category oCategory:Category.values()){
-			List<String> lUrls = DAOUrlsRastreated.getInstance().getUrlsCategory(oCategory);
+			List<String> lUrls = DAOUrlsRastreated.getInstance().selectUrls(oCategory, State.Nothing);
 
 			int iMaxToText =(int) (lUrls.size() * percentage);
 			sUrlsSubListToIndex.addAll(lUrls.subList(0, iMaxToText));
@@ -61,7 +62,7 @@ public class Rastreator {
 		//list we are going to return
 		for(Category oCategory: Category.values()){
 			//list of the urls of this category saved yet
-			List<String> lUrlsSaved = DAOUrlsClassified.getInstance().getUrlsCategory(oCategory);
+			List<String> lUrlsSaved = DAOUrlsRastreated.getInstance().selectUrlsCategory(oCategory);
 			//list with all news urls for a category
 			List<String> lUrls = getUrlsFromCategory(oCategory.toString(), lUrlsSaved);
 			for(String sUrls: lUrls){

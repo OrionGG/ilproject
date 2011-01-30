@@ -3,6 +3,7 @@ package DBLayer;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -123,6 +124,24 @@ public class DAOUrlsRastreated extends DAOWebsClassified {
 			}
 			return lUrls;
 		}
+		
+
+		public List<String> selectUrls(Category oCategory, State eState) {
+			List<String> lUrls = new java.util.ArrayList<String>();
+			try {
+				ResultSet oResultSet = executeQuery("SELECT url FROM urls_rastreated WHERE category=? AND state=?",
+						oCategory.ordinal(), eState.ordinal());
+				while(oResultSet.next()){
+					String sUrl = oResultSet.getString("url");
+					lUrls.add(sUrl);
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return lUrls;
+		}
+		
 		public TreeMap<String,Category> selectUrlsCategory( State eState) {
 			TreeMap<String,Category> tUrls = new TreeMap<String,Category>();
 			try {
