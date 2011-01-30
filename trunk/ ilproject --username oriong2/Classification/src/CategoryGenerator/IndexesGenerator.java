@@ -70,6 +70,7 @@ public class IndexesGenerator {
 		Internet,
 		DB
 	}
+	
 
 	private static SourceOfData getSourceOfData = SourceOfData.DB;
 	private static String rdfs = "http://www.w3.org/2000/01/rdf-schema#";
