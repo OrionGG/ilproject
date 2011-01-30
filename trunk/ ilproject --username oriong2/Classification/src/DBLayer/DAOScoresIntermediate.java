@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import CategoryGenerator.Categories;
+import dominio.Category;;
 
 public class DAOScoresIntermediate extends DAOWebsClassified{
 	
@@ -23,7 +23,7 @@ public class DAOScoresIntermediate extends DAOWebsClassified{
 	}
 
 	
-	public ResultSet selectUrlsFromCategory(Categories category) throws SQLException, ClassNotFoundException {
+	public ResultSet selectUrlsFromCategory(Category category) throws SQLException, ClassNotFoundException {
 		String query="SELECT url,indextype,score FROM scores_intermediate WHERE category='"+category+"' ORDER BY value url,index";
 		System.out.println(query);
 		ResultSet rs = executeQuery(query);

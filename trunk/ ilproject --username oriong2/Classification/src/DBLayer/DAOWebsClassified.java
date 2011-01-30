@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
 
-import CategoryGenerator.Categories;
+import dominio.Category;
 
 import dao.DAO_MySQL;
 

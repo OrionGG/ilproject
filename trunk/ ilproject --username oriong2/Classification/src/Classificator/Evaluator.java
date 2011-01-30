@@ -3,7 +3,7 @@ import java.util.*;
 import java.util.Map.Entry;
 
 
-import CategoryGenerator.Categories;
+import dominio.Category;
 import DBLayer.*;
 import DBLayer.DAOUrlsRastreated.State;
 

@@ -14,7 +14,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 
-import CategoryGenerator.Categories;
+import dominio.Category;
 import DBLayer.DAOScoresIntermediate;
 import DBLayer.DAOScoresIntermediate;
 
@@ -32,7 +32,7 @@ public class FinalScoreCalculator {
 	public static void calculateFinalScoreTable() throws SQLException, ClassNotFoundException{
 
 		Float finalScore = new Float(0);
-		for(Categories category : Categories.allCategories){
+		for(Category category : Category.allCategories){
 			ResultSet rs= DAOScoresIntermediate.getInstance().selectUrlsFromCategory(category);
 			String lastUrl=rs.getString(DAOScoresIntermediate.Fields.url.toString());
 
@@ -58,21 +58,21 @@ public class FinalScoreCalculator {
 		return fTotalScore;
 	}
 
-	public static void showFinalResults(TreeMap<Double, Categories> oTreeMap) {
+	public static void showFinalResults(TreeMap<Double, Category> oTreeMap) {
 		int i= 0;
-		for(Entry<Double,Categories> oTreeMapEntry: oTreeMap.entrySet()){
+		for(Entry<Double,Category> oTreeMapEntry: oTreeMap.entrySet()){
 			double dScore =  oTreeMapEntry.getKey();
-			Categories oCategoriesTreeMapEntry = oTreeMapEntry.getValue();
+			Category oCategoryTreeMapEntry = oTreeMapEntry.getValue();
 
 
-			System.out.println(i + ": " + oCategoriesTreeMapEntry.toString() + " = " + dScore);
+			System.out.println(i + ": " + oCategoryTreeMapEntry.toString() + " = " + dScore);
 			i++;
 		}
 	}
 
-	public static TreeMap<Double, Categories> indexShortedCross(List<IndexCategScore> lCategIndexScore) {
-		TreeMap<Double,Categories> oTreeMap = new TreeMap<Double,Categories>(Collections.reverseOrder()); 
-		for(Categories cat:Categories.allCategories){
+	public static TreeMap<Double, Category> indexShortedCross(List<IndexCategScore> lCategIndexScore) {
+		TreeMap<Double,Category> oTreeMap = new TreeMap<Double,Category>(Collections.reverseOrder()); 
+		for(Category cat:Category.allCategories){
 			/*for(IndexCategScore oIndexCategScore: lCategIndexScore){
 				float iIndexScore = oIndexCategScore.hCategScore.get(cat);
 			}*/

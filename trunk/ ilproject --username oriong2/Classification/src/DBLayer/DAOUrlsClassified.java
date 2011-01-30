@@ -7,9 +7,6 @@ import java.util.List;
 
 import org.apache.log4j.Category;
 
-
-import CategoryGenerator.Categories;
-
 public class DAOUrlsClassified extends DAOWebsClassified{
 	public enum Fields{
 		id,
@@ -26,14 +23,14 @@ public class DAOUrlsClassified extends DAOWebsClassified{
 	}
 
 	
-	public Categories selectUrl(String url) throws SQLException, ClassNotFoundException {
+	public Category selectUrl(String url) throws SQLException, ClassNotFoundException {
 		String query="SELECT category FROM urls_classified WHERE url='"+url+"'";
 		System.out.println(query);
 		ResultSet rs = executeQuery(query);
-		Categories categories=null;
-		categories=rs.getInt(0);
-		categories.ordinal();
-		return categories;
+		Category Category=null;
+		Category=rs.getInt(0);
+		Category.ordinal();
+		return Category;
 	}
 	public void saveUrls(String url, String category)  {
 
@@ -44,6 +41,12 @@ public class DAOUrlsClassified extends DAOWebsClassified{
 			e.printStackTrace();
 		}
 
+	}
+
+
+	public List<String> getUrlsCategory(dominio.Category oCategory) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

@@ -36,13 +36,12 @@ import org.apache.lucene.util.Version;
 
 import com.hp.hpl.jena.rdf.model.Resource;
 
-import dao.DAO_MySQL;
-import dominio.StringToCategories;
-import dominio.UrlByCategory;
+
+import dominio.UrlForFiltering;
 
 
 import Analizer.SpanishAnalyzer;
-import CategoryGenerator.Categories;
+import dominio.Category;
 import CategoryGenerator.IndexesGenerator;
 import CategoryGenerator.IndexesWriter;
 import CategoryGenerator.IndexesWriter.IndexType;
@@ -113,7 +112,7 @@ public class Classificator {
 			e.printStackTrace();
 		}
 	
-		TreeMap<Double, Categories> oTreeMap = FinalScoreCalculator.indexShortedCross(listTopDocs);
+		TreeMap<Double, Category> oTreeMap = FinalScoreCalculator.indexShortedCross(listTopDocs);
 		System.out.println("");
 		//	System.out.println("URL: "+ sUrl);
 		System.out.println("");

@@ -5,10 +5,10 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import dominio.StringToCategories;
-import dominio.UrlByCategory;
+import dominio.Category;
 
-import DBLayer.DAOUrlCategory;
+import dominio.UrlForFiltering;
+
 import DBLayer.DAOUrlsClassified;
 import DBLayer.DAOUrlsRastreated;
 import DBLayer.DAOUrlsRastreated.State;
@@ -40,7 +40,7 @@ public class Rastreator {
 			List<String> sUrlsSubListToIndex,
 			List<String> sUrlsSubListToClassify) {
 		
-		for(Categories oCategory: Categories.allCategories){
+		for(Category oCategory: Category.allCategories){
 			List<String> lUrls = DAOUrlsRastreated.getInstance().getUrlsCategory(oCategory);
 
 			int iMaxToText =(int) (lUrls.size() * percentage);
@@ -59,7 +59,7 @@ public class Rastreator {
 	private static void saveUrlsByCategory() throws MalformedURLException,
 			IOException {
 		//list we are going to return
-		for(Categories oCategory: Categories.allCategories){
+		for(Category oCategory: Category.allCategories){
 			//list of the urls of this category saved yet
 			List<String> lUrlsSaved = DAOUrlsClassified.getInstance().getUrlsCategory(oCategory);
 			//list with all news urls for a category
@@ -79,7 +79,7 @@ public class Rastreator {
 		List<String> lUrls = new java.util.ArrayList<String>();
 		Categories oCategory = StringToCategories.getCategory(categoryName);
 		String sTextUrls = "";
-		for(UrlByCategory oUrlByCategory : oCategory.getLUrlList()){
+		for(UrlForFiltering oUrlByCategory : oCategory.getLUrlList()){
 			lUrls.addAll(Spider.GetSubUrls.SpiderUrl(oUrlByCategory.sMainUrl, oUrlByCategory.sRestUrl, 2,40,1, oUrlByCategory.sSuffixFilter,  urlList));
 		}
 
