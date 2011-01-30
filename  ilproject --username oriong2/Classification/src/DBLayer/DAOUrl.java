@@ -5,10 +5,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 
-
+  @Deprecated
 public class DAOUrl extends DAO{
     
-    
+  
     public int getId(String sUrl)throws SQLException{
     	ResultSet oResultSet = executeQuery("SELECT ID FROM URL WHERE URL = ?",sUrl);
     	 if (oResultSet.next()) {
