@@ -1,7 +1,7 @@
-package CategoryGenerator;
+package dominio;
 
-public class UrlByCategory {
-	public UrlByCategory(String mainUrl, String restUrl, String suffixFilter) {
+public class UrlForFiltering {
+	public UrlForFiltering(String mainUrl, String restUrl, String suffixFilter) {
 		super();
 		sMainUrl = mainUrl;
 		sRestUrl = restUrl;

@@ -5,7 +5,11 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import dominio.StringToCategories;
+import dominio.UrlByCategory;
+
 import DBLayer.DAOUrlCategory;
+import DBLayer.DAOUrlsClassified;
 import DBLayer.DAOUrlsRastreated;
 import DBLayer.DAOUrlsRastreated.State;
 
@@ -57,7 +61,7 @@ public class Rastreator {
 		//list we are going to return
 		for(Categories oCategory: Categories.allCategories){
 			//list of the urls of this category saved yet
-			List<String> lUrlsSaved = DAOUrlCategory.getInstance().getUrlsCategory(oCategory);
+			List<String> lUrlsSaved = DAOUrlsClassified.getInstance().getUrlsCategory(oCategory);
 			//list with all news urls for a category
 			List<String> lUrls = getUrlsFromCategory(oCategory.toString(), lUrlsSaved);
 			for(String sUrls: lUrls){

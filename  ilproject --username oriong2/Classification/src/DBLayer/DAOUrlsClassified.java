@@ -31,7 +31,7 @@ public class DAOUrlsClassified extends DAOWebsClassified{
 		System.out.println(query);
 		ResultSet rs = executeQuery(query);
 		Categories categories=null;
-		Int cat=rs.getInt(0);
+		categories=rs.getInt(0);
 		categories.ordinal();
 		return categories;
 	}

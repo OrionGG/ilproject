@@ -37,14 +37,14 @@ import org.apache.lucene.util.Version;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 import dao.DAO_MySQL;
+import dominio.StringToCategories;
+import dominio.UrlByCategory;
 
 
 import Analizer.SpanishAnalyzer;
 import CategoryGenerator.Categories;
 import CategoryGenerator.IndexesGenerator;
 import CategoryGenerator.IndexesWriter;
-import CategoryGenerator.StringToCategories;
-import CategoryGenerator.UrlByCategory;
 import CategoryGenerator.IndexesWriter.IndexType;
 import DBLayer.DAOScoresIntermediate;
 import DBLayer.DAOUrlsRastreated;

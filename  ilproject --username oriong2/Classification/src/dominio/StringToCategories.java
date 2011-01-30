@@ -1,15 +1,16 @@
-package CategoryGenerator;
+package dominio;
 
 import java.util.Hashtable;
 
+
 public class StringToCategories {
-	private Hashtable<String, Categories> CategoriesTable = new Hashtable<String, Categories>();
+	private Hashtable<String, Category> CategoriesTable = new Hashtable<String, Category>();
 	
 	private static StringToCategories oInstance = null;
 	
 	public StringToCategories(){
-		CategoriesTable = new Hashtable<String, Categories>();
-		for(Categories oCategories: Categories.allCategories){
+		CategoriesTable = new Hashtable<String, Category>();
+		for(Category oCategories: Category.allCategories){
 			CategoriesTable.put(oCategories.toString(), oCategories);
 		}		
 	}
@@ -21,8 +22,8 @@ public class StringToCategories {
 		return oInstance;
 	}
 	
-	public static Categories getCategory(String sCategoryName){
-		Categories sResult = StringToCategories.getInstance().CategoriesTable.get(sCategoryName);
+	public static Category getCategory(String sCategoryName){
+		Category sResult = StringToCategories.getInstance().CategoriesTable.get(sCategoryName);
 		return sResult;
 	}
 

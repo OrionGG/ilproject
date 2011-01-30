@@ -24,7 +24,7 @@ public class Evaluator {
 		
 		//read DB
 		TreeMap<String,Integer> listUrlsEvaluation=DAOUrlsRastreated.getInstance().selectUrls(State.Classified);
-	
+		
 		for(String url : listUrlsEvaluation){
 			String urlOld=url;
 			Categories cat=DAOUrlsClassified.getInstance().selectUrl(url);
@@ -32,8 +32,6 @@ public class Evaluator {
 				if(cat==catNew){
 					
 				}
-				
-				
 			}
 		}
 	
