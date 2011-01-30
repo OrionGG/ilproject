@@ -47,6 +47,7 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
 
+import dao.DAO;
 import dao.DAO_Model;
 import dominio.DbPedia;
 import encoders.Encode;
@@ -55,8 +56,9 @@ import encoders.Encode;
 import Analizer.BlogSpaAnalyzer;
 import Analizer.SpanishAnalyzer;
 import CategoryGenerator.IndexesWriter.IndexType;
-import DBLayer.DAOCategorization;
-import DBLayer.DAOUrlCategory;
+
+import DBLayer.DAOUrlsClassified;
+import DBLayer.DAOUrlsRastreated;
 import DBLayer.DAOWebsClassified;
 import GetText.ExtractText;
 import GetText.WikipediaText;
@@ -87,36 +89,26 @@ public class IndexesGenerator {
 		System.out.println("EMPIEZA: coge categorias");
 		Model ontology=DAO_Model.generateMainModel();
 		ArrayList<Resource> urlCategorias=getFatherCategoriesInternet();
-		//System.out.println("Fin categorias");
-
-
+		
 		SpanishAnalyzer analyzer = new SpanishAnalyzer(Version.LUCENE_30, new File (".\\resources\\stopwords\\spanishSmart.txt"));
-		//Property type=ontology.createProperty(rdf,"type");
 
+		////LIST OF INDEXES THAT WILL BE CREATED---->CHANGE
 		IndexType[] oListofIdexes = new IndexType[]{
 				/*IndexType.DBPedia,
-
-			IndexType.Wikipedia,*/
-
+				IndexType.Wikipedia,*/
 				//IndexType.ListWebsIndex
 		};
+		IndexesWriter.CreateIndexes(oListofIdexes, analyzer);
 
-		//IndexesWriter.CreateIndexes(oListofIdexes, analyzer);
 
-
-		String nameResource = "";	
-		String sTextResources = "";
-		String sTotalTextSynonym = "";
-		//int i = 0; i< 20; i++
 		
 		for(Resource category : urlCategorias){
 
-		
 			////PRIMERA PARTE-->>Generar indice de Recursos de DbPedia
-			addResourcesCategory(analyzer, IndexesWriter.getIndex(IndexType.DBPediaIndex), sTextResources, category);
+			addResourcesCategory(analyzer, IndexesWriter.getIndex(IndexType.DBPediaIndex), category);
 
 			///SEGUNDA PARTE--->Generar indice de Texto de WIkipedia
-			addTextFromWikipedia(analyzer, IndexesWriter.getIndex(IndexType.WikipediaIndex), sTotalTextSynonym, category);
+			addTextFromWikipedia(analyzer, IndexesWriter.getIndex(IndexType.WikipediaIndex), category);
 
 			////TERCERA FASE: ");---->Generar indice de Noticias diarias
 			addTextFromUrls(IndexesWriter.getIndex(IndexType.ListWebsIndex), category);
@@ -126,7 +118,7 @@ public class IndexesGenerator {
 		////The list for evaluating  with 20%of the webs is tranferred to DB WEB_CAT, 
 		//Evaluator will look for them
 			
-		persistNewsToEvaluate(listToEvaluate);
+		saveUrlsToEvaluate(listToEvaluate);
 	
 		
 		/// Not necesary ---  Evaluator.evaluate(listToEvaluate);
@@ -134,18 +126,11 @@ public class IndexesGenerator {
 	}
 
 	
-	
-	
-
-
-
 
 
 
 //////PRIMERA FASE
-	private static void addResourcesCategory(SpanishAnalyzer analyzer,
-			IndexWriter iDBPediaWriter, String sTextResources,
-			Resource category) throws Exception,
+	private static void addResourcesCategory(SpanishAnalyzer analyzer,IndexWriter iDBPediaWriter, Resource category) throws Exception,
 			IOException, CorruptIndexException {
 		String pathCategory=category.getURI();
 
@@ -155,6 +140,9 @@ public class IndexesGenerator {
 		String labelResource=null;
 		System.out.println("\nCATEGORIA = " +category.getLocalName() + "\n");
 		System.out.println("Tiene "+lis.size()+" resources");
+		
+		String sTextResources = "";
+		
 		for(int i=0; i<100 && i<lis.size();i++){
 			Resource resource =lis.get(i);
 			//if(resource.getLocalName()!=null){
@@ -184,13 +172,12 @@ public class IndexesGenerator {
 	}
 	
 //////SEGUNDA FASE
-	private static void addTextFromWikipedia(SpanishAnalyzer analyzer,
-			IndexWriter iWikiWriter, String sTotalTextSynonym, Resource category)
+	private static void addTextFromWikipedia(SpanishAnalyzer analyzer,IndexWriter iWikiWriter, Resource category)
 	throws Exception, IOException, JWNLException, CorruptIndexException {
 		String sText;
 		WikipediaText oWikipediaText = new WikipediaText();
 		String sTextWikipedia= oWikipediaText.GetTextFromWikipedia(category.getLocalName(), true);
-
+		String sTotalTextSynonym = "";
 
 		sText = showTextAnalized(sTextWikipedia, analyzer);
 
@@ -231,64 +218,38 @@ public class IndexesGenerator {
 	
 	
 //////TERCERA FASE
-	private static void addTextFromUrls(IndexWriter iListWebsWriter, Resource category)
-	throws MalformedURLException, IOException {
+	private static void addTextFromUrls(IndexWriter iListWebsWriter, Resource category)	throws MalformedURLException, IOException {
 	
 		
 		//Obtener objeto category
 		Categories oCategory = StringToCategories.getCategory(category.getLocalName());
 		
 			
-		List<String> sUrls = new ArrayList<String>();
+		List<String> listUrls = new ArrayList<String>();
 		//Esto es para o sacar las urls de internet rastreando con el spider
 		//o cogerlas de la base de datos donde previamente las hemos guardado con StoreAllUrls
 		
 		///POR DEFECTO DB
-		sUrls = DAOWebsClassified.getInstance().getUrlsCategory(oCategory);
-	
-
-		int iMaxToText =(int) (sUrls.size() * 0.8);
-
-		List<String> sUrlsSubListToIndex =  sUrls.subList(0, iMaxToText);
-		List<String> sUrlsSubListToEval =  sUrls.subList(iMaxToText, sUrls.size());
-		listToEvaluate.put(oCategory, sUrlsSubListToEval);
 		
-		listToClassify.put(oCategory, sUrlsSubListToIndex);
+		listUrls = DAOUrlsRastreated.selectUrls("classified",);
+	
 		String sTextUrls = "";		
 		
 		//RECOGE TODO EL TEXTO
-		sTextUrls = getTextFromUrls(sUrlsSubListToIndex, iMaxToText) + " ";
+
+		for(int i = 0; i<listUrls.size();i++){
+			String sUrlSub = listUrls.get(i);
+			sTextUrls += ExtractText.GetBlogText(sUrlSub) + " ";
+			DAOUrlsRastreated.updateUrlState();
+		}
 		AddDocument(iListWebsWriter, category, sTextUrls.trim());
+		
 	}
 
 	
 	
 	
 	///METODOS COMPLEMENTARIOS
-
-	
-	private static void persistNewsToEvaluate(Hashtable<Categories, List<String>> listToEvaluate2) {
-	
-	for(Entry<Categories,List<String>> oEntry:listToEvaluate.entrySet()){
-		Categories oCategories = oEntry.getKey();
-	
-		for(String sUrl: oEntry.getValue()){
-			DAOCategorization.storeWebCat(sUrl, oCategories.toString());
-		}
-	}
-		
-	}
-
-	private static String getTextFromUrls(List<String> sUrls, int maxToText) throws IOException,
-	MalformedURLException {
-		String sText="";
-		for(int i = 0; i<maxToText;i++){
-			String sUrlSub = sUrls.get(i);
-			sText += ExtractText.GetBlogText(sUrlSub) + " ";
-		}
-		return sText;
-	}
-
 	
 
 	private static String showTextAnalized(String sTextResources, Analyzer oAnalyzer)
@@ -333,6 +294,32 @@ public class IndexesGenerator {
 
 
 	////METODOS NO USADOS
+@Deprecated
+	private static void saveUrlsToEvaluate(Hashtable<Categories, List<String>> listToEvaluate2) {
+		
+		for(Entry<Categories,List<String>> oEntry:listToEvaluate.entrySet()){
+			Categories oCategories = oEntry.getKey();
+		
+			for(String sUrl: oEntry.getValue()){
+				//DAO.storeWebCat(sUrl, oCategories.toString());
+			}
+		}
+			
+		}
+
+		
+
+@Deprecated
+		private static String getTextFromUrls(List<String> sUrls, int maxToText) throws IOException,
+		MalformedURLException {
+			String sText="";
+			for(int i = 0; i<maxToText;i++){
+				String sUrlSub = sUrls.get(i);
+				sText += ExtractText.GetBlogText(sUrlSub) + " ";
+			}
+			return sText;
+		}
+
 	private static void getTextFromUrlsFromOneCat( Resource category)
 	throws MalformedURLException, IOException {
 		List<String> sUrls = new java.util.ArrayList<String>();
