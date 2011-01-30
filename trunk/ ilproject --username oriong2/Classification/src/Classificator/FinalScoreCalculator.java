@@ -31,9 +31,9 @@ public class FinalScoreCalculator {
 
 	public static void calculateFinalScoreTable() throws SQLException, ClassNotFoundException{
 
-		Float finalScore=new Float(0);
+		Float finalScore = new Float(0);
 		for(Categories category : Categories.allCategories){
-			ResultSet rs= DAOScoresIntermediate.selectUrlsFromCategory(category);
+			ResultSet rs= DAOScoresIntermediate.getInstance().selectUrlsFromCategory(category);
 			String lastUrl=rs.getString(DAOScoresIntermediate.Fields.url.toString());
 
 			Hashtable<Integer, Float> hIndexScore = new Hashtable<Integer, Float>();
@@ -47,7 +47,7 @@ public class FinalScoreCalculator {
 				}
 			}
 			finalScore = calculateFinalScore(hIndexScore);	
-			DAOScoresIntermediate.saveUrl(lastUrl, category.ordinal(), finalScore);
+			DAOScoresIntermediate.getInstance().saveUrl(lastUrl, category.ordinal(), finalScore);
 			lastUrl = rs.getString(DAOScoresIntermediate.Fields.url.toString());
 		}
 
