@@ -50,6 +50,7 @@ import DBLayer.DAOScoresIntermediate;
 import DBLayer.DAOUrlsRastreated;
 import DBLayer.DAOWebsClassified;
 import DBLayer.DAOUrl;
+import DBLayer.DAOUrlsRastreated.State;
 import GetText.ExtractText;
 import Spider.GetSubUrls;
 
@@ -70,42 +71,20 @@ public class Classificator {
 				String sUrl = args[2].toString();
 				List<String> oList = GetSubUrls.DefaultSpiderUrl(sDomainUrl, sUrl);
 				for(String sSubUrl : oList){
-					String sText = ExtractText.GetBlogText(sSubUrl);
-					DAOUrl oDAOUrl = new DAOUrl();
-					oDAOUrl.insertOrUpdateUrl(sSubUrl, sText);
-					classificate(sText,sDomainUrl);
+			
+					classificate(sSubUrl);
 				}
 			}else{
 				
 				////GETTING THE URLS FROM THE CATEGORY GENERATOR
 				
-				
-					ArrayList <String> urls=DAOUrlsRastreated.getInstance().selectUrls("indexar");
+					List<String> urls=DAOUrlsRastreated.getInstance().selectUrls(State.ToIndex);
 					for(String url : urls){
 						classificate(url);
 						
 					}
 								
-					for(String sSubUrl : sUrls){
-						String sText = ExtractText.GetBlogText(sSubUrl);
-						DAOUrl oDAOUrl = new DAOUrl();
-						
-						
-						List<IndexCategScore> listTopDocs = getScoresCat(sDomainUrl);
-						
-						TreeMap<Double, Categories> oTreeMap = Evaluator.indexShortedCross(listTopDocs);
-						System.out.println("");
-					//	System.out.println("URL: "+ sUrl);
-						System.out.println("");
-
-						Evaluator.showFinalResults(oTreeMap);
-						
-						
-						
-						
-						
-						classificate(sText,sDomainUrl);
-					}
+				
 
 				}
 				
@@ -113,10 +92,27 @@ public class Classificator {
 			}
 		}
 
-	}
+	
 	public static void classificate(String sDomainUrl){
-		List<IndexCategScore> listTopDocs = getScoresCat(sDomainUrl);
 		
+		List<IndexCategScore> listTopDocs = new ArrayList<IndexCategScore>();
+		String sText = "";
+		try {
+			sText = ExtractText.GetBlogText(sDomainUrl);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			listTopDocs = getListIndex(sDomainUrl, sText);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
 		TreeMap<Double, Categories> oTreeMap = FinalScoreCalculator.indexShortedCross(listTopDocs);
 		System.out.println("");
 		//	System.out.println("URL: "+ sUrl);
@@ -254,7 +250,7 @@ public class Classificator {
 			String sCategoryName = hitDoc.getField("CategoryName").stringValue();
 
 			////SAVING TO DB TEMPORARY SCORES
-			DAOScoresIntermediate.saveUrl(sDomainUrl,i, oScoreDoc.score);
+			DAOScoresIntermediate.getInstance().saveUrl(sDomainUrl,i, oScoreDoc.score);
 			oResult.hCategScore.put(sCategoryName, oScoreDoc.score);
 		
 			System.out.println("     "+hitDoc.getField("CategoryName").stringValue() + " "+ oScoreDoc.score+"->ALMACENADO");

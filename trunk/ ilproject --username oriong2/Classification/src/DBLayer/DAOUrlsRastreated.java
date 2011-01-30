@@ -11,9 +11,9 @@ import DBLayer.DAOUrlsRastreated.State;
 
 public class DAOUrlsRastreated extends DAOWebsClassified {
 	public enum State{
-		nothing,
-		toIndex,
-		toClassify,
+		Nothing,
+		ToIndex,
+		ToClassify,
 		Indexed,
 		Classified
 	}
@@ -110,7 +110,7 @@ public class DAOUrlsRastreated extends DAOWebsClassified {
 		}
 
 
-		public List<String> selectUrls(String string, State eState) {
+		public List<String> selectUrls( State eState) {
 			List<String> lUrls = new java.util.ArrayList<String>();
 			try {
 				ResultSet oResultSet = executeQuery("SELECT url FROM urls_rastreated WHERE state=?",eState.ordinal());

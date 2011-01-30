@@ -232,7 +232,7 @@ public class IndexesGenerator {
 		
 		///POR DEFECTO DB
 		
-		listUrls = DAOUrlsRastreated.getInstance().selectUrls("classified", State.toIndex);
+		listUrls = DAOUrlsRastreated.getInstance().selectUrls(State.ToIndex);
 	
 		String sTextUrls = "";		
 		
