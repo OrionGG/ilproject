@@ -178,6 +178,7 @@ public class Classificator {
 		
 
 		int i =0;
+		
 		for(IndexTopDoc oIndexTopDoc : lIndexTopDoc){
 			IndexCategScore oIndexCategScore = PrepareIndexToCross(sDomainUrl, i, oIndexTopDoc);
 			lResult.add(oIndexCategScore);

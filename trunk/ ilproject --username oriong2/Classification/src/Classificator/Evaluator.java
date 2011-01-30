@@ -2,9 +2,12 @@ package Classificator;
 import java.util.*;
 import java.util.Map.Entry;
 
+import org.apache.james.mime4j.codec.EncoderUtil.Encoding;
+
 
 import dominio.Category;
 import DBLayer.*;
+import DBLayer.DAOUrlsClassified.Fields;
 import DBLayer.DAOUrlsRastreated.State;
 
 
@@ -22,12 +25,18 @@ public class Evaluator {
 	}
 	public static void evaluate(){
 		
-		//read DB
-		TreeMap<String,Integer> listUrlsEvaluation=DAOUrlsRastreated.getInstance().selectUrls(State.Classified);
-		
-		for(String url : listUrlsEvaluation){
-			String urlOld=url;
-			Categories cat=DAOUrlsClassified.getInstance().selectUrl(url);
+		//read DB, take the rastreated webd webs, rady for categ
+		TreeMap<String,Category> treeUrlsEvaluation=DAOUrlsRastreated.getInstance().selectUrlsCategory(State.Classified);
+		Set<Entry<String, Category>>set=treeUrlsEvaluation.entrySet();
+		////Read Db, taking the catgeorizated and ready for evaluated webs
+		for(Entry<String, Category> entry : set){
+			String url=entry.getKey();
+			Category cat=entry.getValue();
+			
+			ArrayList<>=DAOUrlsClassified.getInstance().selectClassifiedUrl(url);
+			for(){
+				
+			}
 			if(url.equals(urlOld)){
 				if(cat==catNew){
 					
@@ -37,19 +46,19 @@ public class Evaluator {
 	
 	}
 	@Deprecated
-	public static void evaluate(Hashtable<Categories,List<String>> urlsCategorizadas){
+	public static void evaluate(Hashtable<Category,List<String>> urlsCategorizadas){
 		//read DB
 		
 		//entryset
-		for(Entry<Categories,List<String>> oEntry:urlsCategorizadas.entrySet()){
-			Categories oCategories = oEntry.getKey();
+		for(Entry<Category,List<String>> oEntry:urlsCategorizadas.entrySet()){
+			Category oCategory = oEntry.getKey();
 
 			List<IndexCategScore> lCategIndexScore = new java.util.ArrayList<IndexCategScore>();
 
 			for(String sUrl: oEntry.getValue()){
 				lCategIndexScore = Classificator.getScoresCat(sUrl);
 
-				TreeMap<Double, Categories> oTreeMap = FinalScoreCalculator.indexShortedCross(lCategIndexScore);
+				TreeMap<Double, Category> oTreeMap = FinalScoreCalculator.indexShortedCross(lCategIndexScore);
 				System.out.println("");
 				System.out.println("URL: "+ sUrl);
 				System.out.println("");
