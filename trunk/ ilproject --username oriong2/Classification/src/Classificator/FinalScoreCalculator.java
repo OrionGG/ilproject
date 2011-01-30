@@ -4,7 +4,9 @@ package Classificator;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
@@ -54,6 +56,39 @@ public class FinalScoreCalculator {
 	private static float calculateFinalScore(Hashtable<Integer, Float> hIndexScore) {
 		float fTotalScore = calculateFinalScore(hIndexScore.get(1), hIndexScore.get(2), hIndexScore.get(3));
 		return fTotalScore;
+	}
+
+	public static void showFinalResults(TreeMap<Double, Categories> oTreeMap) {
+		int i= 0;
+		for(Entry<Double,Categories> oTreeMapEntry: oTreeMap.entrySet()){
+			double dScore =  oTreeMapEntry.getKey();
+			Categories oCategoriesTreeMapEntry = oTreeMapEntry.getValue();
+
+
+			System.out.println(i + ": " + oCategoriesTreeMapEntry.toString() + " = " + dScore);
+			i++;
+		}
+	}
+
+	public static TreeMap<Double, Categories> indexShortedCross(List<IndexCategScore> lCategIndexScore) {
+		TreeMap<Double,Categories> oTreeMap = new TreeMap<Double,Categories>(Collections.reverseOrder()); 
+		for(Categories cat:Categories.allCategories){
+			/*for(IndexCategScore oIndexCategScore: lCategIndexScore){
+				float iIndexScore = oIndexCategScore.hCategScore.get(cat);
+			}*/
+
+			Float iIndexScore1 = lCategIndexScore.get(0).hCategScore.get(cat.toString());
+			if(iIndexScore1 == null) iIndexScore1 = 0.0f;
+			Float iIndexScore2 = lCategIndexScore.get(1).hCategScore.get(cat.toString());
+			if(iIndexScore2 == null) iIndexScore2 = 0.0f;
+			Float iIndexScore3 = lCategIndexScore.get(2).hCategScore.get(cat.toString());
+			if(iIndexScore3 == null) iIndexScore3 = 0.0f;
+
+			double score = FinalScoreCalculator.calculateFinalScore(iIndexScore1, iIndexScore2, iIndexScore3);
+
+			oTreeMap.put(score, cat);
+		}
+		return oTreeMap;
 	}
 
 }

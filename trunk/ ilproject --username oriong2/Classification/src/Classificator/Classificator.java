@@ -47,6 +47,7 @@ import CategoryGenerator.StringToCategories;
 import CategoryGenerator.UrlByCategory;
 import CategoryGenerator.IndexesWriter.IndexType;
 import DBLayer.DAOScoresIntermediate;
+import DBLayer.DAOUrlsRastreated;
 import DBLayer.DAOWebsClassified;
 import DBLayer.DAOUrl;
 import GetText.ExtractText;
@@ -62,26 +63,8 @@ public class Classificator {
 			String sDomainUrl = args[1].toString();
 			
 			if(sOption.equals("-u")){
-				List<IndexCategScore> listTopDocs = getScoresCat(sDomainUrl);
-			
-				TreeMap<Double, Categories> oTreeMap = Evaluator.indexShortedCross(listTopDocs);
-				System.out.println("");
-			//	System.out.println("URL: "+ sUrl);
-				System.out.println("");
-
-				Evaluator.showFinalResults(oTreeMap);
-				//TreeMap<Float,Categories> scoreCategory= FinalScoreCalculator.getFinalCategories(listTopDocs);					
-			
-				/*//SAVING TO DB
-				Set<Entry<Float, Categories>> valores=scoreCategory.entrySet();
-				
-				for(Entry<Float,Categories> entry: valores){
-					Float valor =entry.getKey();
-					Categories cat=entry.getValue();
-						DAOCategorization.storeWebCat(sDomainUrl, cat.toString(), valor);
-					}	
-					
-					*/
+				classificate(sDomainUrl);
+	
 			}
 			else if(sOption.equals("-l")){
 				String sUrl = args[2].toString();
@@ -97,15 +80,10 @@ public class Classificator {
 				////GETTING THE URLS FROM THE CATEGORY GENERATOR
 				
 				
-				ArrayList<Resource> urlCategorias=IndexesGenerator.getFatherCategoriesInternet();
-		
-				for(Resource category : urlCategorias){
-					Categories oCategory = StringToCategories.getCategory(category.getLocalName());
-					List<String> sUrls = new java.util.ArrayList<String>();
-					for(UrlByCategory oUrlByCategory : oCategory.getLUrlList()){
+					ArrayList <String> urls=DAOUrlsRastreated.getInstance().selectUrls("indexar");
+					for(String url : urls){
+						classificate(url);
 						
-						sUrls.addAll(Spider.GetSubUrls.SpiderUrl(oUrlByCategory.sMainUrl, oUrlByCategory.sRestUrl, 2,40,1, oUrlByCategory.sSuffixFilter));
-					
 					}
 								
 					for(String sSubUrl : sUrls){
@@ -136,9 +114,41 @@ public class Classificator {
 		}
 
 	}
+	public static void classificate(String sDomainUrl){
+		List<IndexCategScore> listTopDocs = getScoresCat(sDomainUrl);
+		
+		TreeMap<Double, Categories> oTreeMap = FinalScoreCalculator.indexShortedCross(listTopDocs);
+		System.out.println("");
+		//	System.out.println("URL: "+ sUrl);
+		System.out.println("");
+	
+		FinalScoreCalculator.showFinalResults(oTreeMap);
+	}
 
 
-	public static List<IndexCategScore>  classificate(String sDomainUrl, String sText) throws CorruptIndexException, IOException, ParseException, SQLException, ClassNotFoundException{
+
+	public static List<IndexCategScore> getScoresCat(String sUrl) {
+		List<IndexCategScore> oResult = new java.util.ArrayList<IndexCategScore>();
+		String sText = "";
+		try {
+			sText = ExtractText.GetBlogText(sUrl);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			oResult = getListIndex(sUrl, sText);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return oResult;
+	}
+
+	public static List<IndexCategScore>  getListIndex(String sDomainUrl, String sText) throws CorruptIndexException, IOException, ParseException, SQLException, ClassNotFoundException{
 		List<IndexCategScore> lResult = new ArrayList<IndexCategScore>();
 		Map<IndexSearcher, Directory> lIndex = new Hashtable<IndexSearcher, Directory>();
 		
@@ -254,27 +264,5 @@ public class Classificator {
 		return oResult;
 	}
 
-
-
-	public static List<IndexCategScore> getScoresCat(String sUrl) {
-		List<IndexCategScore> oResult = new java.util.ArrayList<IndexCategScore>();
-		String sText = "";
-		try {
-			sText = ExtractText.GetBlogText(sUrl);
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			oResult = classificate(sUrl, sText);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return oResult;
-	}
 
 }
