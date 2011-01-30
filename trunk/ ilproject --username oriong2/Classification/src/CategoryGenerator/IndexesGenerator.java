@@ -50,6 +50,8 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import dao.DAO;
 import dao.DAO_Model;
 import dominio.DbPedia;
+import dominio.StringToCategories;
+import dominio.UrlByCategory;
 import encoders.Encode;
 
 
