@@ -6,7 +6,7 @@ import java.util.List;
 
 import DBLayer.DAOUrlCategory;
 
-public class StoreAllUrls {
+public class Rastreator {
 
 	/**
 	 * @param args
