@@ -16,4 +16,14 @@ public class Url {
 	public Category getOriginalCategory(){
 		return originalCategory;
 	}
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	public void setOriginalCategory(Category originalCategory) {
+		this.originalCategory = originalCategory;
+	}
+	public void setCategoryScore(TreeMap<Float, Category> categoryScore) {
+		this.categoryScore = categoryScore;
+	}
+
 }
