@@ -6,7 +6,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.TreeMap;
 
-import CategoryGenerator.Categories;
+import dominio.Category;
 import DBLayer.DAOUrlsClassified.Fields;
 import DBLayer.DAOUrlsRastreated.State;
 
@@ -41,7 +41,7 @@ public class DAOUrlsRastreated extends DAOWebsClassified {
 	         }
 	    }
 	    
-	    public void insertOrUpdateUrlCategory(String sUrl, Categories oCategories){
+	    public void insertOrUpdateUrlCategory(String sUrl, Category oCategories){
 	    	int iId = -1;
 			try {
 				iId = getId(sUrl);
@@ -57,7 +57,7 @@ public class DAOUrlsRastreated extends DAOWebsClassified {
 	    	}
 	     }
 
-	    public void insertUrlCategory(String sUrl, Categories oCategories){
+	    public void insertUrlCategory(String sUrl, Category oCategories){
 	        try {
 				executeUpdate("INSERT INTO urls_rastreated(url,category) VALUES(?,?)",sUrl,oCategories.ordinal());
 			} catch (SQLException e) {
@@ -66,7 +66,7 @@ public class DAOUrlsRastreated extends DAOWebsClassified {
 			}
 	     }
 
-	    public void updateCategory(int id,Categories oCategories){
+	    public void updateCategory(int id,Category oCategories){
 	        try {
 				executeUpdate("UPDATE urls_rastreated SET category=? WHERE ID=?",oCategories.ordinal(),id);
 			} catch (SQLException e) {
@@ -84,7 +84,7 @@ public class DAOUrlsRastreated extends DAOWebsClassified {
 			}
 	     }
 	    
-	    public List<String> getUrlsCategory(Categories oCategory) {
+	    public List<String> getUrlsCategory(Category oCategory) {
 	    	List<String> lUrls = new java.util.ArrayList<String>();
 			try {
 				ResultSet oResultSet = executeQuery("SELECT url FROM urls_rastreated WHERE category=?",oCategory.ordinal());

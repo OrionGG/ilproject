@@ -49,9 +49,10 @@ import com.hp.hpl.jena.rdf.model.Resource;
 
 import dao.DAO;
 import dao.DAO_Model;
+import dominio.Category;
 import dominio.DbPedia;
 import dominio.StringToCategories;
-import dominio.UrlByCategory;
+import dominio.UrlForFiltering;
 import encoders.Encode;
 
 
@@ -82,8 +83,8 @@ public class IndexesGenerator {
 	private static String rdfs = "http://www.w3.org/2000/01/rdf-schema#";
 	private static 	String rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns/#";
 	private static String thing="http://www.w3.org/2002/07/owl#Thing";
-	public static Hashtable<Categories, List<String>> listToEvaluate = new Hashtable<Categories, List<String>>();
-	public static Hashtable<Categories, List<String>> listToClassify=new Hashtable<Categories, List<String>>();
+	public static Hashtable<Category, List<String>> listToEvaluate = new Hashtable<Category, List<String>>();
+	public static Hashtable<Category, List<String>> listToClassify=new Hashtable<Category, List<String>>();
 	
 	
 	public static void main(String[] args) throws Exception {
@@ -121,7 +122,7 @@ public class IndexesGenerator {
 		////The list for evaluating  with 20%of the webs is tranferred to DB WEB_CAT, 
 		//Evaluator will look for them
 			
-		saveUrlsToEvaluate(listToEvaluate);
+		//saveUrlsToEvaluate(listToEvaluate);
 	
 		
 		/// Not necesary ---  Evaluator.evaluate(listToEvaluate);
@@ -225,7 +226,7 @@ public class IndexesGenerator {
 	
 		
 		//Obtener objeto category
-		Categories oCategory = StringToCategories.getCategory(category.getLocalName());
+		Category oCategory = StringToCategory.getCategory(category.getLocalName());
 		
 			
 		List<String> listUrls = new ArrayList<String>();
@@ -298,10 +299,10 @@ public class IndexesGenerator {
 
 	////METODOS NO USADOS
 @Deprecated
-	private static void saveUrlsToEvaluate(Hashtable<Categories, List<String>> listToEvaluate2) {
+	private static void saveUrlsToEvaluate(Hashtable<Category, List<String>> listToEvaluate2) {
 		
-		for(Entry<Categories,List<String>> oEntry:listToEvaluate.entrySet()){
-			Categories oCategories = oEntry.getKey();
+		for(Entry<Category,List<String>> oEntry:listToEvaluate.entrySet()){
+			Category oCategories = oEntry.getKey();
 		
 			for(String sUrl: oEntry.getValue()){
 				//DAO.storeWebCat(sUrl, oCategories.toString());
@@ -327,11 +328,11 @@ public class IndexesGenerator {
 	throws MalformedURLException, IOException {
 		List<String> sUrls = new java.util.ArrayList<String>();
 
-		Categories oCategory = Categories.FictionalCharacter;
+		Category oCategory = Category.FictionalCharacter;
 		if(category.getLocalName().equals(oCategory.toString())){
 			String sTextUrls = "";
 			List<String> sUrlsSubListToEval = new java.util.ArrayList<String>();
-			for(UrlByCategory oUrlByCategory : oCategory.getLUrlList()){
+			for(UrlForFiltering oUrlByCategory : oCategory.getLUrlList()){
 				sUrls.addAll(Spider.GetSubUrls.SpiderUrl(oUrlByCategory.sMainUrl, oUrlByCategory.sRestUrl, 1,3,0, oUrlByCategory.sSuffixFilter));
 
 

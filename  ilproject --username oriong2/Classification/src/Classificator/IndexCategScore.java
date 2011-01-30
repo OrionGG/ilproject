@@ -4,7 +4,7 @@ import java.util.Hashtable;
 
 import org.apache.lucene.search.IndexSearcher;
 
-import CategoryGenerator.Categories;
+import dominio.Category;
 
 public class IndexCategScore {
 	public IndexSearcher oIndex;
