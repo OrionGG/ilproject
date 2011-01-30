@@ -17,7 +17,7 @@ public class DAOUrlsClassified extends DAOWebsClassified{
 	
 
 
-	public static void saveWebCat(String url, String category)  {
+	public static void saveUrls(String url, String category)  {
 
 		try {
 			setUpCatego();
