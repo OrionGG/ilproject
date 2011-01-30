@@ -59,6 +59,7 @@ import CategoryGenerator.IndexesWriter.IndexType;
 
 import DBLayer.DAOUrlsClassified;
 import DBLayer.DAOUrlsRastreated;
+import DBLayer.DAOUrlsRastreated.State;
 import DBLayer.DAOWebsClassified;
 import GetText.ExtractText;
 import GetText.WikipediaText;
@@ -231,7 +232,7 @@ public class IndexesGenerator {
 		
 		///POR DEFECTO DB
 		
-		listUrls = DAOUrlsRastreated.selectUrls("classified",);
+		listUrls = DAOUrlsRastreated.getInstance().selectUrls("classified", State.toIndex);
 	
 		String sTextUrls = "";		
 		
@@ -240,7 +241,7 @@ public class IndexesGenerator {
 		for(int i = 0; i<listUrls.size();i++){
 			String sUrlSub = listUrls.get(i);
 			sTextUrls += ExtractText.GetBlogText(sUrlSub) + " ";
-			DAOUrlsRastreated.updateUrlState();
+			DAOUrlsRastreated.getInstance().updateUrlState(sUrlSub, State.Indexed);
 		}
 		AddDocument(iListWebsWriter, category, sTextUrls.trim());
 		
