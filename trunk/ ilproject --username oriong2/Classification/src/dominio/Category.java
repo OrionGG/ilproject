@@ -32,7 +32,7 @@ public enum Category {
 	Model(
 			new UrlForFiltering[]{
 					new UrlForFiltering("http://www.abc.es", "/estilo-moda/modelos-pasarela-modas.asp", "moda"),
-					new UrlForFiltering("http://www.estiloymoda.com","/noticias/", ""),
+					new UrlForFiltering("http://www.estiloymoda.com","/noticias/", "estiloymoda"),
 			}	
 	),
 	PlayboyPlaymate(
@@ -53,20 +53,28 @@ public enum Category {
 			}
 	),
 	Criminal(
+			//8
 			new UrlForFiltering[]{
 					new UrlForFiltering("http://www.noticias.com", "/noticias/sucesos", "sucesos"),
 					new UrlForFiltering("http://www.lavanguardia.es","/sucesos/index.html", "sucesos"),
 			}
 	),
 	Monarch(
+			
+			//SALUD
 			new UrlForFiltering[]{
-					new UrlForFiltering("http://www.noticias.com", "/noticias/gobierno", "noticias" )
+					
+							new UrlForFiltering("http://www.larazon.es","/secciones/a-tu-salud/", "salud"),
+							new UrlForFiltering("http://www.elmundo.es","/elmundosalud/index.html", "salud"),
+							new UrlForFiltering("http://www.europapress.es","/salud/","salud"),
+							
+					
 			}
 	),
 	OfficeHolder(
 			new UrlForFiltering[]{
 					new UrlForFiltering("http://www.elpais.com", "/economia/", "economia"),
-					new UrlForFiltering("http://www.elmundo.es", "/mundodinero/index.html", "mundodinero")
+					new UrlForFiltering("http://www.elmundo.es", "/mundodinero/index.html", "economia")
 					}
 	),
 	MilitaryPerson(
@@ -76,8 +84,9 @@ public enum Category {
 					}
 	),
 	Politician(
+			//12
 			new UrlForFiltering[]{
-					
+					new UrlForFiltering("http://www.noticias.com", "/noticias/gobierno", "gobierno" ),
 					new UrlForFiltering("http://www.lavanguardia.es","/politica/index.html", "/politica/"),
 					
 			}
@@ -107,43 +116,46 @@ public enum Category {
 	),
 	Journalist(
 			new UrlForFiltering[]{
-					new UrlForFiltering("http://www.lavanguardia.es","/comunicacion/index.html", "comunicacion"),
+			new UrlForFiltering("http://www.lavanguardia.es","/comunicacion/index.html", "comunicacion"),
 			
 			
 					
 			}
 	),
 	Architect(
+			//17
 			new UrlForFiltering[]{
-					new UrlForFiltering("http://www.arquitecturaviva.com", "/", "arquitecturaviva")
+					new UrlForFiltering("http://blogs.elpais.com","/del-tirador-a-la-ciudad/","del-tirador-a-la-ciudad"),
+					new UrlForFiltering("http://www.arquitecturaviva.com", "/", ""),
 			}
 	),
 	Ambassador(
 			new UrlForFiltering[]{
 			//NATURALEZA
-					new UrlForFiltering("http://www.larazon.es/","secciones/verde", ""),
-		
+					new UrlForFiltering("http://www.larazon.es","/secciones/verde/", ""),
+					new UrlForFiltering("http://www.europapress.es","/sociedad/","medio-ambiente"),
 						
 			}
 	),
 	SoccerManager(
+			//19
 			//TECNOLOGIA
 			new UrlForFiltering[]{
 					new UrlForFiltering("http://www.elpais.com", "/tecnologia/", "tecnologia"),
+					new UrlForFiltering("http://www.xataka.com","/",""),
 					new UrlForFiltering("http://www.elmundo.es", "/elmundo/navegante.html", "navegante"),
 					new UrlForFiltering("http://noticias.lainformacion.com","/tecnologia", "tecnologia"),
 			}
 	),
 	CollegeCoach(
-			//SALUD
+			//educacion
 			new UrlForFiltering[]{
+					new UrlForFiltering("http://www.europapress.es","/sociedad/educacion/","eduacion"),
+					}
 			
-					
-							new UrlForFiltering("http://www.larazon.es","/secciones/a-tu-salud/", ""),
-							new UrlForFiltering("http://www.elmundo.es","/elmundosalud/index.html", ""),
-			}
 	),
 	NascarDriver(
+			
 			new UrlForFiltering[]{
 					new UrlForFiltering("http://www.as.com", "/motor/", "motor"),
 					new UrlForFiltering("http://www.elpais.com", "/deportes/motociclismo/", "motociclismo")
@@ -153,12 +165,13 @@ public enum Category {
 			new UrlForFiltering[]{
 					new UrlForFiltering("http://www.europapress.es", "/deportes/invierno-00658/", "invierno"),
 					new UrlForFiltering("http://www.as.com", "/mas-deporte/estaciones-esqui/", "esqui"),
-					new UrlForFiltering("http://www.marca.com", "/mas_deportes/nieve.html", "nieve")
+					new UrlForFiltering("http://www.marca.com", "/mas_deportes/nieve.html", "nieve"),
 			}
 	),
 	Boxer(
+			//23
 			new UrlForFiltering[]{
-					new UrlForFiltering("http://www.as.com", "/mas-deporte/boxeo/", "boxeo")			
+					new UrlForFiltering("http://www.as.com", "/mas-deporte/boxeo/", "box"),			
 					}
 	),
 	IceHockeyPlayer(
@@ -168,11 +181,14 @@ public enum Category {
 	),
 	Cyclist(
 			new UrlForFiltering[]{
-					new UrlForFiltering("http://www.as.com", "/ciclismo/", "ciclismo")
+					new UrlForFiltering("http://www.europapress.es","/deportes/","ciclismo"),
+					new UrlForFiltering("http://www.as.com", "/ciclismo/", "ciclismo"),
 			}
 	),
 	BadmintonPlayer(
-			new UrlForFiltering[]{}
+			new UrlForFiltering[]{
+					new UrlForFiltering("http://www.as.com","/mas-deporte/balonmano/",""),
+			}
 
 	),
 	GridironFootballPlayer(
@@ -181,13 +197,13 @@ public enum Category {
 	NationalCollegiateAthleticAssociationAthlete(
 			new UrlForFiltering[]{
 					new UrlForFiltering("http://www.marca.com", "/atletismo.html", "atletismo"),
-					new UrlForFiltering("http://www.as.com", "/mas-deporte/atletismo/", "atletismo")
+					new UrlForFiltering("http://www.as.com", "/mas-deporte/atletismo/", "atletismo"),
 			}
 	),
 	Wrestler(
 			new UrlForFiltering[]{
 				
-						new UrlForFiltering("http://www.mundowrestling.com/","", ""),
+					new UrlForFiltering("http://www.mundowrestling.com/","", ""),
 			}
 	),
 	FormulaOneRacer(
@@ -198,12 +214,16 @@ public enum Category {
 	),
 	BaseballPlayer(
 			new UrlForFiltering[]{
-					new UrlForFiltering("http://www.as.com", "/baloncesto/", "baloncesto"),
-					new UrlForFiltering("http://www.elpais.com", "/deportes/baloncesto/", "baloncesto")					
+					new UrlForFiltering("http://www.noticiasonline.com","/deportes/mlbaseball/","baseball"),
+				
 			}
 	),
 	GaelicGamesPlayer(
-			new UrlForFiltering[]{}
+			new UrlForFiltering[]{
+					//MIXXXX
+					new UrlForFiltering("http://www.as.com","/mas-deporte/polideportivo/",""),
+					
+			}
 	),
 	RugbyPlayer(
 			new UrlForFiltering[]{
@@ -214,11 +234,13 @@ public enum Category {
 			new UrlForFiltering[]{
 					new UrlForFiltering("http://www.marca.com", "/mas_deportes/padel.html", "padel"),
 					new UrlForFiltering("http://www.as.com", "/tenis/", "tenis"),
-					new UrlForFiltering("http://www.elpais.com", "/deportes/tenis/", "tenis")
+					new UrlForFiltering("http://www.elpais.com", "/deportes/tenis/", "tenis"),
 			}
 	),
 	BasketballPlayer(
 			new UrlForFiltering[]{
+					new UrlForFiltering("http://www.as.com", "/baloncesto/", "baloncesto"),
+					new UrlForFiltering("http://www.elpais.com", "/deportes/baloncesto/", "baloncesto"),		
 					new UrlForFiltering("http://www.lavanguardia.es","/especiales/nba/index.html", ""),
 					new UrlForFiltering("http://www.marca.com", "/baloncesto.html", "baloncesto"),
 					}
@@ -226,14 +248,13 @@ public enum Category {
 	GolfPlayer(
 			new UrlForFiltering[]{
 					
-			
 						new UrlForFiltering("http://es.eurosport.yahoo.com/","/golf/", ""),
-					
 						new UrlForFiltering("http://www.degolf.org","/noticias/", ""),
 						
 			}
 	),
 	SoccerPlayer(
+			//37
 			new UrlForFiltering[]{
 					new UrlForFiltering("http://www.as.com", "/futbol/", "futbol"),
 					new UrlForFiltering("http://www.elmundo.es", "/elmundodeporte/futbol.html", "futbol"),
@@ -244,6 +265,7 @@ public enum Category {
 			new UrlForFiltering[]{
 					
 					///VELA PA ORION
+					new UrlForFiltering("http://www.as.com","/mas-deporte/vela/","vela"),
 					new UrlForFiltering("http://www.lavanguardia.es","/deportes/barcelona-world-race/index.html", ""),
 			}
 	),
@@ -251,7 +273,7 @@ public enum Category {
 			new UrlForFiltering[]{
 					new UrlForFiltering("http://www.abc.es", "/cultura-cine/pelicula-actor-actrices.asp", "cine"),
 					new UrlForFiltering("http://www.elpais.com","/cine/", "articulo"),
-					new UrlForFiltering("http://www.abc.es", "/cultura-teatros/teatros.asp", "teatros")
+					new UrlForFiltering("http://www.abc.es", "/cultura-teatros/teatros.asp", "teatros"),
 			}
 	),
 	ComicsCreator(

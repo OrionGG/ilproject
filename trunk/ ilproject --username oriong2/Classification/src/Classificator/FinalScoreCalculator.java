@@ -27,12 +27,6 @@ public class FinalScoreCalculator {
 
 
 
-	public static float calculateFinalScore(float score1, float score2, float score3){
-
-		float finalScore = score1 * weightWiki + score2 * weightDbpedia + score3 * weightNews;
-		return  finalScore;
-	}
-
 	public static void fillUrlsClassifiedTable() throws SQLException, ClassNotFoundException{
 
 		//lista de ulrs a las que le hemos calculado el score final
@@ -82,6 +76,11 @@ public class FinalScoreCalculator {
 		return hIndexScore;
 	}
 
+	public static float calculateFinalScore(float score1, float score2, float score3){
+
+		float finalScore = score1 * weightWiki + score2 * weightDbpedia + score3 * weightNews;
+		return  finalScore;
+	}
 	private static float calculateFinalScore(Hashtable<Integer, Float> hIndexScore) {
 		float fTotalScore = calculateFinalScore(hIndexScore.get(0), hIndexScore.get(1), hIndexScore.get(2));
 		return fTotalScore;

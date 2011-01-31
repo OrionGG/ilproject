@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/lucene-core-3.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-core-3.0.2.jar" sourcepath="C:/Users/JORGE/.m2/repository/org/apache/lucene/lucene-core/3.0.2/lucene-core-3.0.2-sources.jar"/>
 	<classpathentry kind="lib" path="lib/lucene-demos-3.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/jericho-html-3.1.jar"/>
 	<classpathentry kind="lib" path="lib/ivy-2.2.0.jar"/>

@@ -73,21 +73,17 @@ public class Classificator {
 			
 					classificate(sSubUrl);
 				}
-			}else{
+			}
+		}else{
 				
-				////GETTING THE URLS FROM THE CATEGORY GENERATOR
-				
-					List<String> urls=DAOUrlsRastreated.getInstance().selectUrls(State.ToIndex);
-					for(String url : urls){
-						classificate(url);
-						
-					}
-								
-				
+			System.out.println("Catgeorizar todas las url del rastreador");
 
-				}
+			////GETTING THE URLS FROM THE CATEGORY GENERATOR
+			List<String> urls=DAOUrlsRastreated.getInstance().selectUrls(State.ToIndex);
+			for(String url : urls){
+				classificate(url);	
+			}
 				
-	
 			}
 		}
 
@@ -98,6 +94,8 @@ public class Classificator {
 		String sText = "";
 		try {
 			sText = ExtractText.GetBlogText(sDomainUrl);
+			
+			
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -112,18 +110,22 @@ public class Classificator {
 			e.printStackTrace();
 		}
 	
+		
+		
+		
 		TreeMap<Double, Category> oTreeMap = FinalScoreCalculator.indexShortedCross(listTopDocs);
 		System.out.println("");
 		//	System.out.println("URL: "+ sUrl);
 		System.out.println("");
-	
+		
 		FinalScoreCalculator.showFinalResults(oTreeMap);
+		
 	}
 
 
 
 	public static List<IndexCategScore> getScoresCat(String sUrl) {
-		List<IndexCategScore> oResult = new java.util.ArrayList<IndexCategScore>();
+		List<IndexCategScore> oResult = new ArrayList<IndexCategScore>();
 		String sText = "";
 		try {
 			sText = ExtractText.GetBlogText(sUrl);
@@ -234,8 +236,7 @@ public class Classificator {
 	}
 
 
-	private static IndexCategScore PrepareIndexToCross(String sDomainUrl, int i, IndexTopDoc oIndexTopDoc)
-			throws CorruptIndexException, IOException, SQLException, ClassNotFoundException {
+	private static IndexCategScore PrepareIndexToCross(String sDomainUrl, int i, IndexTopDoc oIndexTopDoc)	throws CorruptIndexException, IOException, SQLException, ClassNotFoundException {
 		IndexSearcher oIndexSearcher = oIndexTopDoc.oIndexSearcher;
 		TopDocs hits = oIndexTopDoc.oTopDocs;
 		//////FUNCIONALIDADES POSIBLES PARA LEER EL INDICE
