@@ -176,6 +176,7 @@ public class ApacheURLListerRecursive {
 	private boolean validURL(String href) {
 		return href != null
 		&& !(href.lastIndexOf("http")>1)
+		&& !(href.lastIndexOf("www.")>10)
 		&&  !getUrlList().contains(href) ;
 	}
 

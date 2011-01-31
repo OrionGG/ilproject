@@ -98,7 +98,7 @@ public class IndexesGenerator {
 		////LIST OF INDEXES THAT WILL BE CREATED---->CHANGE
 		IndexType[] oListofIdexes = new IndexType[]{
 				/*IndexType.DBPedia,*/
-				IndexType.WikipediaIndex
+				IndexType.WikiIndex
 				//IndexType.ListWebsIndex
 		};
 		IndexesWriter.CreateIndexes(oListofIdexes, analyzer);
@@ -111,7 +111,7 @@ public class IndexesGenerator {
 			addResourcesCategory(analyzer, IndexesWriter.getIndex(IndexType.DBPediaIndex), category);
 
 			///SEGUNDA PARTE--->Generar indice de Texto de WIkipedia
-			addTextFromWikipedia(analyzer, IndexesWriter.getIndex(IndexType.WikipediaIndex), category);
+			addTextFromWikipedia(analyzer, IndexesWriter.getIndex(IndexType.WikiIndex), category);
 
 			////TERCERA FASE: ");---->Generar indice de Noticias diarias
 			addTextFromUrls(IndexesWriter.getIndex(IndexType.ListWebsIndex), category);
