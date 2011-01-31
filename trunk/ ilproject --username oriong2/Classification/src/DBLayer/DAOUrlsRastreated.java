@@ -102,7 +102,7 @@ public class DAOUrlsRastreated extends DAOWebsClassified {
 
 		public void updateUrlState(String sUrls, State eState) {
 			try {
-				executeUpdate("UPDATE INTO urls_rastreated(url,state) VALUES (?,?)",sUrls, eState.ordinal());
+				executeUpdate("UPDATE urls_rastreated SET state=? WHERE url=?", eState.ordinal(),sUrls);
 
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

@@ -97,9 +97,9 @@ public class IndexesGenerator {
 
 		////LIST OF INDEXES THAT WILL BE CREATED---->CHANGE
 		IndexType[] oListofIdexes = new IndexType[]{
-				/*IndexType.DBPedia,*/
-				IndexType.WikiIndex
-				//IndexType.ListWebsIndex
+				IndexType.DBPediaIndex,
+				IndexType.WikiIndex,
+				IndexType.ListWebsIndex
 		};
 		IndexesWriter.CreateIndexes(oListofIdexes, analyzer);
 
