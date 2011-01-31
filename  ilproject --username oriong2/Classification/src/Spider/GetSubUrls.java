@@ -60,10 +60,11 @@ public class GetSubUrls {
 
 	public static List<String> SpiderUrl(String sMainUrl,
 			String sRestUrl, int depth, int wide,int iChildrenWide, String sSuffixFilter,
-			List<String> urlList) throws IOException {
+			ArrayList<String> urlList) throws IOException {
 		// TODO Auto-generated method stub
 		ApacheURLListerRecursive oApacheURLLister = new ApacheURLListerRecursive();
-		oApacheURLLister.setUrlList(urlList);
+		List<String> lUrlsClone = (List<String>) (urlList.clone());
+		oApacheURLLister.setUrlList(lUrlsClone);
 		
 		
 		List<String> oList = oApacheURLLister.listAll(sMainUrl, sRestUrl, depth, wide,iChildrenWide, sSuffixFilter);

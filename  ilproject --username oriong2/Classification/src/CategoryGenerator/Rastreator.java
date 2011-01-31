@@ -44,9 +44,9 @@ public class Rastreator {
 		for(Category oCategory:Category.values()){
 			List<String> lUrls = DAOUrlsRastreated.getInstance().selectUrls(oCategory, State.Nothing);
 
-			int iMaxToText =(int) (lUrls.size() * percentage);
+			int iMaxToText =(int) StrictMath.round(lUrls.size() * percentage);
 			sUrlsSubListToIndex.addAll(lUrls.subList(0, iMaxToText));
-		
+			
 			sUrlsSubListToClassify.addAll( lUrls.subList(iMaxToText, lUrls.size()));
 		}
 	}
@@ -64,9 +64,9 @@ public class Rastreator {
 			//list of the urls of this category saved yet
 			List<String> lUrlsSaved = DAOUrlsRastreated.getInstance().selectUrlsCategory(oCategory);
 			//list with all news urls for a category
-			List<String> lUrls = getUrlsFromCategory(oCategory.toString(), lUrlsSaved);
+			List<String> lUrls = getUrlsFromCategory(oCategory.toString(), (ArrayList<String>) lUrlsSaved);
 			for(String sUrls: lUrls){
-				DAOUrlsRastreated.getInstance().insertOrUpdateUrlCategory(sUrls, oCategory);
+				DAOUrlsRastreated.getInstance().insertOrUpdateUrlCategory(sUrls, oCategory, State.Nothing);
 			}
 		}
 	}
@@ -76,12 +76,12 @@ public class Rastreator {
 		
 	}
 	
-	public static List<String> getUrlsFromCategory(String categoryName, List<String> urlList) throws MalformedURLException, IOException{
-		List<String> lUrls = new java.util.ArrayList<String>();
+	public static List<String> getUrlsFromCategory(String categoryName, ArrayList<String> urlList) throws MalformedURLException, IOException{
+		ArrayList<String> lUrls = new ArrayList<String>();
 		Category oCategory = Category.valueOf(categoryName);
 		String sTextUrls = "";
 		for(UrlForFiltering oUrlByCategory : oCategory.getLUrlList()){
-			lUrls.addAll(Spider.GetSubUrls.SpiderUrl(oUrlByCategory.sMainUrl, oUrlByCategory.sRestUrl, 2,40,1, oUrlByCategory.sSuffixFilter,  urlList));
+			lUrls.addAll(Spider.GetSubUrls.SpiderUrl(oUrlByCategory.sMainUrl, oUrlByCategory.sRestUrl, 2,20,1, oUrlByCategory.sSuffixFilter,  urlList));
 		}
 
 		return lUrls;
