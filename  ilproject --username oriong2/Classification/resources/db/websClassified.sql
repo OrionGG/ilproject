@@ -1,4 +1,4 @@
-CREATE DATABASE  IF NOT EXISTS `WebsClassified` /*!40100 DEFAULT CHARACTER SET latin1 */;
+CREATE DATABASE  IF NOT EXISTS `WebsClassified` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `WebsClassified`;
 -- MySQL dump 10.13  Distrib 5.1.40, for Win32 (ia32)
 --
@@ -18,21 +18,21 @@ USE `WebsClassified`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `scored_intermedied`
+-- Table structure for table `scored_intermediated`
 --
 
-DROP TABLE IF EXISTS `scored_intermedied`;
+DROP TABLE IF EXISTS `scores_intermediate`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `scored_intermedied` (
+CREATE TABLE `scores_intermediate` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `url` varchar(2000) DEFAULT NULL,
   `indextype` int(11) DEFAULT NULL,
   `category` varchar(300) DEFAULT NULL,
   `score` mediumtext,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `idscored_intermedied_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2648 DEFAULT CHARSET=latin1;
+  UNIQUE KEY `idscores_intermediate_UNIQUE` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2648 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -48,7 +48,7 @@ CREATE TABLE `urls_classified` (
   `category` varchar(300) DEFAULT NULL,
   `score` mediumblob,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,7 +65,7 @@ CREATE TABLE `urls_rastreated` (
   `state` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `idurls_classified_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2148 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2148 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
