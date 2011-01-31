@@ -17,7 +17,7 @@ import Analizer.SpanishAnalyzer;
 public class IndexesWriter {
 	public enum IndexType{
 		DBPediaIndex,
-		WikipediaIndex,
+		WikiIndex,
 		ListWebsIndex
 	}
 	static Hashtable<String, IndexWriter> IndexHash = new Hashtable<String, IndexWriter>();
