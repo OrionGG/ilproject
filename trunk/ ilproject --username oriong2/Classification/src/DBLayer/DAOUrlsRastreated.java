@@ -42,7 +42,7 @@ public class DAOUrlsRastreated extends DAOWebsClassified {
 	         }
 	    }
 	    
-	    public void insertOrUpdateUrlCategory(String sUrl, Category oCategories){
+	    public void insertOrUpdateUrlCategory(String sUrl, Category oCategories, State eState){
 	    	int iId = -1;
 			try {
 				iId = getId(sUrl);
@@ -51,25 +51,25 @@ public class DAOUrlsRastreated extends DAOWebsClassified {
 				e.printStackTrace();
 			}
 	    	if(iId > 0){
-	    		updateCategory(iId, oCategories);
+	    		update(iId, oCategories, eState);
 	    	}
 	    	else{
-	    		insertUrlCategory(sUrl, oCategories);
+	    		insert(sUrl, oCategories, eState);
 	    	}
 	     }
 
-	    public void insertUrlCategory(String sUrl, Category oCategories){
+	    public void insert(String sUrl, Category oCategories, State eState){
 	        try {
-				executeUpdate("INSERT INTO urls_rastreated(url,category) VALUES(?,?)",sUrl,oCategories.ordinal());
+				executeUpdate("INSERT INTO urls_rastreated(url,category, state ) VALUES(?,?, ?)",sUrl,oCategories.ordinal(), eState.ordinal());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	     }
 
-	    public void updateCategory(int id,Category oCategories){
+	    public void update(int id,Category oCategories, State eState){
 	        try {
-				executeUpdate("UPDATE urls_rastreated SET category=? WHERE ID=?",oCategories.ordinal(),id);
+				executeUpdate("UPDATE urls_rastreated SET category=?, state=? WHERE ID=?",oCategories.ordinal(), eState.ordinal(),id);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
