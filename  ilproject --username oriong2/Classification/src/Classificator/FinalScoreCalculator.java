@@ -24,6 +24,10 @@ public class FinalScoreCalculator {
 	private static float weightDbpedia=new Float(0.2);	
 	private static float weightWiki= new Float(0.2);	
 	private static float weightNews= new Float(0.6);
+	
+	public static void main(String[] args) throws Exception {
+		fillUrlsClassifiedTable();
+	}
 
 
 
