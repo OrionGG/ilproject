@@ -108,13 +108,13 @@ public class IndexesGenerator {
 		for(Resource category : urlCategorias){
 
 			////PRIMERA PARTE-->>Generar indice de Recursos de DbPedia
-			addResourcesCategory(analyzer, IndexesWriter.getIndex(IndexType.DBPediaIndex), category);
+			addResourcesFromDbPedia(analyzer, IndexesWriter.getIndex(IndexType.DBPediaIndex), category);
 
 			///SEGUNDA PARTE--->Generar indice de Texto de WIkipedia
 			addTextFromWikipedia(analyzer, IndexesWriter.getIndex(IndexType.WikiIndex), category);
 
 			////TERCERA FASE: ");---->Generar indice de Noticias diarias
-			addTextFromUrls(IndexesWriter.getIndex(IndexType.ListWebsIndex), category);
+			addTextFromUrlsClassified(IndexesWriter.getIndex(IndexType.ListWebsIndex), category);
 
 		}
 
@@ -133,7 +133,7 @@ public class IndexesGenerator {
 
 
 //////PRIMERA FASE
-	private static void addResourcesCategory(SpanishAnalyzer analyzer,IndexWriter iDBPediaWriter, Resource category) throws Exception,
+	private static void addResourcesFromDbPedia(SpanishAnalyzer analyzer,IndexWriter iDBPediaWriter, Resource category) throws Exception,
 			IOException, CorruptIndexException {
 		String pathCategory=category.getURI();
 
@@ -181,7 +181,7 @@ public class IndexesGenerator {
 		WikipediaText oWikipediaText = new WikipediaText();
 		String sTextWikipedia= oWikipediaText.GetTextFromWikipedia(category.getLocalName(), true);
 		String sTotalTextSynonym = "";
-
+		System.out.println("\n\nSALIDA DE LA SEGUNDA FASE: ");
 		sText = showTextAnalized(sTextWikipedia, analyzer);
 
 		System.out.println(sText);
@@ -195,7 +195,7 @@ public class IndexesGenerator {
 		for(String sWord:oSyn){
 
 			try{
-				System.out.println("\n\nSALIDA DE LA TERCERA FASE: ");
+				
 				sTextWikipediaSynonym = oWikipediaText.GetTextFromWikipedia(sWord, true);
 
 				sText = showTextAnalized(sTextWikipediaSynonym, analyzer);
@@ -221,32 +221,34 @@ public class IndexesGenerator {
 	
 	
 //////TERCERA FASE
-	private static void addTextFromUrls(IndexWriter iListWebsWriter, Resource category)	throws MalformedURLException, IOException {
+	private static void addTextFromUrlsClassified(IndexWriter iListWebsWriter, Resource category)	throws MalformedURLException, IOException {
 	
-		
+		System.out.println("\n\nSALIDA DE LA TERCERA FASE: ");
 		//Obtener objeto category
 		Category oCategory = Category.valueOf(category.getLocalName());
 		
 			
-		List<String> listUrls = new ArrayList<String>();
+		List<String> listUrlsToIndex = new ArrayList<String>();
 		//Esto es para o sacar las urls de internet rastreando con el spider
 		//o cogerlas de la base de datos donde previamente las hemos guardado con StoreAllUrls
 		
 		///POR DEFECTO DB
 		
-		listUrls = DAOUrlsRastreated.getInstance().selectUrls(State.ToIndex);
+		listUrlsToIndex = DAOUrlsRastreated.getInstance().selectUrls(State.ToIndex);
 	
 		String sTextUrls = "";		
 		
 		//RECOGE TODO EL TEXTO
-
-		for(int i = 0; i<listUrls.size();i++){
-			String sUrlSub = listUrls.get(i);
-			sTextUrls += ExtractText.GetBlogText(sUrlSub) + " ";
-			DAOUrlsRastreated.getInstance().updateUrlState(sUrlSub, State.Indexed);
+		if(listUrlsToIndex.size()>0){
+				for(int i = 0; i<listUrlsToIndex.size();i++){
+					String sUrlSub = listUrlsToIndex.get(i);
+					sTextUrls += ExtractText.GetBlogText(sUrlSub) + " ";
+					DAOUrlsRastreated.getInstance().updateUrlState(sUrlSub, State.Indexed);
+				}
+				AddDocument(iListWebsWriter, category, sTextUrls.trim());
+		}else{
+			System.out.print("Las urls rastreadas ready to index es cero");
 		}
-		AddDocument(iListWebsWriter, category, sTextUrls.trim());
-		
 	}
 
 	
