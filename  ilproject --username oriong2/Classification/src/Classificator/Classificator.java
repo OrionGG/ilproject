@@ -247,9 +247,10 @@ public class Classificator {
 		{
 			Document hitDoc = oIndexSearcher.doc(oScoreDoc.doc); 
 			String sCategoryName = hitDoc.getField("CategoryName").stringValue();
+			Category oCategory = Category.valueOf(sCategoryName);
 
 			////SAVING TO DB TEMPORARY SCORES
-			DAOScoresIntermediate.getInstance().saveUrl(sDomainUrl,i, oScoreDoc.score);
+			DAOScoresIntermediate.getInstance().saveUrl(sDomainUrl,i,oCategory, oScoreDoc.score);
 			oResult.hCategScore.put(sCategoryName, oScoreDoc.score);
 		
 			System.out.println("     "+hitDoc.getField("CategoryName").stringValue() + " "+ oScoreDoc.score+"->ALMACENADO");

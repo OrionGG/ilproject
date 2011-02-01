@@ -30,11 +30,11 @@ public class DAOScoresIntermediate extends DAOWebsClassified{
 
 		return rs;
 	}
-	public void saveUrl(String domainUrl, int i, float score)  {
+	public void saveUrl(String domainUrl, int i, Category oCategory, float score)  {
 
 		try {
-			String sql = "INSERT INTO scores_intermediate(url,indextype,score) VALUES ('"+domainUrl+"','"+i+"','"+score+"')";
-			executeUpdate(sql);
+			String sql = "INSERT INTO scores_intermediate(url,indextype, category,score) VALUES (?,?,?,?)";
+			executeUpdate(sql,domainUrl, i, oCategory.ordinal(), score);
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
