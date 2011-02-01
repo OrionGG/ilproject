@@ -110,9 +110,7 @@ public class Classificator {
 			e.printStackTrace();
 		}
 	
-		
-		
-		
+
 		TreeMap<Double, Category> oTreeMap = FinalScoreCalculator.indexShortedCross(listTopDocs);
 		System.out.println("");
 		//	System.out.println("URL: "+ sUrl);
@@ -204,20 +202,20 @@ public class Classificator {
 	private static Map<IndexSearcher, Directory> generateIndexesReader(Map<IndexSearcher, Directory> lIndex) throws IOException {
 		// TODO Auto-generated method stub
 		
-		File fDBPediaDirectory=new File(".\\resources\\DBPediaIndex");
+		File fDBPediaDirectory=new File(".\\resources\\index\\DBPediaIndex");
 		Directory dDBPediaIndexDirectory = FSDirectory.open(fDBPediaDirectory,new NoLockFactory());
 		
 		// Now search the index:
 		IndexSearcher iDBPediaSearcher = new IndexSearcher(dDBPediaIndexDirectory, true); // read-only=true
 		lIndex.put(iDBPediaSearcher, dDBPediaIndexDirectory);
 
-		File fWikiDirectory=new File(".\\resources\\WikiIndex");
+		File fWikiDirectory=new File(".\\resources\\index\\WikiIndex");
 		Directory dWikiIndexDirectory = FSDirectory.open(fWikiDirectory,new NoLockFactory());
 		// Now search the index:
 		IndexSearcher iWikiSearcher = new IndexSearcher(dWikiIndexDirectory, true); // read-only=true
 		lIndex.put(iWikiSearcher, dWikiIndexDirectory);
 
-		File fListWebsDirectory=new File(".\\resources\\ListWebsIndex");
+		File fListWebsDirectory=new File(".\\resources\\index\\ListWebsIndex");
 		Directory dListWebsIndexDirectory = FSDirectory.open(fListWebsDirectory,new NoLockFactory());
 		// Now search the index:
 		IndexSearcher iListWebsSearcher = new IndexSearcher(dListWebsIndexDirectory, true); // read-only=true

@@ -33,7 +33,7 @@ public class IndexesWriter {
 	private static IndexWriter CreateIndex(SpanishAnalyzer analyzer, String sName)
 	throws IOException, CorruptIndexException,
 	LockObtainFailedException {
-		File fDirectory=new File(".\\resources\\" + sName);
+		File fDirectory=new File(".\\resources\\index\\" + sName);
 		boolean  success = false;
 		if(fDirectory.exists()){
 			success = fDirectory.delete();
