@@ -70,13 +70,13 @@ import Language.Traductor;
 
 
 public class IndexesGenerator {
-	
-	
+
+
 	public enum SourceOfData{
 		Internet,
 		DB
 	}
-	
+
 
 	private static SourceOfData getSourceOfData = SourceOfData.DB;
 	private static String rdfs = "http://www.w3.org/2000/01/rdf-schema#";
@@ -84,178 +84,188 @@ public class IndexesGenerator {
 	private static String thing="http://www.w3.org/2002/07/owl#Thing";
 	public static Hashtable<Category, List<String>> listToEvaluate = new Hashtable<Category, List<String>>();
 	public static Hashtable<Category, List<String>> listToClassify=new Hashtable<Category, List<String>>();
-	
-	
+	////LIST OF INDEXES THAT WILL BE CREATED---->CHANGE
+	final static IndexType[] oListofIdexes = new IndexType[]{
+		IndexType.DBPediaIndex,
+		//IndexType.WikiIndex,
+		//IndexType.ListWebsIndex
+	};
+
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 
 		System.out.println("EMPIEZA: coge categorias");
 		Model ontology=DAO_Model.generateMainModel();
 		ArrayList<Resource> urlCategorias=getFatherCategoriesInternet();
-		
+
 		SpanishAnalyzer analyzer = new SpanishAnalyzer(Version.LUCENE_30, new File (".\\resources\\stopwords\\spanishSmart.txt"));
 
-		////LIST OF INDEXES THAT WILL BE CREATED---->CHANGE
-		IndexType[] oListofIdexes = new IndexType[]{
-				IndexType.DBPediaIndex,
-				IndexType.WikiIndex,
-				IndexType.ListWebsIndex
-		};
 		IndexesWriter.CreateIndexes(oListofIdexes, analyzer);
 
+		////PRIMERA PARTE-->>Generar indice de Recursos de DbPedia
+		addResourcesFromDbPedia(analyzer, IndexesWriter.getIndex(IndexType.DBPediaIndex), urlCategorias);
 
-		
-		for(Resource category : urlCategorias){
+		///SEGUNDA PARTE--->Generar indice de Texto de WIkipedia
+		addTextFromWikipedia(analyzer, IndexesWriter.getIndex(IndexType.WikiIndex), urlCategorias);
 
-			////PRIMERA PARTE-->>Generar indice de Recursos de DbPedia
-			addResourcesFromDbPedia(analyzer, IndexesWriter.getIndex(IndexType.DBPediaIndex), category);
-
-			///SEGUNDA PARTE--->Generar indice de Texto de WIkipedia
-			addTextFromWikipedia(analyzer, IndexesWriter.getIndex(IndexType.WikiIndex), category);
-
-			////TERCERA FASE: ");---->Generar indice de Noticias diarias
-			addTextFromUrlsClassified(IndexesWriter.getIndex(IndexType.ListWebsIndex), category);
-
-		}
-
-		////The list for evaluating  with 20%of the webs is tranferred to DB WEB_CAT, 
-		//Evaluator will look for them
-			
-		//saveUrlsToEvaluate(listToEvaluate);
-	
-		
-		/// Not necesary ---  Evaluator.evaluate(listToEvaluate);
+		////TERCERA FASE: ");---->Generar indice de Noticias diarias
+		addTextFromUrlsClassified(IndexesWriter.getIndex(IndexType.ListWebsIndex), urlCategorias);
 
 	}
 
-	
 
 
 
-//////PRIMERA FASE
-	private static void addResourcesFromDbPedia(SpanishAnalyzer analyzer,IndexWriter iDBPediaWriter, Resource category) throws Exception,
-			IOException, CorruptIndexException {
-		String pathCategory=category.getURI();
 
-		List<Resource> lis=DbPedia.getResourcesOfType(pathCategory);
+	//////PRIMERA FASE
+	private static void addResourcesFromDbPedia(SpanishAnalyzer analyzer,IndexWriter iDBPediaWriter, ArrayList<Resource> urlCategorias) throws Exception,
+	IOException, CorruptIndexException {
 
-		System.out.println("\n\nSALIDA DE LA PRIMERA FASE: ");
-		String labelResource=null;
-		System.out.println("\nCATEGORIA = " +category.getLocalName() + "\n");
-		System.out.println("Tiene "+lis.size()+" resources");
-		
-		String sTextResources = "";
-		
-		for(int i=0; i<100 && i<lis.size();i++){
-			Resource resource =lis.get(i);
-			//if(resource.getLocalName()!=null){
-			// labelResource=resource.getLocalName();
-			//}else{
-			labelResource=DbPedia.getLabel(resource.getURI());
-			//	labelResource =Encode.getNameFromUrl(resource.getURI());
-			//}
+		if(iDBPediaWriter != null){
+			for(Resource category : urlCategorias){
+				String pathCategory=category.getURI();
 
-			//System.out.print(labelResource+" ");
-			if(labelResource.endsWith("@en")){
-				labelResource=labelResource.replace("@en","");
-				labelResource=Traductor.Translate(labelResource);			
-			}else{
-				labelResource=labelResource.replace("@es","");
-			}
-			sTextResources=labelResource+" "+sTextResources;
-		}
-
-
-		String sText = showTextAnalized(sTextResources, analyzer);
-
-		System.out.println(sText);
-
-
-		AddDocument(iDBPediaWriter, category, sText);
-	}
-	
-//////SEGUNDA FASE
-	private static void addTextFromWikipedia(SpanishAnalyzer analyzer,IndexWriter iWikiWriter, Resource category)
-	throws Exception, IOException, JWNLException, CorruptIndexException {
-		String sText;
-		WikipediaText oWikipediaText = new WikipediaText();
-		String sTextWikipedia= oWikipediaText.GetTextFromWikipedia(category.getLocalName(), true);
-		String sTotalTextSynonym = "";
-		System.out.println("\n\nSALIDA DE LA SEGUNDA FASE: ");
-		sText = showTextAnalized(sTextWikipedia, analyzer);
-
-		System.out.println(sText);
-
-		//AddDocument(iWikiWriter, category, sTextWikipedia, 2);
-		String sTextWikipediaSynonym = "";
-		Set<String> oSyn = Synonym.lookupSynonyms(category.getLocalName());
-
-
-		System.out.println("num sinonimos: " + oSyn.size());
-		for(String sWord:oSyn){
-
-			try{
+				List<Resource> lis=DbPedia.getResourcesOfType(pathCategory);
 				
-				sTextWikipediaSynonym = oWikipediaText.GetTextFromWikipedia(sWord, true);
+				System.out.println("\n\nSALIDA DE LA PRIMERA FASE: ");
+				String labelResource=null;
+				System.out.println("\nCATEGORIA = " +category.getLocalName() + "\n");
+				System.out.println("Tiene "+lis.size()+" resources");
 
-				sText = showTextAnalized(sTextWikipediaSynonym, analyzer);
+				String sTextResources = "";
+
+				for(int i=0; i<100 && i<lis.size();i++){
+					Resource resource =lis.get(i);
+					//if(resource.getLocalName()!=null){
+					// labelResource=resource.getLocalName();
+					//}else{
+					labelResource=DbPedia.getLabel(resource.getURI());
+					//	labelResource =Encode.getNameFromUrl(resource.getURI());
+					//}
+
+					//System.out.print(labelResource+" ");
+					if(labelResource.endsWith("@en")){
+						labelResource=labelResource.replace("@en","");
+						labelResource=Traductor.Translate(labelResource);			
+					}else{
+						labelResource=labelResource.replace("@es","");
+					}
+					sTextResources=labelResource+" "+sTextResources;
+				}
+
+
+				String sText = showTextAnalized(sTextResources, analyzer);
 
 				System.out.println(sText);
 
-				sTotalTextSynonym += " " + sTextWikipediaSynonym;
-			}
-			catch(Exception e){
 
-
+				AddDocument(iDBPediaWriter, category, sText);
 			}
+
+			iDBPediaWriter.optimize();
+			iDBPediaWriter.close();
 		}
-
-		String sTotalTextWikipedia =  sTextWikipedia + " "+ sTextWikipediaSynonym;
-
-
-		sText = showTextAnalized(sTotalTextWikipedia, analyzer);
-
-		AddDocument(iWikiWriter, category, sText);
 	}
 
-	
-	
-//////TERCERA FASE
-	private static void addTextFromUrlsClassified(IndexWriter iListWebsWriter, Resource category)	throws MalformedURLException, IOException {
-	
-		System.out.println("\n\nSALIDA DE LA TERCERA FASE: ");
-		//Obtener objeto category
-		Category oCategory = Category.valueOf(category.getLocalName());
-		
-			
-		List<String> listUrlsToIndex = new ArrayList<String>();
-		//Esto es para o sacar las urls de internet rastreando con el spider
-		//o cogerlas de la base de datos donde previamente las hemos guardado con StoreAllUrls
-		
-		///POR DEFECTO DB
-		
-		listUrlsToIndex = DAOUrlsRastreated.getInstance().selectUrls(State.ToIndex);
-	
-		String sTextUrls = "";		
-		
-		//RECOGE TODO EL TEXTO
-		if(listUrlsToIndex.size()>0){
-				for(int i = 0; i<listUrlsToIndex.size();i++){
-					String sUrlSub = listUrlsToIndex.get(i);
-					sTextUrls += ExtractText.GetBlogText(sUrlSub) + " ";
-					DAOUrlsRastreated.getInstance().updateUrlState(sUrlSub, State.Indexed);
+	//////SEGUNDA FASE
+	private static void addTextFromWikipedia(SpanishAnalyzer analyzer,IndexWriter iWikiWriter, ArrayList<Resource> urlCategorias)
+	throws Exception, IOException, JWNLException, CorruptIndexException {
+
+
+		if(iWikiWriter != null){
+			for(Resource category : urlCategorias){
+				String sText;
+				WikipediaText oWikipediaText = new WikipediaText();
+				String sTextWikipedia= oWikipediaText.GetTextFromWikipedia(category.getLocalName(), true);
+				String sTotalTextSynonym = "";
+				System.out.println("\n\nSALIDA DE LA SEGUNDA FASE: ");
+				sText = showTextAnalized(sTextWikipedia, analyzer);
+
+				System.out.println(sText);
+
+				//AddDocument(iWikiWriter, category, sTextWikipedia, 2);
+				String sTextWikipediaSynonym = "";
+				Set<String> oSyn = Synonym.lookupSynonyms(category.getLocalName());
+
+
+				System.out.println("num sinonimos: " + oSyn.size());
+				for(String sWord:oSyn){
+
+					try{
+
+						sTextWikipediaSynonym = oWikipediaText.GetTextFromWikipedia(sWord, true);
+
+						sText = showTextAnalized(sTextWikipediaSynonym, analyzer);
+
+						System.out.println(sText);
+
+						sTotalTextSynonym += " " + sTextWikipediaSynonym;
+					}
+					catch(Exception e){
+
+
+					}
 				}
-				AddDocument(iListWebsWriter, category, sTextUrls.trim());
-		}else{
-			System.out.print("Las urls rastreadas ready to index es cero");
+
+				String sTotalTextWikipedia =  sTextWikipedia + " "+ sTextWikipediaSynonym;
+
+
+				sText = showTextAnalized(sTotalTextWikipedia, analyzer);
+
+				AddDocument(iWikiWriter, category, sText);
+			}
+			iWikiWriter.optimize();
+			iWikiWriter.close();
 		}
 	}
 
-	
-	
-	
+
+
+	//////TERCERA FASE
+	private static void addTextFromUrlsClassified(IndexWriter iListWebsWriter, ArrayList<Resource> urlCategorias)	throws MalformedURLException, IOException {
+
+
+		if(iListWebsWriter != null){
+			for(Resource category : urlCategorias){
+
+				System.out.println("\n\nSALIDA DE LA TERCERA FASE: ");
+				//Obtener objeto category
+				Category oCategory = Category.valueOf(category.getLocalName());
+
+
+				List<String> listUrlsToIndex = new ArrayList<String>();
+				//Esto es para o sacar las urls de internet rastreando con el spider
+				//o cogerlas de la base de datos donde previamente las hemos guardado con StoreAllUrls
+
+				///POR DEFECTO DB
+
+				listUrlsToIndex = DAOUrlsRastreated.getInstance().selectUrls(State.ToIndex);
+
+				String sTextUrls = "";		
+
+				//RECOGE TODO EL TEXTO
+				if(listUrlsToIndex.size()>0){
+					for(int i = 0; i<listUrlsToIndex.size();i++){
+						String sUrlSub = listUrlsToIndex.get(i);
+						sTextUrls += ExtractText.GetBlogText(sUrlSub) + " ";
+						DAOUrlsRastreated.getInstance().updateUrlState(sUrlSub, State.Indexed);
+					}
+					AddDocument(iListWebsWriter, category, sTextUrls.trim());
+				}else{
+					System.out.print("Las urls rastreadas ready to index es cero");
+				}
+			}
+
+			iListWebsWriter.optimize();
+			iListWebsWriter.close();
+		}
+	}
+
+
+
+
 	///METODOS COMPLEMENTARIOS
-	
+
 
 	private static String showTextAnalized(String sTextResources, Analyzer oAnalyzer)
 	throws IOException {
@@ -288,42 +298,42 @@ public class IndexesGenerator {
 
 
 	public static ArrayList<Resource> getFatherCategoriesInternet() throws SQLException, ClassNotFoundException {
-		
+
 		ArrayList <Resource> fatherCategorias=DbPedia.getFatherCategories();
 
 
 		return fatherCategorias;
 	}
-	
-	
+
+
 
 
 	////METODOS NO USADOS
-@Deprecated
+	@Deprecated
 	private static void saveUrlsToEvaluate(Hashtable<Category, List<String>> listToEvaluate2) {
-		
+
 		for(Entry<Category,List<String>> oEntry:listToEvaluate.entrySet()){
 			Category oCategories = oEntry.getKey();
-		
+
 			for(String sUrl: oEntry.getValue()){
 				//DAO.storeWebCat(sUrl, oCategories.toString());
 			}
 		}
-			
-		}
 
-		
+	}
 
-@Deprecated
-		private static String getTextFromUrls(List<String> sUrls, int maxToText) throws IOException,
-		MalformedURLException {
-			String sText="";
-			for(int i = 0; i<maxToText;i++){
-				String sUrlSub = sUrls.get(i);
-				sText += ExtractText.GetBlogText(sUrlSub) + " ";
-			}
-			return sText;
+
+
+	@Deprecated
+	private static String getTextFromUrls(List<String> sUrls, int maxToText) throws IOException,
+	MalformedURLException {
+		String sText="";
+		for(int i = 0; i<maxToText;i++){
+			String sUrlSub = sUrls.get(i);
+			sText += ExtractText.GetBlogText(sUrlSub) + " ";
 		}
+		return sText;
+	}
 
 	private static void getTextFromUrlsFromOneCat( Resource category)
 	throws MalformedURLException, IOException {

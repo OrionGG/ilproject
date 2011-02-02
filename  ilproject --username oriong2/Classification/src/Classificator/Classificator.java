@@ -145,9 +145,8 @@ public class Classificator {
 
 	public static List<IndexCategScore>  getListIndex(String sDomainUrl, String sText) throws CorruptIndexException, IOException, ParseException, SQLException, ClassNotFoundException{
 		List<IndexCategScore> lResult = new ArrayList<IndexCategScore>();
-		Map<IndexSearcher, Directory> lIndex = new Hashtable<IndexSearcher, Directory>();
 		
-		lIndex=generateIndexesReader(lIndex);
+		List<IndexSearcherExtension> lIndexSearcherExtension = generateIndexesReader();
 		// Parse a simple query that searches for "text":
 		Analyzer analyzer = new SpanishAnalyzer(Version.LUCENE_30, new File (".\\resources\\stopwords\\spanishSmart.txt"));
 
@@ -166,32 +165,17 @@ public class Classificator {
 
 		Query query = parser.parse(sText);
 		
-		//Generate a list of top docs archived
-		List<IndexTopDoc> lIndexTopDoc = new ArrayList<IndexTopDoc>(); 
 		//For each index
-		for(Entry<IndexSearcher, Directory> oIndex: lIndex.entrySet()){
-			IndexSearcher oIndexSearcher = oIndex.getKey();
-			Directory oDirectory = oIndex.getValue();
-			IndexTopDoc oIndexTopDoc = hitDocsByIndex(oIndexSearcher, oDirectory, query,sDomainUrl);
-			lIndexTopDoc.add(oIndexTopDoc);
+		for(IndexSearcherExtension oIndexSearcherExtension: lIndexSearcherExtension){
+			hitDocsByIndex(oIndexSearcherExtension, query,sDomainUrl);
 		}
 		
 
-		int i =0;
 		
-		for(IndexTopDoc oIndexTopDoc : lIndexTopDoc){
-			IndexCategScore oIndexCategScore = PrepareIndexToCross(sDomainUrl, i, oIndexTopDoc);
+		for(IndexSearcherExtension oIndexSearcherExtension : lIndexSearcherExtension){
+			IndexCategScore oIndexCategScore = PrepareIndexToCross(sDomainUrl, oIndexSearcherExtension);
 			lResult.add(oIndexCategScore);
-			i++;
-		}
-		
-
-		//For each index
-		for(Entry<IndexSearcher, Directory> oIndex: lIndex.entrySet()){
-			IndexSearcher oIndexSearcher = oIndex.getKey();
-			Directory oDirectory = oIndex.getValue();
-			oIndexSearcher.close();
-			oDirectory.close();
+			oIndexSearcherExtension.close();
 		}
 		
 
@@ -199,47 +183,48 @@ public class Classificator {
 	}
 	
 
-	private static Map<IndexSearcher, Directory> generateIndexesReader(Map<IndexSearcher, Directory> lIndex) throws IOException {
+	private static List<IndexSearcherExtension> generateIndexesReader() throws IOException {
 		// TODO Auto-generated method stub
+
+		List<IndexSearcherExtension> lIndex = new ArrayList<IndexSearcherExtension>();
 		
 		File fDBPediaDirectory=new File(".\\resources\\index\\DBPediaIndex");
 		Directory dDBPediaIndexDirectory = FSDirectory.open(fDBPediaDirectory,new NoLockFactory());
 		
 		// Now search the index:
-		IndexSearcher iDBPediaSearcher = new IndexSearcher(dDBPediaIndexDirectory, true); // read-only=true
-		lIndex.put(iDBPediaSearcher, dDBPediaIndexDirectory);
+		IndexSearcherExtension iDBPediaSearcher = new IndexSearcherExtension(1, dDBPediaIndexDirectory, true, null); // read-only=true
+		lIndex.add( iDBPediaSearcher);
 
 		File fWikiDirectory=new File(".\\resources\\index\\WikiIndex");
 		Directory dWikiIndexDirectory = FSDirectory.open(fWikiDirectory,new NoLockFactory());
 		// Now search the index:
-		IndexSearcher iWikiSearcher = new IndexSearcher(dWikiIndexDirectory, true); // read-only=true
-		lIndex.put(iWikiSearcher, dWikiIndexDirectory);
+		IndexSearcherExtension iWikiSearcher = new IndexSearcherExtension(2, dWikiIndexDirectory, true, null); // read-only=true
+		lIndex.add(iWikiSearcher);
 
 		File fListWebsDirectory=new File(".\\resources\\index\\ListWebsIndex");
 		Directory dListWebsIndexDirectory = FSDirectory.open(fListWebsDirectory,new NoLockFactory());
 		// Now search the index:
-		IndexSearcher iListWebsSearcher = new IndexSearcher(dListWebsIndexDirectory, true); // read-only=true
-		lIndex.put(iListWebsSearcher, dListWebsIndexDirectory);
+		IndexSearcherExtension iListWebsSearcher = new IndexSearcherExtension(3, dListWebsIndexDirectory, true, null); // read-only=true
+		lIndex.add(iListWebsSearcher);
 
 		return lIndex;
 	}
 
 
-	private static IndexTopDoc hitDocsByIndex(IndexSearcher oIndexSearcher, Directory oDirectory,
+	private static void hitDocsByIndex(IndexSearcherExtension oIndexSearcherExtension,
 			Query query,String sDomainUrl) throws IOException, CorruptIndexException, SQLException {
 
-		TopDocs hits = oIndexSearcher.search(query, 1000); 
-		IndexTopDoc oResult = new IndexTopDoc(oIndexSearcher, hits);
-		return oResult;
+		TopDocs hits = oIndexSearcherExtension.search(query, 1000); 
+		oIndexSearcherExtension.oTopDocs = hits;
 	}
 
 
-	private static IndexCategScore PrepareIndexToCross(String sDomainUrl, int i, IndexTopDoc oIndexTopDoc)	throws CorruptIndexException, IOException, SQLException, ClassNotFoundException {
-		IndexSearcher oIndexSearcher = oIndexTopDoc.oIndexSearcher;
-		TopDocs hits = oIndexTopDoc.oTopDocs;
+	private static IndexCategScore PrepareIndexToCross(String sDomainUrl, IndexSearcherExtension IndexSearcherExtension)	throws CorruptIndexException, IOException, SQLException, ClassNotFoundException {
+		IndexSearcher oIndexSearcher = (IndexSearcher)IndexSearcherExtension;
+		TopDocs hits = IndexSearcherExtension.oTopDocs;
 		//////FUNCIONALIDADES POSIBLES PARA LEER EL INDICE
 		//System.out.println("El termino -"+term+"- aparece "+isearcher.docFreq(term)+" veces");
-		System.out.println("Tras ejecutar la query " + hits.scoreDocs.length + " encontrados para");
+		System.out.println("Tras ejecutar la query con el indice "+ IndexSearcherExtension.iIndex +": " + hits.scoreDocs.length + " encontrados para");
 		// Iterate through the results:
 		System.out.println("Scores del articulo por categorias: "); 
 		IndexCategScore oResult = new IndexCategScore(oIndexSearcher);
@@ -250,7 +235,7 @@ public class Classificator {
 			Category oCategory = Category.valueOf(sCategoryName);
 
 			////SAVING TO DB TEMPORARY SCORES
-			DAOScoresIntermediate.getInstance().saveUrl(sDomainUrl,i,oCategory, oScoreDoc.score);
+			DAOScoresIntermediate.getInstance().saveUrl(sDomainUrl, IndexSearcherExtension.iIndex,oCategory, oScoreDoc.score);
 			oResult.hCategScore.put(sCategoryName, oScoreDoc.score);
 		
 			System.out.println("     "+hitDoc.getField("CategoryName").stringValue() + " "+ oScoreDoc.score+"->ALMACENADO");

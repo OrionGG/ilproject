@@ -20,13 +20,13 @@ public class IndexesWriter {
 		WikiIndex,
 		ListWebsIndex
 	}
-	static Hashtable<String, IndexWriter> IndexHash = new Hashtable<String, IndexWriter>();
+	static Hashtable<IndexType, IndexWriter> IndexHash = new Hashtable<IndexType, IndexWriter>();
 	
 	public static void CreateIndexes(IndexType[] lIndesList, SpanishAnalyzer analyzer ) throws CorruptIndexException, LockObtainFailedException, IOException{
 		
 		for(IndexType oIndexType:lIndesList){
 			IndexWriter iIndexWriter = CreateIndex(analyzer, oIndexType.toString());
-			IndexHash.put( oIndexType.toString(), iIndexWriter);
+			IndexHash.put( oIndexType, iIndexWriter);
 		}
 	}
 
@@ -44,13 +44,13 @@ public class IndexesWriter {
 	}
 	
 	public static IndexWriter getIndex(IndexType oIndexType){
-		IndexWriter oResult = IndexHash.get(oIndexType.toString());
+		IndexWriter oResult = IndexHash.get(oIndexType);
 		return oResult;
 		
 	}
 
 	public static void optimize() throws CorruptIndexException, IOException {
-		for(Entry<String, IndexWriter> oEntry:IndexHash.entrySet()){
+		for(Entry<IndexType, IndexWriter> oEntry:IndexHash.entrySet()){
 			IndexWriter oIndexWriter = oEntry.getValue();
 			oIndexWriter.optimize();		
 		}
@@ -58,7 +58,7 @@ public class IndexesWriter {
 	}
 
 	public static void close() throws CorruptIndexException, IOException {
-		for(Entry<String, IndexWriter> oEntry:IndexHash.entrySet()){
+		for(Entry<IndexType, IndexWriter> oEntry:IndexHash.entrySet()){
 			IndexWriter oIndexWriter = oEntry.getValue();
 			oIndexWriter.close();		
 		}
