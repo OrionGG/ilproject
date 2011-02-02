@@ -116,7 +116,7 @@ public class Classificator {
 		//	System.out.println("URL: "+ sUrl);
 		System.out.println("");
 		
-		FinalScoreCalculator.showFinalResults(oTreeMap);
+		//FinalScoreCalculator.showFinalResults(oTreeMap);
 		
 	}
 
