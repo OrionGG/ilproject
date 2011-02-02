@@ -7,6 +7,8 @@ package DBLayer;
 
 import java.sql.*;
 
+import com.sun.rowset.CachedRowSetImpl;
+
 /**
  *
  * @author chemi
@@ -28,7 +30,7 @@ public class DAO {
         return DriverManager.getConnection("jdbc:mysql://localhost:3306/"+SERVERNAME,"root", "admin");
     }
 
-    protected ResultSet executeQuery(String query, Object ...parameters) throws SQLException {
+    protected CachedRowSetImpl executeQuery(String query, Object ...parameters) throws SQLException {
         Connection con = getConnection();
         PreparedStatement statement = con.prepareStatement(query);
         if (parameters != null && parameters.length > 0) {
@@ -37,7 +39,12 @@ public class DAO {
                 statement.setObject(i++, parameter);
             }
         }
-        return statement.executeQuery();
+
+        ResultSet rs = statement.executeQuery();
+        CachedRowSetImpl crs = new CachedRowSetImpl();
+        crs.populate(rs);
+        con.close();
+        return crs;
     }
 
     protected void executeUpdate(String query, Object ...parameters)throws SQLException{
@@ -50,12 +57,18 @@ public class DAO {
             }
         }
         statement.executeUpdate();
-
+        con.close();
     }
 
-    protected ResultSet executeSimpleQuery(String query) throws SQLException{
+    protected CachedRowSetImpl executeSimpleQuery(String query) throws SQLException{
         Connection con =getConnection();
         PreparedStatement statement =con.prepareStatement(query);
-        return statement.executeQuery();
+        
+
+        ResultSet rs = statement.executeQuery();
+        CachedRowSetImpl crs = new CachedRowSetImpl();
+        crs.populate(rs);
+        con.close();
+        return crs;
     }
 }

@@ -94,7 +94,9 @@ public class Classificator {
 		String sText = "";
 		try {
 			sText = ExtractText.GetBlogText(sDomainUrl);
-			
+			if(sText ==""){
+				return;
+			}
 			
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
