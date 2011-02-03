@@ -13,8 +13,9 @@ import dominio.Url;
 public class DAOUrlsClassified extends DAOWebsClassified{
 	public enum Fields{
 		id,
-		URLNAME,
-		CATEGORYTYPE
+		url,
+		category,
+		score
 	}
 	
 	private static DAOUrlsClassified oInstance;
@@ -31,7 +32,7 @@ public class DAOUrlsClassified extends DAOWebsClassified{
 		String query="SELECT category FROM urls_classified WHERE url='"+url+"'";
 		System.out.println(query);
 		ResultSet rs = executeQuery(query);
-		int iEnum = rs.getInt(Fields.CATEGORYTYPE.toString());
+		int iEnum = rs.getInt(Fields.category.toString());
 		Category oCategory = Category.values()[iEnum];
 		return oCategory;
 	}
@@ -49,14 +50,14 @@ public class DAOUrlsClassified extends DAOWebsClassified{
 
 
 
-	public  TreeMap <Float,Category>  selectCategoryScores(Url url ) throws SQLException {
-		String query="SELECT score,category FROM urls_classified WHERE url='"+url+"' ORDER BY score";
+	public  TreeMap <Float,Category>  selectCategoryScores(String sUrl ) throws SQLException {
+		String query="SELECT score,category FROM urls_classified WHERE url='"+sUrl+"'";
 		
 		ResultSet rs = executeQuery(query);
 		TreeMap <Float,Category> categoryScores=new TreeMap<Float, Category>();
 		while(rs.next()){
 			//Fill the score Category with the info form DB---already oredeereed by score
-			categoryScores.put(rs.getFloat("score"),  Category.values()[rs.getInt("category")]);
+			categoryScores.put(rs.getFloat(Fields.score.toString()),  Category.values()[rs.getInt(Fields.category.toString())]);
 		}
 
 		return categoryScores;

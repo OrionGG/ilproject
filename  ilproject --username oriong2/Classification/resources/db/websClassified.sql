@@ -29,7 +29,7 @@ CREATE TABLE `scores_intermediate` (
   `url` varchar(2000) DEFAULT NULL,
   `indextype` int(11) DEFAULT NULL,
   `category` int(11) DEFAULT NULL,
-  `score` mediumtext,
+  `score`  FLOAT,
   PRIMARY KEY (`id`),
   UNIQUE KEY `idscores_intermediate_UNIQUE` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=129 DEFAULT CHARSET=utf8;
@@ -43,10 +43,10 @@ DROP TABLE IF EXISTS `urls_classified`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `urls_classified` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `url` varchar(2000) DEFAULT NULL,
   `category` int(11) DEFAULT NULL,
-  `score` mediumblob,
+  `score`  FLOAT,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
