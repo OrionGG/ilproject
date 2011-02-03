@@ -46,8 +46,10 @@ public class FinalScoreCalculator {
 
 	private static void calculeAndSaveFinalScore(Category category, String lastUrl, 
 			Hashtable<Integer, Float> hIndexScore) {
-		float finalScore = calculateFinalScore(hIndexScore);	
-		DAOUrlsClassified.getInstance().saveUrl(lastUrl, category, finalScore);
+		float finalScore = calculateFinalScore(hIndexScore);
+		if(finalScore != 0){
+			DAOUrlsClassified.getInstance().saveUrl(lastUrl, category, finalScore);
+		}
 	}
 
 	private static Hashtable<Integer, Float> getIntermediateScoresByUrl(ResultSet oResultSet, String sUrl) throws SQLException{
