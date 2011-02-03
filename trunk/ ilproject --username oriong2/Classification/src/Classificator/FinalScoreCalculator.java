@@ -24,7 +24,7 @@ public class FinalScoreCalculator {
 	private static float weightDbpedia=new Float(0.2);	
 	private static float weightWiki= new Float(0.2);	
 	private static float weightNews= new Float(0.6);
-	
+
 	public static void main(String[] args) throws Exception {
 		fillUrlsClassifiedTable();
 	}
@@ -33,25 +33,14 @@ public class FinalScoreCalculator {
 
 	public static void fillUrlsClassifiedTable() throws SQLException, ClassNotFoundException{
 
-		//lista de ulrs a las que le hemos calculado el score final
-		List<String> lUrlsWithFinalScore = new ArrayList();
-		for(Category category : Category.values()){
-			ResultSet rs = DAOScoresIntermediate.getInstance().selectUrlsFromCategory(category);
-			String lastUrl = rs.getString(DAOScoresIntermediate.Fields.url.toString());
-			
-			if(lUrlsWithFinalScore.contains(lastUrl)){
-				//esta url ya ha sido procesada por lo que pasamos a la siguiente
-				continue;
+		List<String> lAllUrls = DAOScoresIntermediate.getInstance().selectAllUrls();
+		for(String sUrl : lAllUrls){
+
+			for(Category category : Category.values()){
+				Hashtable<Integer, Float> hIndexScore = DAOScoresIntermediate.getInstance().getIntermediateScoresByUrlAndCategory(sUrl, category);
+				calculeAndSaveFinalScore(category, sUrl, hIndexScore);
 			}
-			else{
-				//incluir la url en la lista de procesadas
-				lUrlsWithFinalScore.add(lastUrl);
-			}
-			
-			Hashtable<Integer, Float> hIndexScore = getIntermediateScoresByUrl(rs, lastUrl);
-			
-			calculeAndSaveFinalScore(category, lastUrl, hIndexScore);
-		}
+		}	
 
 	}
 
@@ -60,7 +49,7 @@ public class FinalScoreCalculator {
 		float finalScore = calculateFinalScore(hIndexScore);	
 		DAOUrlsClassified.getInstance().saveUrl(lastUrl, category, finalScore);
 	}
-	
+
 	private static Hashtable<Integer, Float> getIntermediateScoresByUrl(ResultSet oResultSet, String sUrl) throws SQLException{
 		Hashtable<Integer, Float> hIndexScore = new Hashtable<Integer, Float>();
 
@@ -76,7 +65,7 @@ public class FinalScoreCalculator {
 				i++;
 			}
 		}
-		
+
 		return hIndexScore;
 	}
 
@@ -86,7 +75,13 @@ public class FinalScoreCalculator {
 		return  finalScore;
 	}
 	private static float calculateFinalScore(Hashtable<Integer, Float> hIndexScore) {
-		float fTotalScore = calculateFinalScore(hIndexScore.get(0), hIndexScore.get(1), hIndexScore.get(2));
+		Float iIndexScore1 = hIndexScore.get(1);
+		if(iIndexScore1 == null) iIndexScore1 = 0.0f;
+		Float iIndexScore2 = hIndexScore.get(2);
+		if(iIndexScore2 == null) iIndexScore2 = 0.0f;
+		Float iIndexScore3 = hIndexScore.get(3);
+		if(iIndexScore3 == null) iIndexScore3 = 0.0f;
+		float fTotalScore = calculateFinalScore(iIndexScore1,iIndexScore2, iIndexScore3);
 		return fTotalScore;
 	}
 
@@ -120,7 +115,7 @@ public class FinalScoreCalculator {
 		return oTreeMap;
 	}
 
-	
+
 	public static float getWeightDbpedia() {
 		return weightDbpedia;
 	}

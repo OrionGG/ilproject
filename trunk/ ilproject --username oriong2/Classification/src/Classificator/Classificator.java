@@ -57,39 +57,43 @@ public class Classificator {
 
 
 	public static void main(String[] args) throws Exception {
-		
+
 		if (args.length > 1){
 			String sOption = args[0].toString();
 			String sDomainUrl = args[1].toString();
-			
+
 			if(sOption.equals("-u")){
 				classificate(sDomainUrl);
-	
+
 			}
 			else if(sOption.equals("-l")){
 				String sUrl = args[2].toString();
 				List<String> oList = GetSubUrls.DefaultSpiderUrl(sDomainUrl, sUrl);
 				for(String sSubUrl : oList){
-			
+
 					classificate(sSubUrl);
 				}
 			}
 		}else{
-				
+
 			System.out.println("Catgeorizar todas las url del rastreador");
 
 			////GETTING THE URLS FROM THE CATEGORY GENERATOR
-			List<String> urls=DAOUrlsRastreated.getInstance().selectUrls(State.ToIndex);
-			for(String url : urls){
-				classificate(url);	
-			}
-				
-			}
-		}
+			TreeMap<String,Category> urlsCategory=DAOUrlsRastreated.getInstance().selectUrlsCategory(State.ToClassify);
+			for(Entry<String,Category> oUrlCategory : urlsCategory.entrySet()){
+				String url = oUrlCategory.getKey();
+				classificate(url);
+				Category oCategory = oUrlCategory.getValue();
+				DAOUrlsRastreated.getInstance().insertOrUpdateUrlCategory(url, oCategory, State.Classified);
 
-	
+			}
+
+		}
+	}
+
+
 	public static void classificate(String sDomainUrl){
-		
+
 		List<IndexCategScore> listTopDocs = new ArrayList<IndexCategScore>();
 		String sText = "";
 		try {
@@ -97,7 +101,7 @@ public class Classificator {
 			if(sText ==""){
 				return;
 			}
-			
+
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -111,15 +115,16 @@ public class Classificator {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	
 
-		TreeMap<Double, Category> oTreeMap = FinalScoreCalculator.indexShortedCross(listTopDocs);
+
+		//TreeMap<Double, Category> oTreeMap = FinalScoreCalculator.indexShortedCross(listTopDocs);
+
 		System.out.println("");
 		//	System.out.println("URL: "+ sUrl);
 		System.out.println("");
-		
+
 		//FinalScoreCalculator.showFinalResults(oTreeMap);
-		
+
 	}
 
 
@@ -147,7 +152,7 @@ public class Classificator {
 
 	public static List<IndexCategScore>  getListIndex(String sDomainUrl, String sText) throws CorruptIndexException, IOException, ParseException, SQLException, ClassNotFoundException{
 		List<IndexCategScore> lResult = new ArrayList<IndexCategScore>();
-		
+
 		List<IndexSearcherExtension> lIndexSearcherExtension = generateIndexesReader();
 		// Parse a simple query that searches for "text":
 		Analyzer analyzer = new SpanishAnalyzer(Version.LUCENE_30, new File (".\\resources\\stopwords\\spanishSmart.txt"));
@@ -159,19 +164,19 @@ public class Classificator {
 		parser.setAllowLeadingWildcard(false);
 
 		Reader stringReader = new StringReader(sText);
-		
+
 		TokenStream tokenStream = (analyzer).tokenStream("defaultFieldName", stringReader);
 		sText =  (new Analizer.test.TermAnalyzerView()).GetView(tokenStream, 0).trim();
-		
+
 		System.out.println("Texto parseado: " + sText);
 
 		Query query = parser.parse(sText);
-		
+
 		//For each index
 		for(IndexSearcherExtension oIndexSearcherExtension: lIndexSearcherExtension){
 			hitDocsByIndex(oIndexSearcherExtension, query,sDomainUrl);
 		}
-		
+
 
 		
 		for(IndexSearcherExtension oIndexSearcherExtension : lIndexSearcherExtension){
@@ -179,20 +184,20 @@ public class Classificator {
 			lResult.add(oIndexCategScore);
 			oIndexSearcherExtension.close();
 		}
-		
+
 
 		return lResult;
 	}
-	
+
 
 	private static List<IndexSearcherExtension> generateIndexesReader() throws IOException {
 		// TODO Auto-generated method stub
 
 		List<IndexSearcherExtension> lIndex = new ArrayList<IndexSearcherExtension>();
-		
+
 		File fDBPediaDirectory=new File(".\\resources\\index\\DBPediaIndex");
 		Directory dDBPediaIndexDirectory = FSDirectory.open(fDBPediaDirectory,new NoLockFactory());
-		
+
 		// Now search the index:
 		IndexSearcherExtension iDBPediaSearcher = new IndexSearcherExtension(1, dDBPediaIndexDirectory, true, null); // read-only=true
 		lIndex.add( iDBPediaSearcher);
@@ -216,7 +221,7 @@ public class Classificator {
 	private static void hitDocsByIndex(IndexSearcherExtension oIndexSearcherExtension,
 			Query query,String sDomainUrl) throws IOException, CorruptIndexException, SQLException {
 
-		TopDocs hits = oIndexSearcherExtension.search(query, 1000); 
+		TopDocs hits = oIndexSearcherExtension.search(query, 5); 
 		oIndexSearcherExtension.oTopDocs = hits;
 	}
 
@@ -238,11 +243,11 @@ public class Classificator {
 
 			////SAVING TO DB TEMPORARY SCORES
 			DAOScoresIntermediate.getInstance().saveUrl(sDomainUrl, IndexSearcherExtension.iIndex,oCategory, oScoreDoc.score);
-			oResult.hCategScore.put(sCategoryName, oScoreDoc.score);
-		
+			oResult.hCategScore.put(oCategory.ordinal(), oScoreDoc.score);
+
 			System.out.println("     "+hitDoc.getField("CategoryName").stringValue() + " "+ oScoreDoc.score+"->ALMACENADO");
 			//assertEquals("This is the text to be indexed.", hitDoc.get("fieldname"));
-			
+
 		}
 		return oResult;
 	}

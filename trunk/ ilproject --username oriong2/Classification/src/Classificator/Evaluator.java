@@ -43,7 +43,7 @@ public class Evaluator {
 	
 	}
 	
-	public static void main() throws SQLException, IOException{
+	public static void main(String[] args) throws SQLException, IOException{
 		
 		FinalScoreCalculator.setWeightDbpedia(new Float(0.2));
 		FinalScoreCalculator.setWeightWiki(new Float(0.2));
@@ -64,7 +64,7 @@ public class Evaluator {
 			url.setUrl(entry.getKey());
 			url.setOriginalCategory(entry.getValue());
 			
-			TreeMap<Float, Category> categoryScores = DAOUrlsClassified.getInstance().selectCategoryScores(url);
+			TreeMap<Float, Category> categoryScores = DAOUrlsClassified.getInstance().selectCategoryScores(url.getUrl());
 			url.setCategoryScore(categoryScores);
 			Set<Entry<Float, Category>>setClassified=categoryScores.entrySet();
 			int i =0;
