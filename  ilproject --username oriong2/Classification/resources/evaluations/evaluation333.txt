@@ -1,8 +1,8 @@
 WEIGHTS
 
- dbpedia=0.33
- wiki=0.33
- weightNews =0.33
+ dbpedia=0.33333334
+ wiki=0.33333334
+ weightNews =0.33333334
 
 
 CATEGORIA: MusicalArtist
@@ -489,6 +489,18 @@ CATEGORIA: BritishRoyalty
 	F-Measure = 0.3783783783783784
 	Accuracy = 0.8756756756756757
 
+Macroaveraging Precision = 0.20254124448297414
+Microaveraging Precision = 0.25210084033613445
+
+Macroaveraging Recall = 0.20386822773186414
+Microaveraging Recall = 0.25210084033613445
+
+Macroaveraging F-Measure = 0.16133884716068783
+Microaveraging F-Measure = 0.25210084033613445
+
+Macroaveraging Accuracy = 0.9551946672448692
+Microaveraging Accuracy = 0.9548910288900152
+
 Number Total Of Test Instances Correctly Classified = 60.0
-Number Total Number Of Test Instances = 240.0
-Classification Accuracy = 0.25
+Number Total Number Of Test Instances = 238.0
+Classification Accuracy = 0.25210084033613445
