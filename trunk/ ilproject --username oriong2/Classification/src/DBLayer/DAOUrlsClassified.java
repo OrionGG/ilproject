@@ -72,6 +72,18 @@ public class DAOUrlsClassified extends DAOWebsClassified{
 
 
 
+	public void deleteAll() {
+		try {
+			executeUpdate("DELETE FROM urls_classified");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+
+
 
 }
 

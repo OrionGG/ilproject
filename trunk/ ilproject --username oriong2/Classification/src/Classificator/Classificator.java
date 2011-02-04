@@ -221,7 +221,7 @@ public class Classificator {
 	private static void hitDocsByIndex(IndexSearcherExtension oIndexSearcherExtension,
 			Query query,String sDomainUrl) throws IOException, CorruptIndexException, SQLException {
 
-		TopDocs hits = oIndexSearcherExtension.search(query, 5); 
+		TopDocs hits = oIndexSearcherExtension.search(query, 7); 
 		oIndexSearcherExtension.oTopDocs = hits;
 	}
 
