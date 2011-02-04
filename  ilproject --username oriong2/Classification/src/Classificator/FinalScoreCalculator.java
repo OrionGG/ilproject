@@ -32,7 +32,7 @@ public class FinalScoreCalculator {
 
 
 	public static void fillUrlsClassifiedTable() throws SQLException, ClassNotFoundException{
-
+		DAOUrlsClassified.getInstance().deleteAll();
 		List<String> lAllUrls = DAOScoresIntermediate.getInstance().selectAllUrls();
 		for(String sUrl : lAllUrls){
 			System.out.println("Final score for: " + sUrl);

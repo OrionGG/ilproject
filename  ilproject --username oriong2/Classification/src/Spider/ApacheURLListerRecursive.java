@@ -87,6 +87,27 @@ public class ApacheURLListerRecursive {
 			/*        if (!url.getPath().endsWith("/") && !url.getPath().endsWith(".html")) {
             url = new URL(url.getProtocol(), url.getHost(), url.getPort(), url.getPath() + "/");
         }*/
+			HttpURLConnection oHttpURLConnectionUrl = null;
+			try {
+				oHttpURLConnectionUrl = (HttpURLConnection)url.openConnection();
+
+				if(!IsAGoobUrl(oHttpURLConnectionUrl))
+				{
+					return;
+				}
+			} 
+			catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			finally{
+
+				if(oHttpURLConnectionUrl != null)
+					oHttpURLConnectionUrl.disconnect();
+			}
+			
+
+			
 			BufferedReader r;
 			try {
 				r = new BufferedReader(new InputStreamReader(URLHandlerRegistry.getDefault()

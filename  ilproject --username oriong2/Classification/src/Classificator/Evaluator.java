@@ -59,18 +59,16 @@ public class Evaluator {
 		for(Category oCategory: Category.values()){
 			//read DB, take the rastreated webd webs, rady for categ
 			List<String> lUrlsEvaluation=DAOUrlsRastreated.getInstance().selectUrls(oCategory, State.Classified);
-			dTotalNumberOfTestInstances += lUrlsEvaluation.size();
+			//dTotalNumberOfTestInstances += lUrlsEvaluation.size();
 
 			EvaluationMetrics oCurrentEvaluationMetrics = hCategoyEvaluationMetrics.get(oCategory.ordinal());
-			
+
 			//añadiendo falso positivo a la categoria que pone como primera
 			if(oCurrentEvaluationMetrics == null){
 				oCurrentEvaluationMetrics = new EvaluationMetrics();
 			}
 			////Read Db, taking the catgeorizated and ready for evaluated webs
-			int nUrlsEvaluated=0;
 			for(String sUrl : lUrlsEvaluation){
-				nUrlsEvaluated++;
 				Url url=new Url();
 				url.setUrl(sUrl);
 				url.setOriginalCategory(oCategory);
@@ -80,6 +78,9 @@ public class Evaluator {
 
 				if(categoryScores.firstEntry() == null){
 					continue;
+				}
+				else{
+					dTotalNumberOfTestInstances++;
 				}
 
 				hCategoyEvaluationMetrics = takeMetrics(categoryScores, url,oCurrentEvaluationMetrics, hCategoyEvaluationMetrics);
@@ -118,7 +119,7 @@ public class Evaluator {
 		else{
 			oCurrentEvaluationMetrics.dFalseNegative++;
 			EvaluationMetrics oEvaluationMetrics = hCategoyEvaluationMetrics.get(oFirstCategory.ordinal());
-			
+
 			//añadiendo falso positivo a la categoria que pone como primera
 			if(oEvaluationMetrics != null){
 				oEvaluationMetrics.dFalsePositive++;
@@ -129,25 +130,88 @@ public class Evaluator {
 				hCategoyEvaluationMetrics.put(oFirstCategory.ordinal(), oEvaluationMetrics);
 
 			}
+		}
 
-			//añadiendo true negativo a las categorias que no incluye
-			for(Category oCategory: Category.values()){
-				if((oCategory == url.getOriginalCategory())
-						|| (oCategory ==oFirstCategory)){
-					continue;
-				}
-				
-				EvaluationMetrics oEvaluationMetricsRestCategories = hCategoyEvaluationMetrics.get(oCategory.ordinal());
-				
-				if(oEvaluationMetricsRestCategories != null){
-					oEvaluationMetricsRestCategories.dTrueNegative++;
-				}
-				else{
-					oEvaluationMetricsRestCategories = new EvaluationMetrics();
-					oEvaluationMetricsRestCategories.dTrueNegative = 1;
-					hCategoyEvaluationMetrics.put(oCategory.ordinal(), oEvaluationMetricsRestCategories);
+		//añadiendo true negativo a las categorias que no incluye
+		for(Category oCategory: Category.values()){
+			if((oCategory == url.getOriginalCategory())
+					|| (oCategory ==oFirstCategory)){
+				continue;
+			}
 
-				}
+			EvaluationMetrics oEvaluationMetricsRestCategories = hCategoyEvaluationMetrics.get(oCategory.ordinal());
+
+			if(oEvaluationMetricsRestCategories != null){
+				oEvaluationMetricsRestCategories.dTrueNegative++;
+			}
+			else{
+				oEvaluationMetricsRestCategories = new EvaluationMetrics();
+				oEvaluationMetricsRestCategories.dTrueNegative = 1;
+				hCategoyEvaluationMetrics.put(oCategory.ordinal(), oEvaluationMetricsRestCategories);
+
+			}
+
+		}
+
+		return hCategoyEvaluationMetrics;
+	}
+
+	public static Hashtable<Integer, EvaluationMetrics> takeMetrics2(TreeMap<Float, Category> categoryScores, Url url, 
+			EvaluationMetrics oCurrentEvaluationMetrics, 
+			Hashtable<Integer, EvaluationMetrics> hCategoyEvaluationMetrics){
+
+
+		Iterator<Category> iIteratorC = categoryScores.values().iterator();
+		double dPosition = 3;
+		ArrayList<Integer> lBestCategories = new ArrayList<Integer>();
+		for(int i = 0; i < 3 && i < categoryScores.values().size();i++){
+			Category oBestCategory = iIteratorC.next();
+			dPosition = i;
+			if(url.getOriginalCategory() == oBestCategory){
+				dPosition = i;
+				break;
+			}
+			else{
+				lBestCategories.add(oBestCategory.ordinal());
+			}
+		}
+
+		oCurrentEvaluationMetrics.dTruePositive += 1 - (((double)1/3)*dPosition);
+		dNumberTotalOfTestInstancesCorrectlyClassified += 1 - (((double)1/3)*(double)dPosition);
+
+		oCurrentEvaluationMetrics.dFalseNegative+= (((double)1/3)*dPosition);
+
+		for(Integer iCategoryOrdinal: lBestCategories){
+			EvaluationMetrics oEvaluationMetrics = hCategoyEvaluationMetrics.get(iCategoryOrdinal);
+
+			//añadiendo falso positivo a la categoria que pone como primera
+			if(oEvaluationMetrics != null){
+				oEvaluationMetrics.dFalsePositive += (((double)1/3)*dPosition);
+			}
+			else{
+				oEvaluationMetrics = new EvaluationMetrics();
+				oEvaluationMetrics.dFalsePositive  += (((double)1/3)*dPosition);
+				hCategoyEvaluationMetrics.put(iCategoryOrdinal, oEvaluationMetrics);
+
+			}
+		}
+
+		//añadiendo true negativo a las categorias que no incluye
+		for(Category oCategory: Category.values()){
+			if((oCategory == url.getOriginalCategory())
+					|| lBestCategories.contains(oCategory.ordinal())){
+				continue;
+			}
+
+			EvaluationMetrics oEvaluationMetricsRestCategories = hCategoyEvaluationMetrics.get(oCategory.ordinal());
+
+			if(oEvaluationMetricsRestCategories != null){
+				oEvaluationMetricsRestCategories.dTrueNegative++;
+			}
+			else{
+				oEvaluationMetricsRestCategories = new EvaluationMetrics();
+				oEvaluationMetricsRestCategories.dTrueNegative = 1;
+				hCategoyEvaluationMetrics.put(oCategory.ordinal(), oEvaluationMetricsRestCategories);
 
 			}
 
@@ -155,6 +219,7 @@ public class Evaluator {
 		
 		return hCategoyEvaluationMetrics;
 	}
+
 
 	private static void writeEvaluationResultsByCategory(
 			Hashtable<Integer, EvaluationMetrics> hCategoyEvaluationMetrics) throws IOException {
@@ -171,44 +236,148 @@ public class Evaluator {
 		FileOutputStream fis=new FileOutputStream(fichero);
 
 		BufferedWriter bw = new BufferedWriter(new FileWriter(sFichero));
-		
+
 		bw.write("WEIGHTS\n\n dbpedia="+  FinalScoreCalculator.getWeightDbpedia()+"\n wiki="+FinalScoreCalculator.getWeightWiki()+"\n weightNews ="+FinalScoreCalculator.getWeightNews()+"\n\n");
 		bw.write("\n");
+
+		double dTotalTP = 0;
+		double dTotalFN = 0;
+		double dTotalTN = 0;
+		double dTotalFP = 0;
+		double dMacroaveragingPrecision = 0;
+		double dMacroaveragingRecall = 0;
+		double dMacroaveragingFMeasure = 0;
+		double dMacroaveragingAccuracy = 0;
 
 		for(Entry<Integer, EvaluationMetrics> oEntry : hCategoyEvaluationMetrics.entrySet()){
 			int iCategoryOrdinal = oEntry.getKey();
 			Category oCategory = Category.values()[iCategoryOrdinal];
 			EvaluationMetrics oEvaluationMetrics = oEntry.getValue();
-			
+
 			bw.write("CATEGORIA: " + oCategory.toString() + "\n");
 			bw.write("	TP = " + oEvaluationMetrics.dTruePositive + "\n");
+			dTotalTP += oEvaluationMetrics.dTruePositive;
+
 			bw.write("	FN = " + oEvaluationMetrics.dFalseNegative + "\n");
+			dTotalFN += oEvaluationMetrics.dFalseNegative;
+
 			bw.write("	TN = " + oEvaluationMetrics.dTrueNegative + "\n");
+			dTotalTN += oEvaluationMetrics.dTrueNegative;
+
 			bw.write("	FP = " + oEvaluationMetrics.dFalsePositive + "\n");
+			dTotalFP += oEvaluationMetrics.dFalsePositive;
 
 			bw.write("\n");
 
-			double dPrecision =oEvaluationMetrics.dTruePositive / (oEvaluationMetrics.dTruePositive + oEvaluationMetrics.dFalsePositive);
+			double dPrecision = oEvaluationMetrics.dTruePositive / (oEvaluationMetrics.dTruePositive + oEvaluationMetrics.dFalsePositive);
 			bw.write("	Precision = " + dPrecision+ "\n");
+			if(!Double.isNaN(dPrecision)){
+				dMacroaveragingPrecision += dPrecision;
+			}
 
 			double dRecall = oEvaluationMetrics.dTruePositive / (oEvaluationMetrics.dTruePositive + oEvaluationMetrics.dFalseNegative);
 			bw.write("	Recall = " + dRecall+ "\n");
+			if(!Double.isNaN(dRecall)){
+				dMacroaveragingRecall += dRecall;
+			}
 
 			double FMeasure = (2*dRecall*dPrecision)/ (dRecall + dPrecision);
 			bw.write("	F-Measure = " + FMeasure+ "\n");
+			if(!Double.isNaN(FMeasure)){
+				dMacroaveragingFMeasure += FMeasure;
+			}
 
 			double dAccuracy = (oEvaluationMetrics.dTruePositive + oEvaluationMetrics.dTrueNegative) / (oEvaluationMetrics.dTruePositive + oEvaluationMetrics.dFalsePositive + oEvaluationMetrics.dFalseNegative + oEvaluationMetrics.dTrueNegative);
 			bw.write("	Accuracy = " + dAccuracy+ "\n");
+			if(!Double.isNaN(dAccuracy)){
+				dMacroaveragingAccuracy += dAccuracy;
+			}
+
 			bw.write("\n");
 		}
 
+
+		double dMicroaveragingPrecision =  calulateMacroMicroPrecision(hCategoyEvaluationMetrics, bw, dTotalTP, dTotalFP,
+				dMacroaveragingPrecision);
+
+
+		double dMicroaveragingRecall = calculateMacroMicroRecall(
+				hCategoyEvaluationMetrics, bw, dTotalTP, dTotalFN,
+				dMacroaveragingRecall);
+
+
+		calculateMacroMicroFMeasure(hCategoyEvaluationMetrics, bw,
+				dMacroaveragingFMeasure, dMicroaveragingPrecision,
+				dMicroaveragingRecall);
+
+
+		calculateMacroMicroAccuracy(hCategoyEvaluationMetrics, bw, dTotalTP,
+				dTotalFN, dTotalTN, dTotalFP, dMacroaveragingAccuracy);
+
+
 		double dClassificationAccuracy = dNumberTotalOfTestInstancesCorrectlyClassified / dTotalNumberOfTestInstances;
-		bw.write("	Classification Accuracy = " + dClassificationAccuracy+ "\n");
+		bw.write("Number Total Of Test Instances Correctly Classified = " + dNumberTotalOfTestInstancesCorrectlyClassified+ "\n");
+		bw.write("Number Total Number Of Test Instances = " + dTotalNumberOfTestInstances+ "\n");
+
+		bw.write("Classification Accuracy = " + dClassificationAccuracy+ "\n");
 
 		bw.flush();
 		bw.close();
 
 
+	}
+
+	private static void calculateMacroMicroAccuracy(
+			Hashtable<Integer, EvaluationMetrics> hCategoyEvaluationMetrics,
+			BufferedWriter bw, double dTotalTP, double dTotalFN,
+			double dTotalTN, double dTotalFP, double dMacroaveragingAccuracy)
+	throws IOException {
+		dMacroaveragingAccuracy = dMacroaveragingAccuracy/hCategoyEvaluationMetrics.size();
+		bw.write("Macroaveraging Accuracy = " + dMacroaveragingAccuracy + "\n");
+
+		double dMicroaveragingAccuracy = (dTotalTP +dTotalTN)/ (dTotalTP + dTotalFP + dTotalTN + dTotalFN);
+		bw.write("Microaveraging Accuracy = " + dMicroaveragingAccuracy+ "\n");
+		bw.write("\n");
+	}
+
+	private static void calculateMacroMicroFMeasure(
+			Hashtable<Integer, EvaluationMetrics> hCategoyEvaluationMetrics,
+			BufferedWriter bw, double dMacroaveragingFMeasure,
+			double dMicroaveragingPrecision, double dMicroaveragingRecall)
+	throws IOException {
+		dMacroaveragingFMeasure = dMacroaveragingFMeasure/hCategoyEvaluationMetrics.size();
+		bw.write("Macroaveraging F-Measure = " + dMacroaveragingFMeasure+ "\n");
+
+		double dMicroaveragingFMeasure = (2*dMicroaveragingRecall*dMicroaveragingPrecision)/ (dMicroaveragingRecall + dMicroaveragingPrecision);
+		bw.write("Microaveraging F-Measure = " + dMicroaveragingFMeasure+ "\n");
+		bw.write("\n");
+	}
+
+	private static double calculateMacroMicroRecall(
+			Hashtable<Integer, EvaluationMetrics> hCategoyEvaluationMetrics,
+			BufferedWriter bw, double dTotalTP, double dTotalFN,
+			double dMacroaveragingRecall) throws IOException {
+		dMacroaveragingRecall = dMacroaveragingRecall/hCategoyEvaluationMetrics.size();
+		bw.write("Macroaveraging Recall = " + dMacroaveragingRecall+ "\n");
+
+		double dMicroaveragingRecall = dTotalTP / (dTotalTP + dTotalFN);
+		bw.write("Microaveraging Recall = " + dMicroaveragingRecall+ "\n");
+		bw.write("\n");
+		return dMicroaveragingRecall;
+	}
+
+	private static double calulateMacroMicroPrecision(
+			Hashtable<Integer, EvaluationMetrics> hCategoyEvaluationMetrics,
+			BufferedWriter bw, double dTotalTP, double dTotalFP,
+			double dMacroaveragingPrecision) throws IOException {
+		dMacroaveragingPrecision = dMacroaveragingPrecision/hCategoyEvaluationMetrics.size();
+		bw.write("Macroaveraging Precision = " + dMacroaveragingPrecision+ "\n");
+
+		double dMicroaveragingPrecision = dTotalTP / (dTotalTP + dTotalFP);
+		bw.write("Microaveraging Precision = " + dMicroaveragingPrecision+ "\n");
+		bw.write("\n");
+
+		return dMicroaveragingPrecision;
 	}
 
 	private static void writeEvaluationResults(int nUrlsEvaluated) throws IOException {
