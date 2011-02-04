@@ -35,11 +35,12 @@ public class FinalScoreCalculator {
 
 		List<String> lAllUrls = DAOScoresIntermediate.getInstance().selectAllUrls();
 		for(String sUrl : lAllUrls){
-
+			System.out.println("Final score for: " + sUrl);
 			for(Category category : Category.values()){
 				Hashtable<Integer, Float> hIndexScore = DAOScoresIntermediate.getInstance().getIntermediateScoresByUrlAndCategory(sUrl, category);
 				calculeAndSaveFinalScore(category, sUrl, hIndexScore);
 			}
+			System.out.println("");
 		}	
 
 	}
