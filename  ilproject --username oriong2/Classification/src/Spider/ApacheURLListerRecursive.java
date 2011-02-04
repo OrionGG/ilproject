@@ -186,6 +186,7 @@ public class ApacheURLListerRecursive {
 		
 		int iCode;
 		try{
+			oHttpURLConnection.setReadTimeout(2000);
 			iCode = oHttpURLConnection.getResponseCode();
 		}
 		catch(Exception ex){
