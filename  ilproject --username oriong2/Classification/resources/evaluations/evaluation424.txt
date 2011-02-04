@@ -1,0 +1,494 @@
+WEIGHTS
+
+ dbpedia=0.4
+ wiki=0.2
+ weightNews =0.4
+
+
+CATEGORIA: MusicalArtist
+	TP = 0.0
+	FN = 5.0
+	TN = 164.0
+	FP = 10.0
+
+	Precision = 0.0
+	Recall = 0.0
+	F-Measure = NaN
+	Accuracy = 0.9162011173184358
+
+CATEGORIA: Writer
+	TP = 1.0
+	FN = 8.0
+	TN = 161.0
+	FP = 10.0
+
+	Precision = 0.09090909090909091
+	Recall = 0.1111111111111111
+	F-Measure = 0.09999999999999999
+	Accuracy = 0.9
+
+CATEGORIA: Comedian
+	TP = 0.0
+	FN = 4.0
+	TN = 175.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = 0.0
+	F-Measure = NaN
+	Accuracy = 0.9776536312849162
+
+CATEGORIA: ComicsCreator
+	TP = 3.0
+	FN = 1.0
+	TN = 178.0
+	FP = 0.0
+
+	Precision = 1.0
+	Recall = 0.75
+	F-Measure = 0.8571428571428571
+	Accuracy = 0.9945054945054945
+
+CATEGORIA: Actor
+	TP = 0.0
+	FN = 21.0
+	TN = 158.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = 0.0
+	F-Measure = NaN
+	Accuracy = 0.88268156424581
+
+CATEGORIA: Cricketer
+	TP = 0.0
+	FN = 0.0
+	TN = 179.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = NaN
+	F-Measure = NaN
+	Accuracy = 1.0
+
+CATEGORIA: SoccerPlayer
+	TP = 0.0
+	FN = 7.0
+	TN = 172.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = 0.0
+	F-Measure = NaN
+	Accuracy = 0.9608938547486033
+
+CATEGORIA: GolfPlayer
+	TP = 8.0
+	FN = 0.0
+	TN = 177.0
+	FP = 2.0
+
+	Precision = 0.8
+	Recall = 1.0
+	F-Measure = 0.888888888888889
+	Accuracy = 0.9893048128342246
+
+CATEGORIA: BasketballPlayer
+	TP = 0.0
+	FN = 15.0
+	TN = 164.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = 0.0
+	F-Measure = NaN
+	Accuracy = 0.9162011173184358
+
+CATEGORIA: TennisPlayer
+	TP = 0.0
+	FN = 10.0
+	TN = 169.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = 0.0
+	F-Measure = NaN
+	Accuracy = 0.9441340782122905
+
+CATEGORIA: RugbyPlayer
+	TP = 1.0
+	FN = 3.0
+	TN = 174.0
+	FP = 2.0
+
+	Precision = 0.3333333333333333
+	Recall = 0.25
+	F-Measure = 0.28571428571428575
+	Accuracy = 0.9722222222222222
+
+CATEGORIA: GaelicGamesPlayer
+	TP = 0.0
+	FN = 3.0
+	TN = 176.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = 0.0
+	F-Measure = NaN
+	Accuracy = 0.9832402234636871
+
+CATEGORIA: BaseballPlayer
+	TP = 0.0
+	FN = 0.0
+	TN = 164.0
+	FP = 15.0
+
+	Precision = 0.0
+	Recall = NaN
+	F-Measure = NaN
+	Accuracy = 0.9162011173184358
+
+CATEGORIA: FormulaOneRacer
+	TP = 0.0
+	FN = 8.0
+	TN = 171.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = 0.0
+	F-Measure = NaN
+	Accuracy = 0.9553072625698324
+
+CATEGORIA: Wrestler
+	TP = 0.0
+	FN = 0.0
+	TN = 179.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = NaN
+	F-Measure = NaN
+	Accuracy = 1.0
+
+CATEGORIA: NationalCollegiateAthleticAssociationAthlete
+	TP = 1.0
+	FN = 4.0
+	TN = 174.0
+	FP = 1.0
+
+	Precision = 0.5
+	Recall = 0.2
+	F-Measure = 0.28571428571428575
+	Accuracy = 0.9722222222222222
+
+CATEGORIA: GridironFootballPlayer
+	TP = 0.0
+	FN = 0.0
+	TN = 179.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = NaN
+	F-Measure = NaN
+	Accuracy = 1.0
+
+CATEGORIA: BadmintonPlayer
+	TP = 0.0
+	FN = 1.0
+	TN = 177.0
+	FP = 1.0
+
+	Precision = 0.0
+	Recall = 0.0
+	F-Measure = NaN
+	Accuracy = 0.9888268156424581
+
+CATEGORIA: Cyclist
+	TP = 0.0
+	FN = 6.0
+	TN = 173.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = 0.0
+	F-Measure = NaN
+	Accuracy = 0.9664804469273743
+
+CATEGORIA: IceHockeyPlayer
+	TP = 0.0
+	FN = 0.0
+	TN = 179.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = NaN
+	F-Measure = NaN
+	Accuracy = 1.0
+
+CATEGORIA: Boxer
+	TP = 0.0
+	FN = 1.0
+	TN = 178.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = 0.0
+	F-Measure = NaN
+	Accuracy = 0.994413407821229
+
+CATEGORIA: FigureSkater
+	TP = 0.0
+	FN = 9.0
+	TN = 155.0
+	FP = 15.0
+
+	Precision = 0.0
+	Recall = 0.0
+	F-Measure = NaN
+	Accuracy = 0.8659217877094972
+
+CATEGORIA: NascarDriver
+	TP = 0.0
+	FN = 7.0
+	TN = 172.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = 0.0
+	F-Measure = NaN
+	Accuracy = 0.9608938547486033
+
+CATEGORIA: CollegeCoach
+	TP = 0.0
+	FN = 0.0
+	TN = 179.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = NaN
+	F-Measure = NaN
+	Accuracy = 1.0
+
+CATEGORIA: SoccerManager
+	TP = 0.0
+	FN = 0.0
+	TN = 179.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = NaN
+	F-Measure = NaN
+	Accuracy = 1.0
+
+CATEGORIA: Ambassador
+	TP = 0.0
+	FN = 0.0
+	TN = 179.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = NaN
+	F-Measure = NaN
+	Accuracy = 1.0
+
+CATEGORIA: Architect
+	TP = 5.0
+	FN = 0.0
+	TN = 151.0
+	FP = 28.0
+
+	Precision = 0.15151515151515152
+	Recall = 1.0
+	F-Measure = 0.2631578947368421
+	Accuracy = 0.8478260869565217
+
+CATEGORIA: Journalist
+	TP = 1.0
+	FN = 0.0
+	TN = 176.0
+	FP = 3.0
+
+	Precision = 0.25
+	Recall = 1.0
+	F-Measure = 0.4
+	Accuracy = 0.9833333333333333
+
+CATEGORIA: Scientist
+	TP = 0.0
+	FN = 3.0
+	TN = 176.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = 0.0
+	F-Measure = NaN
+	Accuracy = 0.9832402234636871
+
+CATEGORIA: Celebrity
+	TP = 0.0
+	FN = 9.0
+	TN = 163.0
+	FP = 7.0
+
+	Precision = 0.0
+	Recall = 0.0
+	F-Measure = NaN
+	Accuracy = 0.9106145251396648
+
+CATEGORIA: Astronaut
+	TP = 0.0
+	FN = 4.0
+	TN = 175.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = 0.0
+	F-Measure = NaN
+	Accuracy = 0.9776536312849162
+
+CATEGORIA: Politician
+	TP = 0.0
+	FN = 7.0
+	TN = 172.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = 0.0
+	F-Measure = NaN
+	Accuracy = 0.9608938547486033
+
+CATEGORIA: MilitaryPerson
+	TP = 3.0
+	FN = 1.0
+	TN = 178.0
+	FP = 0.0
+
+	Precision = 1.0
+	Recall = 0.75
+	F-Measure = 0.8571428571428571
+	Accuracy = 0.9945054945054945
+
+CATEGORIA: OfficeHolder
+	TP = 0.0
+	FN = 8.0
+	TN = 171.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = 0.0
+	F-Measure = NaN
+	Accuracy = 0.9553072625698324
+
+CATEGORIA: Monarch
+	TP = 0.0
+	FN = 9.0
+	TN = 170.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = 0.0
+	F-Measure = NaN
+	Accuracy = 0.9497206703910615
+
+CATEGORIA: Criminal
+	TP = 1.0
+	FN = 4.0
+	TN = 161.0
+	FP = 14.0
+
+	Precision = 0.06666666666666667
+	Recall = 0.2
+	F-Measure = 0.1
+	Accuracy = 0.9
+
+CATEGORIA: Cleric
+	TP = 0.0
+	FN = 0.0
+	TN = 179.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = NaN
+	F-Measure = NaN
+	Accuracy = 1.0
+
+CATEGORIA: Philosopher
+	TP = 0.0
+	FN = 1.0
+	TN = 178.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = 0.0
+	F-Measure = NaN
+	Accuracy = 0.994413407821229
+
+CATEGORIA: PlayboyPlaymate
+	TP = 1.0
+	FN = 5.0
+	TN = 174.0
+	FP = 0.0
+
+	Precision = 1.0
+	Recall = 0.16666666666666666
+	F-Measure = 0.2857142857142857
+	Accuracy = 0.9722222222222222
+
+CATEGORIA: Model
+	TP = 10.0
+	FN = 1.0
+	TN = 177.0
+	FP = 1.0
+
+	Precision = 0.9090909090909091
+	Recall = 0.9090909090909091
+	F-Measure = 0.9090909090909091
+	Accuracy = 0.9894179894179894
+
+CATEGORIA: PokerPlayer
+	TP = 12.0
+	FN = 0.0
+	TN = 134.0
+	FP = 45.0
+
+	Precision = 0.21052631578947367
+	Recall = 1.0
+	F-Measure = 0.34782608695652173
+	Accuracy = 0.7643979057591623
+
+CATEGORIA: Judge
+	TP = 3.0
+	FN = 3.0
+	TN = 176.0
+	FP = 0.0
+
+	Precision = 1.0
+	Recall = 0.5
+	F-Measure = 0.6666666666666666
+	Accuracy = 0.9835164835164835
+
+CATEGORIA: FictionalCharacter
+	TP = 2.0
+	FN = 10.0
+	TN = 167.0
+	FP = 2.0
+
+	Precision = 0.5
+	Recall = 0.16666666666666666
+	F-Measure = 0.25
+	Accuracy = 0.9337016574585635
+
+CATEGORIA: BritishRoyalty
+	TP = 7.0
+	FN = 1.0
+	TN = 155.0
+	FP = 23.0
+
+	Precision = 0.23333333333333334
+	Recall = 0.875
+	F-Measure = 0.3684210526315789
+	Accuracy = 0.8709677419354839
+
+Number Total Of Test Instances Correctly Classified = 59.0
+Number Total Number Of Test Instances = 240.0
+Classification Accuracy = 0.24583333333333332
