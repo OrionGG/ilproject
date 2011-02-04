@@ -8,11 +8,11 @@ import dominio.Category;
 
 public class IndexCategScore {
 	public IndexSearcher oIndex;
-	public Hashtable<String, Float> hCategScore;
+	public Hashtable<Integer, Float> hCategScore;
 	
 	public IndexCategScore(IndexSearcher oIndex) {
 		this.oIndex = oIndex;
-		this.hCategScore = new Hashtable<String, Float>();
+		this.hCategScore = new Hashtable<Integer, Float>();
 	}
 	
 	
