@@ -1,69 +1,69 @@
 WEIGHTS
 
  dbpedia=0.0
- wiki=1.0
- weightNews =0.0
+ wiki=0.0
+ weightNews =1.0
 
 
 CATEGORIA: MusicalArtist
 	TP = 0.0
 	FN = 5.0
-	TN = 192.0
-	FP = 3.0
+	TN = 233.0
+	FP = 0.0
 
-	Precision = 0.0
+	Precision = NaN
 	Recall = 0.0
 	F-Measure = NaN
-	Accuracy = 0.96
+	Accuracy = 0.9789915966386554
 
 CATEGORIA: Writer
 	TP = 0.0
 	FN = 9.0
-	TN = 191.0
+	TN = 229.0
 	FP = 0.0
 
 	Precision = NaN
 	Recall = 0.0
 	F-Measure = NaN
-	Accuracy = 0.955
+	Accuracy = 0.9621848739495799
 
 CATEGORIA: Comedian
 	TP = 0.0
 	FN = 4.0
-	TN = 190.0
-	FP = 6.0
-
-	Precision = 0.0
-	Recall = 0.0
-	F-Measure = NaN
-	Accuracy = 0.95
-
-CATEGORIA: ComicsCreator
-	TP = 0.0
-	FN = 4.0
-	TN = 196.0
+	TN = 234.0
 	FP = 0.0
 
 	Precision = NaN
 	Recall = 0.0
 	F-Measure = NaN
-	Accuracy = 0.98
+	Accuracy = 0.9831932773109243
+
+CATEGORIA: ComicsCreator
+	TP = 3.0
+	FN = 1.0
+	TN = 234.0
+	FP = 0.0
+
+	Precision = 1.0
+	Recall = 0.75
+	F-Measure = 0.8571428571428571
+	Accuracy = 0.9957983193277311
 
 CATEGORIA: Actor
 	TP = 0.0
 	FN = 21.0
-	TN = 179.0
+	TN = 217.0
 	FP = 0.0
 
 	Precision = NaN
 	Recall = 0.0
 	F-Measure = NaN
-	Accuracy = 0.895
+	Accuracy = 0.9117647058823529
 
 CATEGORIA: Cricketer
 	TP = 0.0
 	FN = 0.0
-	TN = 200.0
+	TN = 238.0
 	FP = 0.0
 
 	Precision = NaN
@@ -74,117 +74,117 @@ CATEGORIA: Cricketer
 CATEGORIA: SoccerPlayer
 	TP = 0.0
 	FN = 7.0
-	TN = 192.0
-	FP = 1.0
-
-	Precision = 0.0
-	Recall = 0.0
-	F-Measure = NaN
-	Accuracy = 0.96
-
-CATEGORIA: GolfPlayer
-	TP = 1.0
-	FN = 7.0
-	TN = 191.0
-	FP = 2.0
-
-	Precision = 0.3333333333333333
-	Recall = 0.125
-	F-Measure = 0.18181818181818182
-	Accuracy = 0.9552238805970149
-
-CATEGORIA: BasketballPlayer
-	TP = 3.0
-	FN = 12.0
-	TN = 188.0
-	FP = 0.0
-
-	Precision = 1.0
-	Recall = 0.2
-	F-Measure = 0.33333333333333337
-	Accuracy = 0.9408866995073891
-
-CATEGORIA: TennisPlayer
-	TP = 6.0
-	FN = 4.0
-	TN = 195.0
-	FP = 1.0
-
-	Precision = 0.8571428571428571
-	Recall = 0.6
-	F-Measure = 0.7058823529411764
-	Accuracy = 0.9757281553398058
-
-CATEGORIA: RugbyPlayer
-	TP = 0.0
-	FN = 4.0
-	TN = 195.0
-	FP = 1.0
-
-	Precision = 0.0
-	Recall = 0.0
-	F-Measure = NaN
-	Accuracy = 0.975
-
-CATEGORIA: GaelicGamesPlayer
-	TP = 0.0
-	FN = 3.0
-	TN = 192.0
-	FP = 5.0
-
-	Precision = 0.0
-	Recall = 0.0
-	F-Measure = NaN
-	Accuracy = 0.96
-
-CATEGORIA: BaseballPlayer
-	TP = 0.0
-	FN = 0.0
-	TN = 199.0
-	FP = 1.0
-
-	Precision = 0.0
-	Recall = NaN
-	F-Measure = NaN
-	Accuracy = 0.995
-
-CATEGORIA: FormulaOneRacer
-	TP = 5.0
-	FN = 3.0
-	TN = 191.0
-	FP = 6.0
-
-	Precision = 0.45454545454545453
-	Recall = 0.625
-	F-Measure = 0.5263157894736842
-	Accuracy = 0.9560975609756097
-
-CATEGORIA: Wrestler
-	TP = 0.0
-	FN = 0.0
-	TN = 186.0
-	FP = 14.0
-
-	Precision = 0.0
-	Recall = NaN
-	F-Measure = NaN
-	Accuracy = 0.93
-
-CATEGORIA: NationalCollegiateAthleticAssociationAthlete
-	TP = 0.0
-	FN = 5.0
-	TN = 195.0
+	TN = 231.0
 	FP = 0.0
 
 	Precision = NaN
 	Recall = 0.0
 	F-Measure = NaN
-	Accuracy = 0.975
+	Accuracy = 0.9705882352941176
+
+CATEGORIA: GolfPlayer
+	TP = 6.0
+	FN = 2.0
+	TN = 227.0
+	FP = 3.0
+
+	Precision = 0.6666666666666666
+	Recall = 0.75
+	F-Measure = 0.7058823529411765
+	Accuracy = 0.9789915966386554
+
+CATEGORIA: BasketballPlayer
+	TP = 0.0
+	FN = 15.0
+	TN = 223.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = 0.0
+	F-Measure = NaN
+	Accuracy = 0.9369747899159664
+
+CATEGORIA: TennisPlayer
+	TP = 0.0
+	FN = 10.0
+	TN = 228.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = 0.0
+	F-Measure = NaN
+	Accuracy = 0.957983193277311
+
+CATEGORIA: RugbyPlayer
+	TP = 4.0
+	FN = 0.0
+	TN = 223.0
+	FP = 11.0
+
+	Precision = 0.26666666666666666
+	Recall = 1.0
+	F-Measure = 0.4210526315789474
+	Accuracy = 0.9537815126050421
+
+CATEGORIA: GaelicGamesPlayer
+	TP = 0.0
+	FN = 3.0
+	TN = 232.0
+	FP = 3.0
+
+	Precision = 0.0
+	Recall = 0.0
+	F-Measure = NaN
+	Accuracy = 0.9747899159663865
+
+CATEGORIA: BaseballPlayer
+	TP = 0.0
+	FN = 0.0
+	TN = 189.0
+	FP = 49.0
+
+	Precision = 0.0
+	Recall = NaN
+	F-Measure = NaN
+	Accuracy = 0.7941176470588235
+
+CATEGORIA: FormulaOneRacer
+	TP = 0.0
+	FN = 8.0
+	TN = 230.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = 0.0
+	F-Measure = NaN
+	Accuracy = 0.9663865546218487
+
+CATEGORIA: Wrestler
+	TP = 0.0
+	FN = 0.0
+	TN = 238.0
+	FP = 0.0
+
+	Precision = NaN
+	Recall = NaN
+	F-Measure = NaN
+	Accuracy = 1.0
+
+CATEGORIA: NationalCollegiateAthleticAssociationAthlete
+	TP = 4.0
+	FN = 1.0
+	TN = 230.0
+	FP = 3.0
+
+	Precision = 0.5714285714285714
+	Recall = 0.8
+	F-Measure = 0.6666666666666666
+	Accuracy = 0.9831932773109243
 
 CATEGORIA: GridironFootballPlayer
 	TP = 0.0
 	FN = 0.0
-	TN = 200.0
+	TN = 238.0
 	FP = 0.0
 
 	Precision = NaN
@@ -195,84 +195,84 @@ CATEGORIA: GridironFootballPlayer
 CATEGORIA: BadmintonPlayer
 	TP = 0.0
 	FN = 1.0
-	TN = 198.0
+	TN = 236.0
 	FP = 1.0
 
 	Precision = 0.0
 	Recall = 0.0
 	F-Measure = NaN
-	Accuracy = 0.99
+	Accuracy = 0.9915966386554622
 
 CATEGORIA: Cyclist
 	TP = 0.0
 	FN = 6.0
-	TN = 193.0
-	FP = 1.0
+	TN = 232.0
+	FP = 0.0
 
-	Precision = 0.0
+	Precision = NaN
 	Recall = 0.0
 	F-Measure = NaN
-	Accuracy = 0.965
+	Accuracy = 0.9747899159663865
 
 CATEGORIA: IceHockeyPlayer
 	TP = 0.0
 	FN = 0.0
-	TN = 199.0
-	FP = 1.0
+	TN = 238.0
+	FP = 0.0
 
-	Precision = 0.0
+	Precision = NaN
 	Recall = NaN
 	F-Measure = NaN
-	Accuracy = 0.995
+	Accuracy = 1.0
 
 CATEGORIA: Boxer
 	TP = 0.0
 	FN = 1.0
-	TN = 199.0
+	TN = 237.0
 	FP = 0.0
 
 	Precision = NaN
 	Recall = 0.0
 	F-Measure = NaN
-	Accuracy = 0.995
+	Accuracy = 0.9957983193277311
 
 CATEGORIA: FigureSkater
 	TP = 0.0
 	FN = 9.0
-	TN = 191.0
+	TN = 229.0
 	FP = 0.0
 
 	Precision = NaN
 	Recall = 0.0
 	F-Measure = NaN
-	Accuracy = 0.955
+	Accuracy = 0.9621848739495799
 
 CATEGORIA: NascarDriver
 	TP = 0.0
 	FN = 7.0
-	TN = 193.0
+	TN = 231.0
 	FP = 0.0
 
 	Precision = NaN
 	Recall = 0.0
 	F-Measure = NaN
-	Accuracy = 0.965
+	Accuracy = 0.9705882352941176
 
 CATEGORIA: CollegeCoach
 	TP = 0.0
 	FN = 0.0
-	TN = 153.0
-	FP = 47.0
+	TN = 238.0
+	FP = 0.0
 
-	Precision = 0.0
+	Precision = NaN
 	Recall = NaN
 	F-Measure = NaN
-	Accuracy = 0.765
+	Accuracy = 1.0
 
 CATEGORIA: SoccerManager
 	TP = 0.0
 	FN = 0.0
-	TN = 200.0
+	TN = 238.0
 	FP = 0.0
 
 	Precision = NaN
@@ -283,128 +283,128 @@ CATEGORIA: SoccerManager
 CATEGORIA: Ambassador
 	TP = 0.0
 	FN = 0.0
-	TN = 179.0
-	FP = 21.0
+	TN = 238.0
+	FP = 0.0
 
-	Precision = 0.0
+	Precision = NaN
 	Recall = NaN
 	F-Measure = NaN
-	Accuracy = 0.895
+	Accuracy = 1.0
 
 CATEGORIA: Architect
 	TP = 5.0
 	FN = 0.0
-	TN = 200.0
-	FP = 0.0
+	TN = 192.0
+	FP = 41.0
 
-	Precision = 1.0
+	Precision = 0.10869565217391304
 	Recall = 1.0
-	F-Measure = 1.0
-	Accuracy = 1.0
+	F-Measure = 0.19607843137254902
+	Accuracy = 0.8277310924369747
 
 CATEGORIA: Journalist
 	TP = 0.0
 	FN = 1.0
-	TN = 196.0
-	FP = 3.0
+	TN = 237.0
+	FP = 0.0
 
-	Precision = 0.0
+	Precision = NaN
 	Recall = 0.0
 	F-Measure = NaN
-	Accuracy = 0.98
+	Accuracy = 0.9957983193277311
 
 CATEGORIA: Scientist
 	TP = 0.0
 	FN = 3.0
-	TN = 192.0
-	FP = 5.0
+	TN = 235.0
+	FP = 0.0
 
-	Precision = 0.0
+	Precision = NaN
 	Recall = 0.0
 	F-Measure = NaN
-	Accuracy = 0.96
+	Accuracy = 0.9873949579831933
 
 CATEGORIA: Celebrity
 	TP = 0.0
 	FN = 9.0
-	TN = 191.0
-	FP = 0.0
-
-	Precision = NaN
-	Recall = 0.0
-	F-Measure = NaN
-	Accuracy = 0.955
-
-CATEGORIA: Astronaut
-	TP = 0.0
-	FN = 4.0
-	TN = 193.0
-	FP = 3.0
+	TN = 206.0
+	FP = 23.0
 
 	Precision = 0.0
 	Recall = 0.0
 	F-Measure = NaN
-	Accuracy = 0.965
+	Accuracy = 0.865546218487395
+
+CATEGORIA: Astronaut
+	TP = 1.0
+	FN = 3.0
+	TN = 234.0
+	FP = 0.0
+
+	Precision = 1.0
+	Recall = 0.25
+	F-Measure = 0.4
+	Accuracy = 0.9873949579831933
 
 CATEGORIA: Politician
 	TP = 0.0
 	FN = 7.0
-	TN = 192.0
-	FP = 1.0
+	TN = 231.0
+	FP = 0.0
 
-	Precision = 0.0
+	Precision = NaN
 	Recall = 0.0
 	F-Measure = NaN
-	Accuracy = 0.96
+	Accuracy = 0.9705882352941176
 
 CATEGORIA: MilitaryPerson
 	TP = 0.0
 	FN = 4.0
-	TN = 196.0
+	TN = 234.0
 	FP = 0.0
 
 	Precision = NaN
 	Recall = 0.0
 	F-Measure = NaN
-	Accuracy = 0.98
+	Accuracy = 0.9831932773109243
 
 CATEGORIA: OfficeHolder
 	TP = 0.0
 	FN = 8.0
-	TN = 192.0
+	TN = 230.0
 	FP = 0.0
 
 	Precision = NaN
 	Recall = 0.0
 	F-Measure = NaN
-	Accuracy = 0.96
+	Accuracy = 0.9663865546218487
 
 CATEGORIA: Monarch
 	TP = 0.0
 	FN = 9.0
-	TN = 190.0
-	FP = 1.0
+	TN = 229.0
+	FP = 0.0
 
-	Precision = 0.0
+	Precision = NaN
 	Recall = 0.0
 	F-Measure = NaN
-	Accuracy = 0.95
+	Accuracy = 0.9621848739495799
 
 CATEGORIA: Criminal
 	TP = 0.0
 	FN = 5.0
-	TN = 194.0
-	FP = 1.0
+	TN = 222.0
+	FP = 11.0
 
 	Precision = 0.0
 	Recall = 0.0
 	F-Measure = NaN
-	Accuracy = 0.97
+	Accuracy = 0.9327731092436975
 
 CATEGORIA: Cleric
 	TP = 0.0
 	FN = 0.0
-	TN = 200.0
+	TN = 238.0
 	FP = 0.0
 
 	Precision = NaN
@@ -415,78 +415,92 @@ CATEGORIA: Cleric
 CATEGORIA: Philosopher
 	TP = 0.0
 	FN = 1.0
-	TN = 199.0
+	TN = 237.0
 	FP = 0.0
 
 	Precision = NaN
 	Recall = 0.0
 	F-Measure = NaN
-	Accuracy = 0.995
+	Accuracy = 0.9957983193277311
 
 CATEGORIA: PlayboyPlaymate
-	TP = 0.0
-	FN = 6.0
-	TN = 194.0
+	TP = 1.0
+	FN = 5.0
+	TN = 232.0
 	FP = 0.0
 
-	Precision = NaN
-	Recall = 0.0
-	F-Measure = NaN
-	Accuracy = 0.97
+	Precision = 1.0
+	Recall = 0.16666666666666666
+	F-Measure = 0.2857142857142857
+	Accuracy = 0.9789915966386554
 
 CATEGORIA: Model
-	TP = 0.0
-	FN = 11.0
-	TN = 189.0
-	FP = 0.0
-
-	Precision = NaN
-	Recall = 0.0
-	F-Measure = NaN
-	Accuracy = 0.945
-
-CATEGORIA: PokerPlayer
-	TP = 9.0
-	FN = 3.0
-	TN = 196.0
+	TP = 2.0
+	FN = 9.0
+	TN = 226.0
 	FP = 1.0
 
-	Precision = 0.9
-	Recall = 0.75
-	F-Measure = 0.8181818181818182
-	Accuracy = 0.9808612440191388
+	Precision = 0.6666666666666666
+	Recall = 0.18181818181818182
+	F-Measure = 0.28571428571428575
+	Accuracy = 0.957983193277311
+
+CATEGORIA: PokerPlayer
+	TP = 12.0
+	FN = 0.0
+	TN = 215.0
+	FP = 11.0
+
+	Precision = 0.5217391304347826
+	Recall = 1.0
+	F-Measure = 0.6857142857142856
+	Accuracy = 0.9537815126050421
 
 CATEGORIA: Judge
-	TP = 0.0
-	FN = 6.0
-	TN = 192.0
-	FP = 2.0
+	TP = 6.0
+	FN = 0.0
+	TN = 232.0
+	FP = 0.0
 
-	Precision = 0.0
-	Recall = 0.0
-	F-Measure = NaN
-	Accuracy = 0.96
+	Precision = 1.0
+	Recall = 1.0
+	F-Measure = 1.0
+	Accuracy = 1.0
 
 CATEGORIA: FictionalCharacter
-	TP = 5.0
-	FN = 7.0
-	TN = 145.0
-	FP = 48.0
+	TP = 3.0
+	FN = 9.0
+	TN = 222.0
+	FP = 4.0
 
-	Precision = 0.09433962264150944
-	Recall = 0.4166666666666667
-	F-Measure = 0.15384615384615385
-	Accuracy = 0.7317073170731707
+	Precision = 0.42857142857142855
+	Recall = 0.25
+	F-Measure = 0.3157894736842105
+	Accuracy = 0.9453781512605042
 
 CATEGORIA: BritishRoyalty
-	TP = 4.0
-	FN = 4.0
-	TN = 172.0
-	FP = 24.0
+	TP = 7.0
+	FN = 1.0
+	TN = 207.0
+	FP = 23.0
 
-	Precision = 0.14285714285714285
-	Recall = 0.5
-	F-Measure = 0.22222222222222224
-	Accuracy = 0.8627450980392157
+	Precision = 0.23333333333333334
+	Recall = 0.875
+	F-Measure = 0.3684210526315789
+	Accuracy = 0.8991596638655462
 
-	Classification Accuracy = 0.15833333333333333
+Macroaveraging Precision = 0.16963109354413702
+Microaveraging Precision = 0.226890756302521
+
+Macroaveraging Recall = 0.18235192837465564
+Microaveraging Recall = 0.226890756302521
+
+Macroaveraging F-Measure = 0.14064037098092827
+Microaveraging F-Measure = 0.226890756302521
+
+Macroaveraging Accuracy = 0.9648586707410236
+Microaveraging Accuracy = 0.9648586707410237
+
+Number Total Of Test Instances Correctly Classified = 54.0
+Number Total Number Of Test Instances = 238.0
+Classification Accuracy = 0.226890756302521
