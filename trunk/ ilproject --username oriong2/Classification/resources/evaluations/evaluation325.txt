@@ -489,6 +489,18 @@ CATEGORIA: BritishRoyalty
 	F-Measure = 0.35
 	Accuracy = 0.8579234972677595
 
+Macroaveraging Precision = 0.2126800187176663
+Microaveraging Precision = 0.2605042016806723
+
+Macroaveraging Recall = 0.22361685032139578
+Microaveraging Recall = 0.2605042016806723
+
+Macroaveraging F-Measure = 0.18028725536269385
+Microaveraging F-Measure = 0.2605042016806723
+
+Macroaveraging Accuracy = 0.9551789033540384
+Microaveraging Accuracy = 0.9549064821931847
+
 Number Total Of Test Instances Correctly Classified = 62.0
-Number Total Number Of Test Instances = 240.0
-Classification Accuracy = 0.25833333333333336
+Number Total Number Of Test Instances = 238.0
+Classification Accuracy = 0.2605042016806723
