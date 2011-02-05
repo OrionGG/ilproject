@@ -63,7 +63,7 @@ public class Evaluator {
 
 			EvaluationMetrics oCurrentEvaluationMetrics = hCategoyEvaluationMetrics.get(oCategory.ordinal());
 
-			//añadiendo falso positivo a la categoria que pone como primera
+			
 			if(oCurrentEvaluationMetrics == null){
 				oCurrentEvaluationMetrics = new EvaluationMetrics();
 			}
@@ -83,19 +83,7 @@ public class Evaluator {
 					dTotalNumberOfTestInstances++;
 				}
 
-				hCategoyEvaluationMetrics = takeMetrics(categoryScores, url,oCurrentEvaluationMetrics, hCategoyEvaluationMetrics);
-
-				Set<Entry<Float, Category>>setClassified=categoryScores.entrySet();
-				int i =0;
-				for(Entry<Float, Category> entryClassified : setClassified){
-					i++;
-					Float score=entryClassified.getKey();
-
-					Category categoryClassified=entryClassified.getValue();
-					if(categoryClassified==url.getOriginalCategory()){
-						calculateEvuation(i,score);
-					}
-				}
+				hCategoyEvaluationMetrics = takeMetricsSimple(url,oCurrentEvaluationMetrics, hCategoyEvaluationMetrics);
 
 
 			}
@@ -107,10 +95,12 @@ public class Evaluator {
 
 	}
 
-	public static Hashtable<Integer, EvaluationMetrics> takeMetrics(TreeMap<Float, Category> categoryScores, Url url, 
+	public static Hashtable<Integer, EvaluationMetrics> takeMetricsSimple(Url url, 
 			EvaluationMetrics oCurrentEvaluationMetrics, 
 			Hashtable<Integer, EvaluationMetrics> hCategoyEvaluationMetrics){
 
+
+		TreeMap<Float, Category> categoryScores = url.getCategoryScore();
 		Category oFirstCategory = categoryScores.firstEntry().getValue();
 		if(url.getOriginalCategory() == oFirstCategory){
 			oCurrentEvaluationMetrics.dTruePositive++;
@@ -156,11 +146,11 @@ public class Evaluator {
 		return hCategoyEvaluationMetrics;
 	}
 
-	public static Hashtable<Integer, EvaluationMetrics> takeMetrics2(TreeMap<Float, Category> categoryScores, Url url, 
+	public static Hashtable<Integer, EvaluationMetrics> takeMetrics(Url url, 
 			EvaluationMetrics oCurrentEvaluationMetrics, 
 			Hashtable<Integer, EvaluationMetrics> hCategoyEvaluationMetrics){
 
-
+		TreeMap<Float, Category> categoryScores = url.getCategoryScore();
 		Iterator<Category> iIteratorC = categoryScores.values().iterator();
 		double dPosition = 3;
 		ArrayList<Integer> lBestCategories = new ArrayList<Integer>();
@@ -177,14 +167,15 @@ public class Evaluator {
 		}
 
 		oCurrentEvaluationMetrics.dTruePositive += 1 - (((double)1/3)*dPosition);
-		dNumberTotalOfTestInstancesCorrectlyClassified += 1 - (((double)1/3)*(double)dPosition);
+		dNumberTotalOfTestInstancesCorrectlyClassified += 1 - (((double)1/3)*dPosition);
 
 		oCurrentEvaluationMetrics.dFalseNegative+= (((double)1/3)*dPosition);
-
+		
+		//añadiendo falso positivo a la categorias que pone por delante de la 
 		for(Integer iCategoryOrdinal: lBestCategories){
 			EvaluationMetrics oEvaluationMetrics = hCategoyEvaluationMetrics.get(iCategoryOrdinal);
 
-			//añadiendo falso positivo a la categoria que pone como primera
+			
 			if(oEvaluationMetrics != null){
 				oEvaluationMetrics.dFalsePositive += (((double)1/3)*dPosition);
 			}
@@ -197,6 +188,7 @@ public class Evaluator {
 		}
 
 		//añadiendo true negativo a las categorias que no incluye
+		//que tendría que salir
 		for(Category oCategory: Category.values()){
 			if((oCategory == url.getOriginalCategory())
 					|| lBestCategories.contains(oCategory.ordinal())){
@@ -407,32 +399,7 @@ public class Evaluator {
 
 	}
 
-	private static void calculateEvuation(int i, Float score) {
-
-
-		// FIRST METHOD
-		if(i==1){
-			countEvaluation++;
-			adderEvaluation=adderEvaluation+1;
-
-		}else {	
-			// SECOND METHOD
-			if (i==2){
-				adderEvaluation=adderEvaluation+0.75F;
-
-
-			}else 
-				if(i==3){
-					adderEvaluation=adderEvaluation+0.5F;
-
-				}
-		}
-		// THIRD METHOD
-		adderScores=score+adderScores;
-
-
-
-	}
+	
 
 
 	@Deprecated
