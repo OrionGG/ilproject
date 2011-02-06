@@ -1,5 +1,6 @@
 package Analizer.test;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -20,14 +21,15 @@ public class AnalyzersTest {
 		// TODO Auto-generated method stub
 		Analyzer[] oAnalyzerList = new Analyzer[]{
 				new SpanishAnalyzer(),
+				new SpanishAnalyzer(Version.LUCENE_30, new File (".\\resources\\stopwords\\spanishSmart.txt")),
 				new SpanishSnowballAnalyzer(Version.LUCENE_30)
 		};
 		
-		String sText = "Para analizar un texto hay que ver como funcionan la narrativa, la l�rica... En una obra literaria hay 6 elementos a comentar:";
-        Reader stringReader = new StringReader(sText);
+		String sText = "Rafael Nadal se clasificó para la segunda ronda del Australian Open (donde jugará ante el estadounidense Ryan Sweeting, verdugo hoy del español Gimeno Traver, al que venció por 6-4, 6-4 y 6-1) tras un paseo de 47 minutos ante el brasileño Marcos Daniel, ni siquiera el tiempo que dura un entrenamiento de rutina. Con 6-0 y 5-0 para Nadal, Daniel se retiró y puso fin a su 'via crucis' particular.";
+        
 		
 		for(Analyzer oAnalyzer : oAnalyzerList){
-			
+			Reader stringReader = new StringReader(sText);
 			System.out.println(oAnalyzer.toString());
             TokenStream tokenStream = oAnalyzer.tokenStream("defaultFieldName", stringReader);
 			sText =  (new Analizer.test.TermAnalyzerView()).GetView(tokenStream, 0).trim();
