@@ -29,7 +29,7 @@ public abstract class AnalyzerView
             else{
             	TermAttribute termAtt = tokenStream.getAttribute(TermAttribute.class);
             	sTerm = termAtt.term();
-                sb.append(GetTokenView(sTerm));
+                //sb.append(GetTokenView(sTerm));
     			//sb += GetTokenView(sTerm);
             	
             }
