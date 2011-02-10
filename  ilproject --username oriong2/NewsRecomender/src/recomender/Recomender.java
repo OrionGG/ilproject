@@ -17,6 +17,7 @@ import java.util.Map;
 import retriever.GetNews;
 
 import connector.TheNewsConnector;
+import dominio.Category;
 
 import jcolibri.casebase.LinealCaseBase;
 import jcolibri.cbraplications.StandardCBRApplication;
@@ -93,26 +94,26 @@ public class Recomender implements StandardCBRApplication
 {
 
 	protected List<APiecesOfNews> oNewsList;
-    /** Connector object */
-    Connector _connector;
-    /** CaseBase object */
-    CBRCaseBase _caseBase;
+	/** Connector object */
+	Connector _connector;
+	/** CaseBase object */
+	CBRCaseBase _caseBase;
 
-    /** KNN configuration*/
-    NNConfig simConfig;
-    
-    /** Obtain query configuration*/
-    Collection<Attribute> hiddenAtts;
-    /** Obtain query configuration*/
-    Map<Attribute,String> labels;
-    
-    /** Critiques configuration object */
-    Collection<CritiqueOption> critiques;
-    
-    public void configure() throws ExecutionException
-    {
-    	
-    	//Use a custom connector
+	/** KNN configuration*/
+	NNConfig simConfig;
+
+	/** Obtain query configuration*/
+	Collection<Attribute> hiddenAtts;
+	/** Obtain query configuration*/
+	Map<Attribute,String> labels;
+
+	/** Critiques configuration object */
+	Collection<CritiqueOption> critiques;
+
+	public void configure() throws ExecutionException
+	{
+
+		//Use a custom connector
 		_connector = new TheNewsConnector(oNewsList);
 		_caseBase = new LinealCaseBase();
 
@@ -120,126 +121,123 @@ public class Recomender implements StandardCBRApplication
 		jcolibri.util.ProgressController.clear();
 		SwingProgressBar pb = new SwingProgressBar();
 		jcolibri.util.ProgressController.register(pb);
-    	
-	
-	//Lets configure the KNN
-	simConfig = new NNConfig();
-	// Set the average() global similarity function for the description of the case
-	simConfig.setDescriptionSimFunction(new Average());
-	simConfig.addMapping(new Attribute("area", HouseDescription.class), new Table("jcolibri/test/recommenders/housesData/area.csv"));
-	simConfig.addMapping(new Attribute("beds", HouseDescription.class), new InrecaMoreIsBetter(0.5));
-	simConfig.addMapping(new Attribute("price", HouseDescription.class), new InrecaLessIsBetter(2000, 0.5));
-	simConfig.addMapping(new Attribute("furnished", HouseDescription.class), new Equal());
-	simConfig.addMapping(new Attribute("type", HouseDescription.class), new Equal());
-	simConfig.addMapping(new Attribute("baths", HouseDescription.class), new InrecaMoreIsBetter(0.5));
 
 
+		//Lets configure the KNN
+		simConfig = new NNConfig();
+		// Set the average() global similarity function for the description of the case
+		simConfig.setDescriptionSimFunction(new Average());
+		for(Category oCategory : Category.values()){
+			simConfig.addMapping(new Attribute(oCategory.toString(), NewsDescription.class), new Table("jcolibri/test/recommenders/housesData/area.csv"));
+		}
 
-	// Obtain query configuration
-	hiddenAtts = new ArrayList<Attribute>();
-	labels = new HashMap<Attribute,String>();
-	labels.put(new Attribute("beds", HouseDescription.class), "Min bedrooms");
-	labels.put(new Attribute("price", HouseDescription.class), "Max price");
-	labels.put(new Attribute("baths", HouseDescription.class), "Min bahtrooms");
-	
-	// Critiques configuration
-	critiques = new ArrayList<CritiqueOption>();
-	critiques.add(new CritiqueOption("More Beds",new Attribute("beds", HouseDescription.class),new QueryLess()));
-	critiques.add(new CritiqueOption("Cheaper",new Attribute("price", HouseDescription.class),new QueryMore()));
-	critiques.add(new CritiqueOption("More Bathrooms",new Attribute("baths", HouseDescription.class),new QueryLess()));
-	critiques.add(new CritiqueOption("Change Area",new Attribute("area", HouseDescription.class),new jcolibri.method.retrieve.FilterBasedRetrieval.predicates.Equal()));
-	critiques.add(new CritiqueOption("Another Area",new Attribute("area", HouseDescription.class),new NotEqual()));
-    }
+		// Obtain query configuration
+		hiddenAtts = new ArrayList<Attribute>();
+		for(Category oCategory : Category.values()){
 
-    public void cycle(CBRQuery query) throws ExecutionException
-    {	
-	// Obtain query with form filling
-	ObtainQueryWithFormMethod.obtainQueryWithoutInitialValues(query,hiddenAtts,labels);
+			labels = new HashMap<Attribute,String>();
 
-	// Jump to main conversation
-	sequence1(query, new FilterConfig());
+			labels.put(new Attribute(oCategory.toString(), HouseDescription.class), "Min bedrooms");
+			labels.put(new Attribute("price", HouseDescription.class), "Max price");
+			labels.put(new Attribute("baths", HouseDescription.class), "Min bahtrooms");	
+		}
 
-    }
-    
-    
-    public void sequence1(CBRQuery query, FilterConfig filterConfig)  throws ExecutionException
-    {	
-	// Execute Filter
-	Collection<CBRCase> filtered = FilterBasedRetrievalMethod.filterCases(_caseBase.getCases(), query, filterConfig);
-	
-	// Execute NN
-	Collection<RetrievalResult> retrievedCases = NNScoringMethod.evaluateSimilarity(filtered, query, simConfig);
-	
-	// Select cases
-	Collection<CBRCase> selectedCases = SelectCases.selectTopK(retrievedCases, 10);
-    	
-	// Obtain critizied query
-	CriticalUserChoice choice = DisplayCasesTableWithCritiquesMethod.displayCasesInTableWithCritiques(selectedCases, critiques, _caseBase.getCases());
-	
-	if(ContinueOrFinish.continueOrFinish(choice))
-	    sequence2(choice.getSelectedCaseAsQuery(), choice);
-	else
-	    sequence3(choice, selectedCases);
-    }
-    
-    public void sequence2(CBRQuery query, CriticalUserChoice cuc) throws ExecutionException
-    {
-	// Replaze current query with the critizied one
-	MoreLikeThis.moreLikeThis(query, cuc.getSelectedCase());
-	sequence1(query, cuc.getFilterConfig());
-    }
-    
-    public void sequence3(UserChoice choice, Collection<CBRCase> retrievedCases)  throws ExecutionException
-    {
-	if(BuyOrQuit.buyOrQuit(choice))
-	    System.out.println("Finish - User Buys: "+choice.getSelectedCase());
-	
-	else
-	    System.out.println("Finish - User Quits");
-    }
 
-    public void postCycle() throws ExecutionException
-    {
-    }
-
-    public CBRCaseBase preCycle() throws ExecutionException
-    {
-	// Load cases from connector into the case base
-	_caseBase.init(_connector);		
-	// Print the cases
-	java.util.Collection<CBRCase> cases = _caseBase.getCases();
-	for(CBRCase c: cases)
-		System.out.println(c);
-	return _caseBase;
-    }
-    
-    public static void main(String[] args) {
-	StandardCBRApplication recommender = new Recomender();
-	try
-	{
-		((Recomender)recommender).oNewsList = GetNews.GetCasesFromDB();
-	    recommender.configure();
-	    
-	    recommender.preCycle();
-	    
-	    CBRQuery query = new CBRQuery();
-	    
-	    HouseDescription hd = new HouseDescription();
-	    
-	    query.setDescription(hd);
-	    
-	    recommender.cycle(query);
-	    
-	    recommender.postCycle();
-	    
-	    //System.exit(0);
-	} catch (Exception e)
-	{
-	    org.apache.commons.logging.LogFactory.getLog(Recomender.class).error(e);
-	    
+		// Critiques configuration
+		critiques = new ArrayList<CritiqueOption>();
+		for(Category oCategory : Category.values()){
+			critiques.add(new CritiqueOption("More " + oCategory.toString(),new Attribute(oCategory.toString(), NewsDescription.class),new QueryMore()));
+		}
 	}
-	
+	public void cycle(CBRQuery query) throws ExecutionException
+	{	
+		// Obtain query with form filling
+		ObtainQueryWithFormMethod.obtainQueryWithoutInitialValues(query,hiddenAtts,labels);
 
-    }
+		// Jump to main conversation
+		sequence1(query, new FilterConfig());
+
+	}
+
+
+	public void sequence1(CBRQuery query, FilterConfig filterConfig)  throws ExecutionException
+	{	
+		// Execute Filter
+		Collection<CBRCase> filtered = FilterBasedRetrievalMethod.filterCases(_caseBase.getCases(), query, filterConfig);
+
+		// Execute NN
+		Collection<RetrievalResult> retrievedCases = NNScoringMethod.evaluateSimilarity(filtered, query, simConfig);
+
+		// Select cases
+		Collection<CBRCase> selectedCases = SelectCases.selectTopK(retrievedCases, 10);
+
+		// Obtain critizied query
+		CriticalUserChoice choice = DisplayCasesTableWithCritiquesMethod.displayCasesInTableWithCritiques(selectedCases, critiques, _caseBase.getCases());
+
+		if(ContinueOrFinish.continueOrFinish(choice))
+			sequence2(choice.getSelectedCaseAsQuery(), choice);
+		else
+			sequence3(choice, selectedCases);
+	}
+
+	public void sequence2(CBRQuery query, CriticalUserChoice cuc) throws ExecutionException
+	{
+		// Replaze current query with the critizied one
+		MoreLikeThis.moreLikeThis(query, cuc.getSelectedCase());
+		sequence1(query, cuc.getFilterConfig());
+	}
+
+	public void sequence3(UserChoice choice, Collection<CBRCase> retrievedCases)  throws ExecutionException
+	{
+		if(BuyOrQuit.buyOrQuit(choice))
+			System.out.println("Finish - User Buys: "+choice.getSelectedCase());
+
+		else
+			System.out.println("Finish - User Quits");
+	}
+
+	public void postCycle() throws ExecutionException
+	{
+	}
+
+	public CBRCaseBase preCycle() throws ExecutionException
+	{
+		// Load cases from connector into the case base
+		_caseBase.init(_connector);		
+		// Print the cases
+		java.util.Collection<CBRCase> cases = _caseBase.getCases();
+		for(CBRCase c: cases)
+			System.out.println(c);
+		return _caseBase;
+	}
+
+	public static void main(String[] args) {
+		StandardCBRApplication recommender = new Recomender();
+		try
+		{
+			((Recomender)recommender).oNewsList = GetNews.GetCasesFromDB();
+			recommender.configure();
+
+			recommender.preCycle();
+
+			CBRQuery query = new CBRQuery();
+
+			HouseDescription hd = new HouseDescription();
+
+			query.setDescription(hd);
+
+			recommender.cycle(query);
+
+			recommender.postCycle();
+
+			//System.exit(0);
+		} catch (Exception e)
+		{
+			org.apache.commons.logging.LogFactory.getLog(Recomender.class).error(e);
+
+		}
+
+
+	}
 
 }
