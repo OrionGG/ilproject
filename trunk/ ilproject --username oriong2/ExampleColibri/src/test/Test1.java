@@ -247,7 +247,7 @@ public class Test1 implements StandardCBRApplication
 			//String sUrl = "http://www.waping.com.ar/";
 			//String sUrl = "http://www.elmundo.es/elmundodeporte";
 
-			String sText = GetBlogText.ExtractText.GetBlogText(sUrl, false);
+			String sText = GetText.ExtractText.GetBlogText(sUrl, false);
 
 			CBRQuery query = new CBRQuery();
 			APiecesOfNews queryDescription = new APiecesOfNews(sUrl, sText, null, 1.0);
