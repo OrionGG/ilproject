@@ -128,7 +128,7 @@ public class Recomender implements StandardCBRApplication
 		// Set the average() global similarity function for the description of the case
 		simConfig.setDescriptionSimFunction(new Average());
 		for(Category oCategory : Category.values()){
-			simConfig.addMapping(new Attribute(oCategory.toString(), NewsDescription.class), new Table("jcolibri/test/recommenders/housesData/area.csv"));
+			simConfig.addMapping(new Attribute("Cat" + oCategory.ordinal(), NewsDescription.class), new Equal());
 		}
 
 		// Obtain query configuration
@@ -146,7 +146,7 @@ public class Recomender implements StandardCBRApplication
 		// Critiques configuration
 		critiques = new ArrayList<CritiqueOption>();
 		for(Category oCategory : Category.values()){
-			critiques.add(new CritiqueOption("More " + oCategory.toString(),new Attribute(oCategory.toString(), NewsDescription.class),new QueryMore()));
+			critiques.add(new CritiqueOption("Cat" + oCategory.ordinal(),new Attribute(oCategory.toString(), NewsDescription.class),new QueryMore()));
 		}
 	}
 	public void cycle(CBRQuery query) throws ExecutionException
