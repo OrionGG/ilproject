@@ -93,7 +93,7 @@ import entities.*;
 public class Recomender implements StandardCBRApplication
 {
 
-	protected List<APiecesOfNews> oNewsList;
+	protected List<NewsDescription> oNewsList;
 	/** Connector object */
 	Connector _connector;
 	/** CaseBase object */

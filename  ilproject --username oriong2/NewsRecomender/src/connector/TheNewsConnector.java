@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
-import entities.APiecesOfNews;
+import entities.NewsDescription;
 
 import jcolibri.cbrcore.CBRCase;
 import jcolibri.cbrcore.CaseBaseFilter;
@@ -14,18 +14,18 @@ import jcolibri.exception.InitializingException;
 
 public class TheNewsConnector implements Connector{
 	
-	List<APiecesOfNews> oNewsList = new ArrayList<APiecesOfNews>();
+	List<NewsDescription> oNewsList = new ArrayList<NewsDescription>();
 	
 	
-	public List<APiecesOfNews> getoTheNewsList() {
+	public List<NewsDescription> getoTheNewsList() {
 		return oNewsList;
 	}
 
-	public void setoTheNewsList(List<APiecesOfNews> oTheNewsList) {
+	public void setoTheNewsList(List<NewsDescription> oTheNewsList) {
 		this.oNewsList = oTheNewsList;
 	}
 	
-	public TheNewsConnector(List<APiecesOfNews> oNewsListParam){
+	public TheNewsConnector(List<NewsDescription> oNewsListParam){
 		oNewsList = oNewsListParam;
 		
 	}
@@ -54,9 +54,9 @@ public class TheNewsConnector implements Connector{
 		Collection<CBRCase> res = new ArrayList<CBRCase>();
 
 
-		for(APiecesOfNews oAPiecesOfNews : oNewsList){
+		for(NewsDescription oNewsDescription : oNewsList){
 			CBRCase _case = new CBRCase();
-			_case.setDescription(oAPiecesOfNews);
+			_case.setDescription(oNewsDescription);
 			res.add(_case);
 		}
 		return res;
