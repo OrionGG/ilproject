@@ -78,7 +78,7 @@ public class NewsDescriptionDao extends DAOWebsClassified{
 	}
 
 	public NewsDescription getNewsDescription(int iId) throws Exception{
-		ResultSet oResultSet = executeQuery("SELECT * FROM CATS WHERE ID=?",iId);
+		ResultSet oResultSet = executeQuery("SELECT * FROM LIST WHERE ID=?",iId);
 		if (oResultSet.next()) {
 
 			NewsDescription oNewsDescription = new NewsDescription();
@@ -112,18 +112,15 @@ public class NewsDescriptionDao extends DAOWebsClassified{
 	}
 
 	public void deleteUrl(int id)throws Exception{
-		executeUpdate("DELETE FROM URL WHERE ID=?",id);
+		executeUpdate("DELETE FROM LIST WHERE ID=?",id);
 	}
 
-	public void disableUrl(int id)throws Exception{
-		executeUpdate("UPDATE URL SET ENABLE=? WHERE ID=?", false, id);
-	}
 
 	public List<NewsDescription> getAllNews(){
 		List<NewsDescription> oListAPiecesOfNews = new ArrayList<NewsDescription>();
 		ResultSet oResultSet;
 		try {
-			oResultSet = executeSimpleQuery("SELECT * FROM URL");
+			oResultSet = executeSimpleQuery("SELECT * FROM LIST");
 			while (oResultSet.next()) {
 
 				NewsDescription oNewsDescription = new NewsDescription();
