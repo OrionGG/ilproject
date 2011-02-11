@@ -22,6 +22,8 @@ import jcolibri.cbrcore.CaseComponent;
  */
 public class NewsDescription implements CaseComponent
 {
+	Integer id;
+	public String sUrl;
 	public float cat1;
 	public float cat2;
 	public float cat3;
@@ -49,82 +51,38 @@ public class NewsDescription implements CaseComponent
 	public float cat25;
 	public float cat26;
 	public float cat27;
-	public float cat2;
+	public float cat28;
+	public float cat29;
+	public float cat30;
+	public float cat31;
+	public float cat32;
+	public float cat33;
+	public float cat34;
+	public float cat35;
+	public float cat36;
+	public float cat37;
+	public float cat38;
+	public float cat39;
+	public float cat40;
+	public float cat41;
+	public float cat42;
+	public float cat43;
+	public float cat44;
+	public float cat45;
+	public float cat46;
+	public float cat47;
+	public float cat48;
+	public float cat49;
 	
 	
 	
-	
-	
-	//public enum Beds  {StudioFlat,one,two,three,four,five,six,seven};
-    //public enum Type  {Flat,House};
-    //public enum Area  {Acton,Addlestone,Alperton,Balham,Barnes,Battersea,Bayswater,Belsize_Park,Bermondsey,Bloomsbury,Brentford,Brixton,Brondesbury,Byfleet,Camden,Canary_Wharf,Chelsea,Chiswick,Clapham,Clerkenwell,Cricklewood,Croyden,Earls_Court,Egham,Finchley,Finsbury,Fulham,Golders_Green,Greenwich,Hammersmith,Hampstead,Highgate,Holland_Park,Holloway,Hornsey,Hounslow,Hyde_Park,Islington,Kensington,Kilburn,Kings_Cross,Kingston,Knightsbridge,Lambeth,Little_Venice,Maida_Vale,Marylebone,Mayfair,Mitcham,Notting_Hill,Paddington,Parsons_Green,Pimlico,Primrose_Hill,Putney,Regents_Park,Richmond,Shepherds_Bush,Shoreditch,Soho,South_Kensington,Southwark,St_Johns_Wood,Stepney,Streatham,Swiss_Cottage,The_City,Tooting,Twickenham,Walton_on_Thames,Wandsworth,Wapping,West_Ham,West_Horsley,West_Kensington,Westminster,Weybridge,Whitechapel,Willesden,Wimbledon};
-	
-    //Integer id;
-    //Area area;
-    //Beds beds;
-    //Integer price;
-    //Boolean furnished;
-    //Type type;
-    //Integer baths;
+
     
     public String toString() 
     {
-    	return "tostring";  
-		//return "("+id+";"+area+";"+beds+";"+price+";"+furnished+";"+type+";"+baths+")";
+		return sUrl;
     }
-    public static String setCategoryId(Integer id){
-    	Category.values();
-    	
-    }
-
-
-    public Area getArea()
-    {
-        return area;
-    }
-
-
-    public void setArea(Area area)
-    {
-        this.area = area;
-    }
-
-
-    public Integer getBaths()
-    {
-        return baths;
-    }
-
-
-    public void setBaths(Integer baths)
-    {
-        this.baths = baths;
-    }
-
-
-    public Beds getBeds()
-    {
-        return beds;
-    }
-
-
-    public void setBeds(Beds beds)
-    {
-        this.beds = beds;
-    }
-
-
-    public Boolean getFurnished()
-    {
-        return furnished;
-    }
-
-
-    public void setFurnished(Boolean furnished)
-    {
-        this.furnished = furnished;
-    }
-
+    
 
     public Integer getId()
     {
@@ -136,31 +94,6 @@ public class NewsDescription implements CaseComponent
     {
         this.id = id;
     }
-
-
-    public Integer getPrice()
-    {
-        return price;
-    }
-
-
-    public void setPrice(Integer price)
-    {
-        this.price = price;
-    }
-
-    
-    public Type getType()
-    {
-        return type;
-    }
-
-
-    public void setType(Type type)
-    {
-        this.type = type;
-    }
-
 
     /* (non-Javadoc)
      * @see jcolibri.cbrcore.CaseComponent#getIdAttribute()
