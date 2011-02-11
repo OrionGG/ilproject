@@ -130,7 +130,7 @@ public class Recomender implements StandardCBRApplication
 		// Set the average() global similarity function for the description of the case
 		simConfig.setDescriptionSimFunction(new Average());
 		for(Category oCategory : Category.values()){
-			simConfig.addMapping(new Attribute("Cat" + oCategory.ordinal(), NewsDescription.class), new Equal());
+			simConfig.addMapping(new Attribute("cat" + oCategory.ordinal(), NewsDescription.class), new Equal());
 		}
 
 		// Obtain query configuration
@@ -138,7 +138,7 @@ public class Recomender implements StandardCBRApplication
 		for(Category oCategory : Category.values()){
 			
 			labels = new HashMap<Attribute,String>();
-			labels.put(new Attribute("Cat" + oCategory.ordinal(), NewsDescription.class), "Min "+"Cat" + oCategory.toString());
+			labels.put(new Attribute("cat" + oCategory.ordinal(), NewsDescription.class), "Min "+"Cat" + oCategory.toString());
 			//labels.put(new Attribute(oCategory.toString(), HouseDescription.class), "Min bedrooms");
 		//	labels.put(new Attribute("price", HouseDescription.class), "Max price");
 			//labels.put(new Attribute("baths", HouseDescription.class), "Min bahtrooms");	
@@ -148,19 +148,20 @@ public class Recomender implements StandardCBRApplication
 		// Critiques configuration
 		critiques = new ArrayList<CritiqueOption>();
 		for(Category oCategory : Category.values()){
-			critiques.add(new CritiqueOption("Cat" + oCategory.ordinal(),new Attribute(oCategory.toString(), NewsDescription.class),new QueryMore()));
+			critiques.add(new CritiqueOption("cat" + oCategory.ordinal(),new Attribute("cat" + oCategory.ordinal(), NewsDescription.class),new QueryMore()));
 		}
 	}
 	
 	public CBRCaseBase preCycle() throws ExecutionException
 	{
 		// Load cases from connector into the case base
+		
 		_caseBase.init(_connector);		
 		// Print the cases
 		Collection<CBRCase> cases = _caseBase.getCases();
-		for(CBRCase c: cases){
+		/*for(CBRCase c: cases){
 			System.out.println(c);
-		}
+		}*/
 		return _caseBase;
 	}
 
