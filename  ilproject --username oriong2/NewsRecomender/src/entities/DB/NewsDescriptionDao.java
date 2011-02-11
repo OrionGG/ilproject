@@ -17,13 +17,11 @@ public class NewsDescriptionDao extends DAOWebsClassified{
 	public enum fields{
 		ID,
 		URL,
-		CAT1,
-		SCORE1,
-		CAT2,
-		SCORE2,
-		CAT3,
-		SCORE3
+		CAT,
+		SCORE
 	}
+	
+	public final static int NUMCAT = 5; 
 
 	private static NewsDescriptionDao oInstance;
 	public static NewsDescriptionDao getInstance(){
@@ -83,43 +81,20 @@ public class NewsDescriptionDao extends DAOWebsClassified{
 		ResultSet oResultSet = executeQuery("SELECT * FROM CATS WHERE ID=?",iId);
 		if (oResultSet.next()) {
 			String sUrl = oResultSet.getString(fields.URL.toString());
-			//CATEGORY 1
-			Category oCategory1 = null;
-			float fScore1 = 0;
-			try {
-				oCategory1 = Category.values()[oResultSet.getInt(fields.CAT1.toString())];
-				fScore1 = oResultSet.getFloat(fields.SCORE1.toString());
-			} catch (NullPointerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			//CATEGORY 2
-			Category oCategory2 = null;
-			float fScore2 = 0;
-			try {
-				oCategory2 = Category.values()[oResultSet.getInt(fields.CAT2.toString())];
-				fScore2 = oResultSet.getFloat(fields.SCORE2.toString());
-			} catch (NullPointerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			//CATEGORY 3
-			Category oCategory3 = null;
-			float fScore3 = 0;
-			try {
-				oCategory3 = Category.values()[oResultSet.getInt(fields.CAT3.toString())];
-				fScore3 = oResultSet.getFloat(fields.SCORE3.toString());
-			} catch (NullPointerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 
 			NewsDescription oNewsDescription = new NewsDescription();
-			oNewsDescription.setCategoryScore(oCategory1, fScore1);
-			oNewsDescription.setCategoryScore(oCategory2, fScore2);
-			oNewsDescription.setCategoryScore(oCategory3, fScore3);
+			for(int i = 0; i < NUMCAT; i++){
+				try {
+					Category oCategory = Category.values()[oResultSet.getInt(fields.CAT.toString()+i)];
+					float fScore = oResultSet.getFloat(fields.SCORE.toString()+i);
+
+					oNewsDescription.setCategoryScore(oCategory, fScore);
+				} catch (NullPointerException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
 
 			return oNewsDescription;
 
@@ -147,43 +122,19 @@ public class NewsDescriptionDao extends DAOWebsClassified{
 			while (oResultSet.next()) {
 
 				String sUrl = oResultSet.getString(fields.URL.toString());
-				//CATEGORY 1
-				Category oCategory1 = null;
-				float fScore1 = 0;
-				try {
-					oCategory1 = Category.values()[oResultSet.getInt(fields.CAT1.toString())];
-					fScore1 = oResultSet.getFloat(fields.SCORE1.toString());
-				} catch (NullPointerException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				//CATEGORY 2
-				Category oCategory2 = null;
-				float fScore2 = 0;
-				try {
-					oCategory2 = Category.values()[oResultSet.getInt(fields.CAT2.toString())];
-					fScore2 = oResultSet.getFloat(fields.SCORE2.toString());
-				} catch (NullPointerException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				//CATEGORY 3
-				Category oCategory3 = null;
-				float fScore3 = 0;
-				try {
-					oCategory3 = Category.values()[oResultSet.getInt(fields.CAT3.toString())];
-					fScore3 = oResultSet.getFloat(fields.SCORE3.toString());
-				} catch (NullPointerException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
 				NewsDescription oNewsDescription = new NewsDescription();
-				oNewsDescription.setCategoryScore(oCategory1, fScore1);
-				oNewsDescription.setCategoryScore(oCategory2, fScore2);
-				oNewsDescription.setCategoryScore(oCategory3, fScore3);
+				for(int i = 0; i < NUMCAT; i++){
+					try {
+						int iPosition = i+1;
+						Category oCategory = Category.values()[oResultSet.getInt(fields.CAT.toString()+ iPosition)];
+						float fScore = oResultSet.getFloat(fields.SCORE.toString()+ iPosition);
+
+						oNewsDescription.setCategoryScore(oCategory, fScore);
+					} catch (NullPointerException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 
 				oListAPiecesOfNews.add(oNewsDescription);
 			}
