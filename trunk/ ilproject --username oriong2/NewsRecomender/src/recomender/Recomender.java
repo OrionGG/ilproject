@@ -118,9 +118,9 @@ public class Recomender implements StandardCBRApplication
 		_caseBase = new LinealCaseBase();
 
 		//To show the progress
-		jcolibri.util.ProgressController.clear();
-		SwingProgressBar pb = new SwingProgressBar();
-		jcolibri.util.ProgressController.register(pb);
+	//	jcolibri.util.ProgressController.clear();
+		//SwingProgressBar pb = new SwingProgressBar();
+		//jcolibri.util.ProgressController.register(pb);
 
 
 		//Lets configure the KNN
@@ -134,12 +134,12 @@ public class Recomender implements StandardCBRApplication
 		// Obtain query configuration
 		hiddenAtts = new ArrayList<Attribute>();
 		for(Category oCategory : Category.values()){
-
+			
 			labels = new HashMap<Attribute,String>();
-
-			labels.put(new Attribute(oCategory.toString(), HouseDescription.class), "Min bedrooms");
-			labels.put(new Attribute("price", HouseDescription.class), "Max price");
-			labels.put(new Attribute("baths", HouseDescription.class), "Min bahtrooms");	
+			labels.put(new Attribute("Cat" + oCategory.ordinal(), NewsDescription.class), "Min "+"Cat" + oCategory.toString());
+			//labels.put(new Attribute(oCategory.toString(), HouseDescription.class), "Min bedrooms");
+		//	labels.put(new Attribute("price", HouseDescription.class), "Max price");
+			//labels.put(new Attribute("baths", HouseDescription.class), "Min bahtrooms");	
 		}
 
 
@@ -215,14 +215,14 @@ public class Recomender implements StandardCBRApplication
 		StandardCBRApplication recommender = new Recomender();
 		try
 		{
-			((Recomender)recommender).oNewsList = GetNews.GetCasesFromDB();
+			((Recomender)recommender).oNewsList = NewsDescriptionDao.getAllNews();
 			recommender.configure();
 
 			recommender.preCycle();
 
 			CBRQuery query = new CBRQuery();
 
-			HouseDescription hd = new HouseDescription();
+			NewsDescription hd = new NewsDescription();
 
 			query.setDescription(hd);
 
