@@ -83,41 +83,42 @@ public class NewsDescriptionDao extends DAOWebsClassified{
 		if (oResultSet.next()) {
 			String sUrl = oResultSet.getString(fields.URL.toString());
 			//CATEGORY 1
-			Category oCategory1;
-			double dScore1;
+			Category oCategory1 = null;
+			float fScore1 = 0;
 			try {
 				oCategory1 = Category.values()[oResultSet.getInt(fields.CAT1.toString())];
-				dScore1 = oResultSet.getDouble(fields.SCORE1.toString());
+				fScore1 = oResultSet.getFloat(fields.SCORE1.toString());
 			} catch (NullPointerException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
 			//CATEGORY 2
-			Category oCategory2;
-			double dScore2;
+			Category oCategory2 = null;
+			float fScore2 = 0;
 			try {
 				oCategory2 = Category.values()[oResultSet.getInt(fields.CAT2.toString())];
-				dScore2 = oResultSet.getDouble(fields.SCORE2.toString());
+				fScore2 = oResultSet.getFloat(fields.SCORE2.toString());
 			} catch (NullPointerException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
 			//CATEGORY 3
-			Category oCategory3;
-			double dScore3;
+			Category oCategory3 = null;
+			float fScore3 = 0;
 			try {
 				oCategory3 = Category.values()[oResultSet.getInt(fields.CAT3.toString())];
-				dScore3 = oResultSet.getDouble(fields.SCORE3.toString());
+				fScore3 = oResultSet.getFloat(fields.SCORE3.toString());
 			} catch (NullPointerException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-
-
-			NewsDescription oNewsDescription = new oNewsDescription(sUrl, sText, oNewsType, dWeight);
+			
+			NewsDescription oNewsDescription = new NewsDescription();
+			oNewsDescription.setCategoryScore(oCategory1, fScore1);
+			oNewsDescription.setCategoryScore(oCategory2, fScore2);
+			oNewsDescription.setCategoryScore(oCategory3, fScore3);
 
 			return oNewsDescription;
 
@@ -127,15 +128,6 @@ public class NewsDescriptionDao extends DAOWebsClassified{
 			return null;
 		}
 
-	}
-
-	public void insertUrl(String sUrl, String sText, NewsType oNewsType, double iWeight)throws Exception{
-		sUrl = normalizeUrl(sUrl);
-		executeUpdate("INSERT INTO URL(URL,TEXT, TYPE, Weight) VALUES(?,?,?,?)",sUrl,sText, oNewsType.ToString(), iWeight);
-	}
-
-	public void updateTextWeight(int id,String sText, double iWeight)throws Exception{
-		executeUpdate("UPDATE URL SET TEXT=?,Weight=? WHERE ID=?",sText,iWeight, id);
 	}
 
 	public void deleteUrl(int id)throws Exception{
@@ -152,19 +144,44 @@ public class NewsDescriptionDao extends DAOWebsClassified{
 		while (oResultSet.next()) {
 
 			String sUrl = oResultSet.getString(fields.URL.toString());
-			NewsType oNewsType = NewsType.NONE;
+			//CATEGORY 1
+			Category oCategory1 = null;
+			float fScore1 = 0;
 			try {
-				oNewsType = NewsType.toNewsType(oResultSet.getString(fields.TYPE.toString()));
+				oCategory1 = Category.values()[oResultSet.getInt(fields.CAT1.toString())];
+				fScore1 = oResultSet.getFloat(fields.SCORE1.toString());
 			} catch (NullPointerException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-			double dWeight = oResultSet.getDouble(fields.WEIGHT.toString());
-
-			NewsDescription oNewsDescription = new oNewsDescription();
 			
-			(sUrl, sText, oNewsType, dWeight);
+			//CATEGORY 2
+			Category oCategory2 = null;
+			float fScore2 = 0;
+			try {
+				oCategory2 = Category.values()[oResultSet.getInt(fields.CAT2.toString())];
+				fScore2 = oResultSet.getFloat(fields.SCORE2.toString());
+			} catch (NullPointerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			//CATEGORY 3
+			Category oCategory3 = null;
+			float fScore3 = 0;
+			try {
+				oCategory3 = Category.values()[oResultSet.getInt(fields.CAT3.toString())];
+				fScore3 = oResultSet.getFloat(fields.SCORE3.toString());
+			} catch (NullPointerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			NewsDescription oNewsDescription = new NewsDescription();
+			oNewsDescription.setCategoryScore(oCategory1, fScore1);
+			oNewsDescription.setCategoryScore(oCategory2, fScore2);
+			oNewsDescription.setCategoryScore(oCategory3, fScore3);
+			
 			oListAPiecesOfNews.add(oNewsDescription);
 		}
 
