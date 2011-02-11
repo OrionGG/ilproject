@@ -230,9 +230,16 @@ public class NewsDescription implements CaseComponent
 	 }
 
     
-    public String toString() 
+    
+    public String getUrl()
     {
-		return sUrl;
+        return sUrl;
+    }
+
+
+    public void setUrl(String sUrl)
+    {
+        this.sUrl = sUrl;
     }
     
 
