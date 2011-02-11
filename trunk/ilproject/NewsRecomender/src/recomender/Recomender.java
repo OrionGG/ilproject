@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import comparers.*;
 
@@ -94,7 +95,7 @@ import entities.DB.*;
  */
 public class Recomender implements StandardCBRApplication
 {
-
+	private static Recomender oInstance;
 	protected List<NewsDescription> oNewsList;
 	/** Connector object */
 	Connector _connector;
@@ -111,6 +112,8 @@ public class Recomender implements StandardCBRApplication
 
 	/** Critiques configuration object */
 	Collection<CritiqueOption> critiques;
+	
+	public Collection<CBRCase> selectedCases;
 
 	public void configure() throws ExecutionException
 	{
@@ -169,10 +172,6 @@ public class Recomender implements StandardCBRApplication
 
 	public void cycle(CBRQuery query) throws ExecutionException
 	{	
-		// Obtain query with form filling
-		//ObtainQueryWithFormMethod.obtainQueryWithoutInitialValues(query,hiddenAtts,labels);
-
-		// Jump to main conversation
 		sequence1(query, new FilterConfig());
 
 	}
@@ -183,6 +182,52 @@ public class Recomender implements StandardCBRApplication
 	public void postCycle() throws ExecutionException
 	{
 	}
+	
+	public static Boolean InstanceNull(){
+		return (oInstance == null);
+	}
+	
+	public static Recomender getInstance(){
+		if(oInstance == null){
+			oInstance = new Recomender();
+		}
+		return oInstance;
+	}
+	
+	public static void loadCases(){
+		try
+		{
+			getInstance().configure();
+			getInstance().preCycle();
+		} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+		}
+	}
+	
+	public static Collection<CBRCase> getResultCollection(Map<Category,Integer> mSelectedCategories){
+		CBRQuery query = new CBRQuery();
+
+		NewsDescription hd = new NewsDescription();
+		for(Entry<Category,Integer> oEntry: mSelectedCategories.entrySet()){
+			hd.setCategoryScore(oEntry.getKey(), oEntry.getValue());
+		}
+		query.setDescription(hd);
+		
+		try {
+			if(InstanceNull()){
+				loadCases();
+			}
+
+			getInstance().cycle(query);
+			getInstance().postCycle();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return getInstance().selectedCases;
+	}
+	
 
 
 	public static void main(String[] args) {
@@ -228,7 +273,7 @@ public class Recomender implements StandardCBRApplication
 		Collection<RetrievalResult> retrievedCases = NNScoringMethod.evaluateSimilarity(filtered, query, simConfig);
 
 		// Select cases
-		Collection<CBRCase> selectedCases = SelectCases.selectTopK(retrievedCases, 10);
+		selectedCases = SelectCases.selectTopK(retrievedCases, 10);
 
 		// Obtain critizied query
 		CriticalUserChoice choice = DisplayCasesTableWithCritiquesMethod.displayCasesInTableWithCritiques(selectedCases, critiques, _caseBase.getCases());

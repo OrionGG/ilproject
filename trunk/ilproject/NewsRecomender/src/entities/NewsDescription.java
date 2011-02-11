@@ -22,7 +22,7 @@ import jcolibri.cbrcore.CaseComponent;
  */
 public class NewsDescription implements CaseComponent
 {
-	Integer id;
+	 Integer id;
 	 String sUrl;
 	 float cat0;
 	 float cat1;
