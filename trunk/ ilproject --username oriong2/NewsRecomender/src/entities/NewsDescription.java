@@ -24,6 +24,7 @@ public class NewsDescription implements CaseComponent
 {
 	Integer id;
 	 String sUrl;
+	 float cat0;
 	 float cat1;
 	 float cat2;
 	 float cat3;
@@ -78,6 +79,9 @@ public class NewsDescription implements CaseComponent
 	 public void  setCategoryScore(Category category, float score){
 		
 		 switch (category.ordinal()) {
+			case 0:
+				setCat0(score);
+				break;
 		case 1:
 			setCat1(score);
 			break;
@@ -750,6 +754,18 @@ public class NewsDescription implements CaseComponent
 
 	public void setCat49(float cat49) {
 		this.cat49 = cat49;
+	}
+
+
+
+	public float getCat0() {
+		return cat0;
+	}
+
+
+
+	public void setCat0(float cat0) {
+		this.cat0 = cat0;
 	}
 
 }

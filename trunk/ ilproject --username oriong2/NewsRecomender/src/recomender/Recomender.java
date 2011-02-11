@@ -158,8 +158,9 @@ public class Recomender implements StandardCBRApplication
 		_caseBase.init(_connector);		
 		// Print the cases
 		Collection<CBRCase> cases = _caseBase.getCases();
-		for(CBRCase c: cases)
+		for(CBRCase c: cases){
 			System.out.println(c);
+		}
 		return _caseBase;
 	}
 
