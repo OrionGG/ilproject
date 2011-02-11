@@ -160,41 +160,7 @@ public class Recomender implements StandardCBRApplication
 	}
 
 
-	public void sequence1(CBRQuery query, FilterConfig filterConfig)  throws ExecutionException
-	{	
-		// Execute Filter
-		Collection<CBRCase> filtered = FilterBasedRetrievalMethod.filterCases(_caseBase.getCases(), query, filterConfig);
-
-		// Execute NN
-		Collection<RetrievalResult> retrievedCases = NNScoringMethod.evaluateSimilarity(filtered, query, simConfig);
-
-		// Select cases
-		Collection<CBRCase> selectedCases = SelectCases.selectTopK(retrievedCases, 10);
-
-		// Obtain critizied query
-		CriticalUserChoice choice = DisplayCasesTableWithCritiquesMethod.displayCasesInTableWithCritiques(selectedCases, critiques, _caseBase.getCases());
-
-		if(ContinueOrFinish.continueOrFinish(choice))
-			sequence2(choice.getSelectedCaseAsQuery(), choice);
-		else
-			sequence3(choice, selectedCases);
-	}
-
-	public void sequence2(CBRQuery query, CriticalUserChoice cuc) throws ExecutionException
-	{
-		// Replaze current query with the critizied one
-		MoreLikeThis.moreLikeThis(query, cuc.getSelectedCase());
-		sequence1(query, cuc.getFilterConfig());
-	}
-
-	public void sequence3(UserChoice choice, Collection<CBRCase> retrievedCases)  throws ExecutionException
-	{
-		if(BuyOrQuit.buyOrQuit(choice))
-			System.out.println("Finish - User Buys: "+choice.getSelectedCase());
-
-		else
-			System.out.println("Finish - User Quits");
-	}
+	
 
 	public void postCycle() throws ExecutionException
 	{
@@ -234,10 +200,45 @@ public class Recomender implements StandardCBRApplication
 		} catch (Exception e)
 		{
 			org.apache.commons.logging.LogFactory.getLog(Recomender.class).error(e);
-
+			System.out.print(e.toString());
 		}
 
 
+	}
+	public void sequence1(CBRQuery query, FilterConfig filterConfig)  throws ExecutionException
+	{	
+		// Execute Filter
+		Collection<CBRCase> filtered = FilterBasedRetrievalMethod.filterCases(_caseBase.getCases(), query, filterConfig);
+
+		// Execute NN
+		Collection<RetrievalResult> retrievedCases = NNScoringMethod.evaluateSimilarity(filtered, query, simConfig);
+
+		// Select cases
+		Collection<CBRCase> selectedCases = SelectCases.selectTopK(retrievedCases, 10);
+
+		// Obtain critizied query
+		CriticalUserChoice choice = DisplayCasesTableWithCritiquesMethod.displayCasesInTableWithCritiques(selectedCases, critiques, _caseBase.getCases());
+
+		if(ContinueOrFinish.continueOrFinish(choice))
+			sequence2(choice.getSelectedCaseAsQuery(), choice);
+		else
+			sequence3(choice, selectedCases);
+	}
+
+	public void sequence2(CBRQuery query, CriticalUserChoice cuc) throws ExecutionException
+	{
+		// Replaze current query with the critizied one
+		MoreLikeThis.moreLikeThis(query, cuc.getSelectedCase());
+		sequence1(query, cuc.getFilterConfig());
+	}
+
+	public void sequence3(UserChoice choice, Collection<CBRCase> retrievedCases)  throws ExecutionException
+	{
+		if(BuyOrQuit.buyOrQuit(choice))
+			System.out.println("Finish - User Buys: "+choice.getSelectedCase());
+
+		else
+			System.out.println("Finish - User Quits");
 	}
 
 }
