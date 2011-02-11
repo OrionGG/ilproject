@@ -1,6 +1,7 @@
 package entities.DB;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class NewsDescriptionDao extends DAOWebsClassified{
 		CAT3,
 		SCORE3
 	}
-	
+
 	private static NewsDescriptionDao oInstance;
 	public static NewsDescriptionDao getInstance(){
 		if(oInstance == null){
@@ -32,7 +33,7 @@ public class NewsDescriptionDao extends DAOWebsClassified{
 		return oInstance;
 	}
 
-/*	public NewsDescriptionDao(){
+	/*	public NewsDescriptionDao(){
 		try {
 			getDBConnector().setConnection("NewsDB");
 		} catch (Exception e) {
@@ -41,7 +42,7 @@ public class NewsDescriptionDao extends DAOWebsClassified{
 		}
 	}*/
 
-/*	public DBConnector getDBConnector(){
+	/*	public DBConnector getDBConnector(){
 		//DBConnector oDBConnector = SQLServerDBConnector.getInstance();
 		DBConnector oDBConnector = MysqlDBConnector.getInstance();
 		try {
@@ -57,7 +58,7 @@ public class NewsDescriptionDao extends DAOWebsClassified{
 
 	public List<Integer>  getIds(String sUrl) throws Exception{
 		sUrl = normalizeUrl(sUrl);
-		
+
 		List<Integer>  oResultList = new ArrayList<Integer>();
 		ResultSet oResultSet;
 		oResultSet = executeQuery("SELECT ID FROM URL WHERE URL = '" + sUrl + "'");
@@ -92,7 +93,7 @@ public class NewsDescriptionDao extends DAOWebsClassified{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 			//CATEGORY 2
 			Category oCategory2 = null;
 			float fScore2 = 0;
@@ -103,7 +104,7 @@ public class NewsDescriptionDao extends DAOWebsClassified{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 			//CATEGORY 3
 			Category oCategory3 = null;
 			float fScore3 = 0;
@@ -114,7 +115,7 @@ public class NewsDescriptionDao extends DAOWebsClassified{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 			NewsDescription oNewsDescription = new NewsDescription();
 			oNewsDescription.setCategoryScore(oCategory1, fScore1);
 			oNewsDescription.setCategoryScore(oCategory2, fScore2);
@@ -138,51 +139,58 @@ public class NewsDescriptionDao extends DAOWebsClassified{
 		executeUpdate("UPDATE URL SET ENABLE=? WHERE ID=?", false, id);
 	}
 
-	public List<NewsDescription> getAllNews() throws Exception{
+	public List<NewsDescription> getAllNews(){
 		List<NewsDescription> oListAPiecesOfNews = new ArrayList<NewsDescription>();
-		ResultSet oResultSet = executeSimpleQuery("SELECT * FROM URL");
-		while (oResultSet.next()) {
+		ResultSet oResultSet;
+		try {
+			oResultSet = executeSimpleQuery("SELECT * FROM URL");
+			while (oResultSet.next()) {
 
-			String sUrl = oResultSet.getString(fields.URL.toString());
-			//CATEGORY 1
-			Category oCategory1 = null;
-			float fScore1 = 0;
-			try {
-				oCategory1 = Category.values()[oResultSet.getInt(fields.CAT1.toString())];
-				fScore1 = oResultSet.getFloat(fields.SCORE1.toString());
-			} catch (NullPointerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				String sUrl = oResultSet.getString(fields.URL.toString());
+				//CATEGORY 1
+				Category oCategory1 = null;
+				float fScore1 = 0;
+				try {
+					oCategory1 = Category.values()[oResultSet.getInt(fields.CAT1.toString())];
+					fScore1 = oResultSet.getFloat(fields.SCORE1.toString());
+				} catch (NullPointerException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				//CATEGORY 2
+				Category oCategory2 = null;
+				float fScore2 = 0;
+				try {
+					oCategory2 = Category.values()[oResultSet.getInt(fields.CAT2.toString())];
+					fScore2 = oResultSet.getFloat(fields.SCORE2.toString());
+				} catch (NullPointerException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				//CATEGORY 3
+				Category oCategory3 = null;
+				float fScore3 = 0;
+				try {
+					oCategory3 = Category.values()[oResultSet.getInt(fields.CAT3.toString())];
+					fScore3 = oResultSet.getFloat(fields.SCORE3.toString());
+				} catch (NullPointerException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				NewsDescription oNewsDescription = new NewsDescription();
+				oNewsDescription.setCategoryScore(oCategory1, fScore1);
+				oNewsDescription.setCategoryScore(oCategory2, fScore2);
+				oNewsDescription.setCategoryScore(oCategory3, fScore3);
+
+				oListAPiecesOfNews.add(oNewsDescription);
 			}
-			
-			//CATEGORY 2
-			Category oCategory2 = null;
-			float fScore2 = 0;
-			try {
-				oCategory2 = Category.values()[oResultSet.getInt(fields.CAT2.toString())];
-				fScore2 = oResultSet.getFloat(fields.SCORE2.toString());
-			} catch (NullPointerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			//CATEGORY 3
-			Category oCategory3 = null;
-			float fScore3 = 0;
-			try {
-				oCategory3 = Category.values()[oResultSet.getInt(fields.CAT3.toString())];
-				fScore3 = oResultSet.getFloat(fields.SCORE3.toString());
-			} catch (NullPointerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			NewsDescription oNewsDescription = new NewsDescription();
-			oNewsDescription.setCategoryScore(oCategory1, fScore1);
-			oNewsDescription.setCategoryScore(oCategory2, fScore2);
-			oNewsDescription.setCategoryScore(oCategory3, fScore3);
-			
-			oListAPiecesOfNews.add(oNewsDescription);
+
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 
 		return oListAPiecesOfNews;
