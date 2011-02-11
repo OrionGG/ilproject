@@ -75,6 +75,159 @@ public class NewsDescription implements CaseComponent
 	 float cat49;
 	
 	
+	 public void  setCategoryScore(Category category, float score){
+		
+		 switch (category.ordinal()) {
+		case 1:
+			setCat1(score);
+			break;
+		case 2:
+			setCat2(score);
+			break;
+		case 3:
+			setCat3(score);
+			break;
+		case 4:
+			setCat4(score);
+			break;
+		case 5:
+			setCat5(score);
+			break;
+		case 6:
+			setCat6(score);
+			break;
+		case 7:
+			setCat7(score);
+			break;
+		case 8:
+			setCat8(score);
+			break;
+		case 9:
+			setCat9(score);
+			break;
+		case 10:
+			setCat10(score);
+			break;
+		case 11:
+			setCat11(score);
+			break;
+		case 12:
+			setCat12(score);
+			break;
+		case 13:
+			setCat13(score);
+			break;
+		case 14:
+			setCat14(score);
+			break;
+		case 15:
+			setCat15(score);
+			break;
+		case 16:
+			setCat16(score);
+			break;
+		case 17:
+			setCat17(score);
+			break;
+		case 18:
+			setCat18(score);
+			break;	
+		case 19:
+				setCat19(score);
+				break;
+		case 20:
+			setCat20(score);
+			break;
+		case 21:
+			setCat21(score);
+			break;
+		case 22:
+			setCat22(score);
+			break;
+		case 23:
+			setCat23(score);
+			break;
+		case 24:
+			setCat24(score);
+			break;
+		case 25:
+			setCat25(score);
+			break;
+		case 26:
+			setCat26(score);
+			break;
+		case 27:
+			setCat27(score);
+			break;
+		case 28:
+			setCat28(score);
+			break;
+		case 29:
+			setCat29(score);
+			break;
+		case 30:
+			setCat30(score);
+			break;
+		case 31:
+			setCat31(score);
+			break;
+		case 32:
+			setCat32(score);
+			break;
+		case 33:
+			setCat33(score);
+			break;
+		case 34:
+			setCat34(score);
+			break;
+		case 35:
+			setCat35(score);
+			break;
+		case 36:
+			setCat36(score);
+			break;
+		case 37:
+			setCat37(score);
+			break;
+		case 38:
+			setCat38(score);
+			break;
+		case 39:
+			setCat39(score);
+			break;
+		case 40:
+			setCat40(score);
+			break;
+		case 41:
+			setCat41(score);
+			break;
+		case 42:
+			setCat42(score);
+			break;
+		case 43:
+			setCat43(score);
+			break;
+		case 44:
+			setCat44(score);
+			break;
+		case 45:
+			setCat45(score);
+			break;
+		case 46:
+			setCat46(score);
+			break;
+		case 47:
+			setCat47(score);
+			break;
+		case 48:
+			setCat48(score);
+			break;
+		
+		default:
+			break;
+		}
+		 
+	 }
 
     
     public String toString() 
