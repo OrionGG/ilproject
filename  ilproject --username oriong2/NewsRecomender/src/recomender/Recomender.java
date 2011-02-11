@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import retriever.GetNews;
+import entities.*;
 
 import connector.TheNewsConnector;
 import dominio.Category;
@@ -53,7 +53,7 @@ import jcolibri.method.retrieve.selection.SelectCases;
 import jcolibri.test.main.SwingProgressBar;
 import jcolibri.test.recommenders.housesData.HouseDescription;
 
-import entities.*;
+import entities.DB.*;
 /**
  * Conversational (type A) flats recommender using Navigation by Proposing and Filtered+NearestNeighbour+topKselection retrieval.
  * <br>
@@ -112,7 +112,9 @@ public class Recomender implements StandardCBRApplication
 
 	public void configure() throws ExecutionException
 	{
-
+		
+		//Get cases from Db
+		oNewsList = NewsDescriptionDao.getInstance().getAllNews();
 		//Use a custom connector
 		_connector = new TheNewsConnector(oNewsList);
 		_caseBase = new LinealCaseBase();
@@ -149,6 +151,18 @@ public class Recomender implements StandardCBRApplication
 			critiques.add(new CritiqueOption("Cat" + oCategory.ordinal(),new Attribute(oCategory.toString(), NewsDescription.class),new QueryMore()));
 		}
 	}
+	
+	public CBRCaseBase preCycle() throws ExecutionException
+	{
+		// Load cases from connector into the case base
+		_caseBase.init(_connector);		
+		// Print the cases
+		Collection<CBRCase> cases = _caseBase.getCases();
+		for(CBRCase c: cases)
+			System.out.println(c);
+		return _caseBase;
+	}
+
 	public void cycle(CBRQuery query) throws ExecutionException
 	{	
 		// Obtain query with form filling
@@ -166,22 +180,12 @@ public class Recomender implements StandardCBRApplication
 	{
 	}
 
-	public CBRCaseBase preCycle() throws ExecutionException
-	{
-		// Load cases from connector into the case base
-		_caseBase.init(_connector);		
-		// Print the cases
-		java.util.Collection<CBRCase> cases = _caseBase.getCases();
-		for(CBRCase c: cases)
-			System.out.println(c);
-		return _caseBase;
-	}
 
 	public static void main(String[] args) {
 		StandardCBRApplication recommender = new Recomender();
 		try
 		{
-			((Recomender)recommender).oNewsList = NewsDescriptionDao.getAllNews();
+			
 			recommender.configure();
 
 			recommender.preCycle();
