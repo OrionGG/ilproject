@@ -80,9 +80,14 @@ public class NewsDescriptionDao extends DAOWebsClassified{
 	public NewsDescription getNewsDescription(int iId) throws Exception{
 		ResultSet oResultSet = executeQuery("SELECT * FROM CATS WHERE ID=?",iId);
 		if (oResultSet.next()) {
-			String sUrl = oResultSet.getString(fields.URL.toString());
 
 			NewsDescription oNewsDescription = new NewsDescription();
+			
+			Integer iID = oResultSet.getInt(fields.ID.toString());
+			oNewsDescription.setId(iID);
+			String sUrl = oResultSet.getString(fields.URL.toString());
+			oNewsDescription.setUrl(sUrl);
+			
 			for(int i = 0; i < NUMCAT; i++){
 				try {
 					Category oCategory = Category.values()[oResultSet.getInt(fields.CAT.toString()+i)];
@@ -121,8 +126,13 @@ public class NewsDescriptionDao extends DAOWebsClassified{
 			oResultSet = executeSimpleQuery("SELECT * FROM URL");
 			while (oResultSet.next()) {
 
-				String sUrl = oResultSet.getString(fields.URL.toString());
 				NewsDescription oNewsDescription = new NewsDescription();
+				
+
+				Integer iID = oResultSet.getInt(fields.ID.toString());
+				oNewsDescription.setId(iID);
+				String sUrl = oResultSet.getString(fields.URL.toString());
+				oNewsDescription.setUrl(sUrl);
 				for(int i = 0; i < NUMCAT; i++){
 					try {
 						int iPosition = i+1;
