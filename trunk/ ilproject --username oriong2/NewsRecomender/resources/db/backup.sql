@@ -19,9 +19,6 @@
 -- Table structure for table `list`
 --
 
-DROP TABLE IF EXISTS `list`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `list` (
   `id` int(11) NOT NULL,
   `url` varchar(2000) DEFAULT NULL,
