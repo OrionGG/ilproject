@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/jcolibri2.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Classification"/>
 	<classpathentry kind="lib" path="lib/common/commons-logging-1.1.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ZLib"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
