@@ -1,7 +1,7 @@
 /**
  * Houses6.java
  * jCOLIBRI2 framework. 
- * @author Juan A. Recio-García.
+ * @author Juan A. Recio-GarcÃ­a.
  * GAIA - Group for Artificial Intelligence Applications
  * http://gaia.fdi.ucm.es
  * 23/10/2007
@@ -13,6 +13,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import comparers.*;
 
 import entities.*;
 
@@ -128,9 +130,9 @@ public class Recomender implements StandardCBRApplication
 		//Lets configure the KNN
 		simConfig = new NNConfig();
 		// Set the average() global similarity function for the description of the case
-		simConfig.setDescriptionSimFunction(new Average());
+		simConfig.setDescriptionSimFunction(new Max_sum());
 		for(Category oCategory : Category.values()){
-			simConfig.addMapping(new Attribute("cat" + oCategory.ordinal(), NewsDescription.class), new Equal());
+			simConfig.addMapping(new Attribute("cat" + oCategory.ordinal(), NewsDescription.class), new Resta());
 		}
 
 		// Obtain query configuration
@@ -168,7 +170,7 @@ public class Recomender implements StandardCBRApplication
 	public void cycle(CBRQuery query) throws ExecutionException
 	{	
 		// Obtain query with form filling
-		ObtainQueryWithFormMethod.obtainQueryWithoutInitialValues(query,hiddenAtts,labels);
+		//ObtainQueryWithFormMethod.obtainQueryWithoutInitialValues(query,hiddenAtts,labels);
 
 		// Jump to main conversation
 		sequence1(query, new FilterConfig());
@@ -195,6 +197,12 @@ public class Recomender implements StandardCBRApplication
 			CBRQuery query = new CBRQuery();
 
 			NewsDescription hd = new NewsDescription();
+			
+			hd.setCat1(1);
+			hd.setCat2(1);
+			hd.setCat3(1);
+			hd.setCat4(1);
+			
 
 			query.setDescription(hd);
 
