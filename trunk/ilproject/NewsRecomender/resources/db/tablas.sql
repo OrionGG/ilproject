@@ -6,13 +6,13 @@ CREATE TABLE cats (
   cat_id int(11) NOT NULL,
   score float DEFAULT NULL,
   KEY id (id)
-) ENGINE=InnoDB
+) ENGINE=InnoDB;
 
 CREATE TABLE urls (
   id int(11) NOT NULL AUTO_INCREMENT,
   url varchar(2000) DEFAULT NULL,
   PRIMARY KEY (id)
-) ENGINE=InnoDB
+) ENGINE=InnoDB;
 
 
 CREATE TABLE list (
