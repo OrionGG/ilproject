@@ -46,6 +46,5 @@
 	<classpathentry kind="lib" path="lib/xalan.jar"/>
 	<classpathentry kind="lib" path="lib/xercesImpl.jar"/>
 	<classpathentry kind="lib" path="lib/xercesImpl-2.7.1.jar"/>
-	<classpathentry kind="lib" path="lib/jcolibri2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
