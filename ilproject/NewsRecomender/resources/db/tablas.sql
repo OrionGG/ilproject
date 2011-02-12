@@ -2,11 +2,12 @@
 USE websclassified;
 
 CREATE TABLE cats (
-  id int(11) NOT NULL,
+  id int(11) NOT NULL ,
   cat_id int(11) NOT NULL,
   score float DEFAULT NULL,
   KEY id (id)
 ) ENGINE=InnoDB;
+
 
 CREATE TABLE urls (
   id int(11) NOT NULL AUTO_INCREMENT,
