@@ -105,10 +105,6 @@ public class Recomender implements StandardCBRApplication
 	/** KNN configuration*/
 	NNConfig simConfig;
 
-	/** Obtain query configuration*/
-	Collection<Attribute> hiddenAtts;
-	/** Obtain query configuration*/
-	Map<Attribute,String> labels;
 
 	/** Critiques configuration object */
 	Collection<CritiqueOption> critiques;
@@ -138,16 +134,6 @@ public class Recomender implements StandardCBRApplication
 			simConfig.addMapping(new Attribute("cat" + oCategory.ordinal(), NewsDescription.class), new Resta());
 		}
 
-		// Obtain query configuration
-		hiddenAtts = new ArrayList<Attribute>();
-		for(Category oCategory : Category.values()){
-			
-			labels = new HashMap<Attribute,String>();
-			labels.put(new Attribute("cat" + oCategory.ordinal(), NewsDescription.class), "Min "+"Cat" + oCategory.toString());
-			//labels.put(new Attribute(oCategory.toString(), HouseDescription.class), "Min bedrooms");
-		//	labels.put(new Attribute("price", HouseDescription.class), "Max price");
-			//labels.put(new Attribute("baths", HouseDescription.class), "Min bahtrooms");	
-		}
 
 
 		// Critiques configuration
