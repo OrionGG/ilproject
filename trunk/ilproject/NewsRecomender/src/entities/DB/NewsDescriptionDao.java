@@ -8,8 +8,6 @@ import java.util.List;
 import DBLayer.DAOUrlsClassified;
 import DBLayer.DAOWebsClassified;
 
-import connector.DBConnector;
-import connector.MysqlDBConnector;
 import dominio.Category;
 import entities.NewsDescription;
 
