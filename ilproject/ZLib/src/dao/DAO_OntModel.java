@@ -15,7 +15,7 @@ import com.mysql.jdbc.Connection;
 
 public class DAO_OntModel {
 	
-
+/*
 	public static void createModelToDb(String dbname,String dbuser,String dbpass){
 		
 		
@@ -31,9 +31,9 @@ public class DAO_OntModel {
     	
     	
 		boolean created =false;
-		/*if(existsDatabase(dbname,dbuser,dbpass)==false){
+		if(existsDatabase(dbname,dbuser,dbpass)==false){
 			createDatabase(dbname,dbuser,dbpass);
-		}*/
+		}
 		IDBConnection con=null;
 		con=new DBConnection("jdbc:mysql://localhost/"+dbname,dbuser,dbpass,dengine);
 		try{
@@ -65,7 +65,7 @@ public static read(){
 	OntModel modelOnt = null;
 	String ns = "http://www.example.com/PruebasOntology.owl";
 
-	// Creo la conexión con el modelo persistente
+	// Creo la conexiï¿½n con el modelo persistente
 	IDBConnection conModel = new DBConnection(strModel, strModelUser, strModelPwd, "MySQL");
 
 	// abro el modelo desde el almacenamiento
@@ -162,12 +162,12 @@ public class createModelToDb(dbname,dbuser,dbpass){
 
 
 
-/*RECORRER
+RECORRER
  * 
  * 
 	
 	//
-	// Como ejemplo de utilización obtengo todas los canciones del autor "Elvis Presley"
+	// Como ejemplo de utilizaciï¿½n obtengo todas los canciones del autor "Elvis Presley"
 	//
 
 	// obtengo la instacia del autor "Elvis Presley"
@@ -182,6 +182,6 @@ public class createModelToDb(dbname,dbuser,dbpass){
 	    OntResource cancion = (OntResource)iteratorCanciones.next();
 	    System.out.println(cancion);
 	}
- * */
-
+ * 
+*/
 }

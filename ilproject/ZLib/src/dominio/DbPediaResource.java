@@ -130,7 +130,7 @@ public class DbPediaResource implements Resource{
 	}
 
 	@Override
-	public RDFNode inModel(Model arg0) {
+	public Resource inModel(Model arg0) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -377,6 +377,21 @@ public class DbPediaResource implements Resource{
 
 	@Override
 	public Resource removeProperties() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Literal asLiteral() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Resource asResource() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Resource getPropertyResourceValue(Property arg0) {
 		// TODO Auto-generated method stub
 		return null;
 	}
