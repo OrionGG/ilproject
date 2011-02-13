@@ -17,7 +17,6 @@
 	<classpathentry kind="lib" path="lib/jena-2.6.2.jar"/>
 	<classpathentry kind="lib" path="lib/arq-2.8.7.jar"/>
 	<classpathentry kind="lib" path="lib/dom.jar"/>
-	<classpathentry kind="lib" path="lib/google-api-translate-java-0.92.jar"/>
 	<classpathentry kind="lib" path="lib/icu4j-3.4.4.jar"/>
 	<classpathentry kind="lib" path="lib/iri-0.7.jar"/>
 	<classpathentry kind="lib" path="lib/ivy-2.2.0.jar"/>
@@ -25,14 +24,8 @@
 	<classpathentry kind="lib" path="lib/jaxp-api.jar"/>
 	<classpathentry kind="lib" path="lib/jdbc2_0-stdext.jar"/>
 	<classpathentry kind="lib" path="lib/jdom.jar"/>
-	<classpathentry kind="lib" path="lib/jericho-html-3.1.jar"/>
 	<classpathentry kind="lib" path="lib/jstl-1.2.jar"/>
 	<classpathentry kind="lib" path="lib/jwnl.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-core-3.0.2.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-demos-3.0.2.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-snowball-2.4.1.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-snowball-3.0.1.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-snowball-3.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.10-bin.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.14-bin.jar"/>
 	<classpathentry kind="lib" path="lib/sax.jar"/>
