@@ -774,5 +774,162 @@ public class NewsDescription implements CaseComponent
 		}
 		 
 	 }
+	
+	public float getCategoryScore(Category category){
+		
+		 switch (category.ordinal()) {
+			case 0:
+				return getCat0();
+				
+		case 1:
+			return getCat1();
+			
+		case 2:
+			return getCat2();
+			
+		case 3:
+			return getCat3();
+			
+		case 4:
+			return getCat4();
+			
+		case 5:
+			return getCat5();
+			
+		case 6:
+			return getCat6();
+			
+		case 7:
+			return getCat7();
+			
+		case 8:
+			return getCat8();
+			
+		case 9:
+			return getCat9();
+			
+		case 10:
+			return getCat10();
+			
+		case 11:
+			return getCat11();
+			
+		case 12:
+			return getCat12();
+			
+		case 13:
+			return getCat13();
+			
+		case 14:
+			return getCat14();
+			
+		case 15:
+			return getCat15();
+			
+		case 16:
+			return getCat16();
+			
+		case 17:
+			return getCat17();
+			
+		case 18:
+			return getCat18();
+				
+		case 19:
+			return	getCat19();
+				
+		case 20:
+			return getCat20();
+			
+		case 21:
+			return getCat21();
+			
+		case 22:
+			return getCat22();
+			
+		case 23:
+			return getCat23();
+			
+		case 24:
+			return getCat24();
+			
+		case 25:
+			return getCat25();
+			
+		case 26:
+			return getCat26();
+			
+		case 27:
+			return getCat27();
+			
+		case 28:
+			return getCat28();
+			
+		case 29:
+			return getCat29();
+			
+		case 30:
+			return getCat30();
+			
+		case 31:
+			return getCat31();
+			
+		case 32:
+			return getCat32();
+			
+		case 33:
+			return getCat33();
+			
+		case 34:
+			return getCat34();
+			
+		case 35:
+			return getCat35();
+			
+		case 36:
+			return getCat36();
+			
+		case 37:
+			return getCat37();
+			
+		case 38:
+			return getCat38();
+			
+		case 39:
+			return getCat39();
+			
+		case 40:
+			return getCat40();
+			
+		case 41:
+			return getCat41();
+			
+		case 42:
+			return getCat42();
+			
+		case 43:
+			return getCat43();
+			
+		case 44:
+			return getCat44();
+			
+		case 45:
+			return getCat45();
+			
+		case 46:
+			return getCat46();
+			
+		case 47:
+			return getCat47();
+			
+		case 48:
+			return getCat48();
+			
+		
+		default:
+			return 0;
+		}
+		 
+	 }
 
 }
