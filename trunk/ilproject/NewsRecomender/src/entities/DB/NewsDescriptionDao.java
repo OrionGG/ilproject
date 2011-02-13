@@ -153,4 +153,62 @@ public class NewsDescriptionDao extends DAOWebsClassified{
 
 
 	}
+	
+	
+	public List<NewsDescription> getAllNewsByCategories(List<Category> lUserCategories){
+		List<NewsDescription> oListAPiecesOfNews = new ArrayList<NewsDescription>();
+		ResultSet oResultSet;
+		try {
+			String sQuery = "SELECT * FROM LIST ";
+			if(lUserCategories.size()> 0){
+				sQuery += "WHERE ";
+			}
+			
+			for(Category oCategory: lUserCategories){
+				for(int i = 0; i < NUMCAT; i++){
+
+					int iPosition = i+1;
+					sQuery += fields.CAT.toString() + iPosition + " = " + oCategory.ordinal();
+					sQuery += " OR ";
+				}
+			}
+			int lastIndexOfOR = sQuery.lastIndexOf(" OR ");
+			sQuery = sQuery.substring(0,lastIndexOfOR);
+			
+
+			oResultSet = executeSimpleQuery(sQuery);
+			while (oResultSet.next()) {
+
+				NewsDescription oNewsDescription = new NewsDescription();
+				
+
+				Integer iID = oResultSet.getInt(fields.ID.toString());
+				oNewsDescription.setId(iID);
+				String sUrl = oResultSet.getString(fields.URL.toString());
+				oNewsDescription.setUrl(sUrl);
+				for(int i = 0; i < NUMCAT; i++){
+					try {
+						int iPosition = i+1;
+						Category oCategory = Category.values()[oResultSet.getInt(fields.CAT.toString()+ iPosition)];
+						float fScore = oResultSet.getFloat(fields.SCORE.toString()+ iPosition);
+
+						oNewsDescription.setCategoryScore(oCategory, fScore);
+					} catch (NullPointerException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+
+				oListAPiecesOfNews.add(oNewsDescription);
+			}
+
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		return oListAPiecesOfNews;
+
+
+	}
 }

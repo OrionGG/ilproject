@@ -116,6 +116,7 @@ public class Recomender implements StandardCBRApplication
 		
 		//Get cases from Db
 		oNewsList = NewsDescriptionDao.getInstance().getAllNews();
+		//oNewsList = NewsDescriptionDao.getInstance().getAllNewsByCategories(lUserCategories);
 		//Use a custom connector
 		_connector = new TheNewsConnector(oNewsList);
 		_caseBase = new LinealCaseBase();
