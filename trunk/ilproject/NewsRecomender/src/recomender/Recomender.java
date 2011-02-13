@@ -275,6 +275,12 @@ public class Recomender implements StandardCBRApplication
 		// Select cases
 		selectedCases = SelectCases.selectTopK(retrievedCases, 10);
 
+/*		Collection<NewsDescription> lNewsDescriptions = new ArrayList();
+		
+		for(CBRCase oCase : selectedCases){
+			NewsDescription oNewsDescription = (NewsDescription)oCase.getDescription();
+			lNewsDescriptions.add(oNewsDescription);
+		}*/
 		
 		
 	}
