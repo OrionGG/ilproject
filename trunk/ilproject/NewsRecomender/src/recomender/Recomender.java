@@ -230,10 +230,25 @@ public class Recomender implements StandardCBRApplication
 		return lNewsDescriptions;
 	}
 	
-	public static Map<Category, Float> updateProfile(List<NewsDescription> selectedCasesByUser,Map<Category,Float> lastProfile){
+	public static Map<Category, Float> updateProfile(String sSelectedUrlsByUser,Map<Category,Float> lastProfile){
 		Map<Category,Float> oNewProfile = lastProfile;
 		
-		for(NewsDescription oCase : selectedCasesByUser){
+		List<Integer> lIds = new ArrayList<Integer>();
+		try {
+			lIds = NewsDescriptionDao.getInstance().getIds(sSelectedUrlsByUser);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		for(int id:lIds){
+			NewsDescription oCase = new NewsDescription();
+			try {
+				oCase = NewsDescriptionDao.getInstance().getNewsDescription(id);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			for(Category oCategory : Category.values()){
 				float fCaseValue = oCase.getCategoryScore(oCategory);
 				float fLastValue = oNewProfile.get(oCategory);
