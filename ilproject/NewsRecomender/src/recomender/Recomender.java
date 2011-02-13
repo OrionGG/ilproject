@@ -28,6 +28,7 @@ import jcolibri.cbrcore.Attribute;
 import jcolibri.cbrcore.CBRCase;
 import jcolibri.cbrcore.CBRCaseBase;
 import jcolibri.cbrcore.CBRQuery;
+import jcolibri.cbrcore.CaseComponent;
 import jcolibri.cbrcore.Connector;
 import jcolibri.connector.PlainTextConnector;
 import jcolibri.exception.ExecutionException;
@@ -137,7 +138,7 @@ public class Recomender implements StandardCBRApplication
 		// Set the average() global similarity function for the description of the case
 		simConfig.setDescriptionSimFunction(new Max_sum());
 		for(Category oCategory : Category.values()){
-			simConfig.addMapping(new Attribute("cat" + oCategory.ordinal(), NewsDescription.class), new Resta());
+			simConfig.addMapping(new Attribute("cat" + oCategory.ordinal(), NewsDescription.class), new Multiply());
 		}
 
 
@@ -197,12 +198,13 @@ public class Recomender implements StandardCBRApplication
 		}
 	}
 	
-	public static Collection<NewsDescription> getResultCollection(Map<Category,Integer> mSelectedCategories){
+	
+	public static Collection<NewsDescription> getResultCollection(Map<Category,Float> mSelectedCategories){
 		CBRQuery query = new CBRQuery();
 		Collection<NewsDescription> lNewsDescriptions = new ArrayList();
 		
 		NewsDescription hd = new NewsDescription();
-		for(Entry<Category,Integer> oEntry: mSelectedCategories.entrySet()){
+		for(Entry<Category,Float> oEntry: mSelectedCategories.entrySet()){
 			hd.setCategoryScore(oEntry.getKey(), oEntry.getValue());
 		}
 		query.setDescription(hd);
@@ -226,6 +228,24 @@ public class Recomender implements StandardCBRApplication
 		}
 		
 		return lNewsDescriptions;
+	}
+	
+	public static Map<Category, Float> updateProfile(List<NewsDescription> selectedCasesByUser,Map<Category,Float> lastProfile){
+		Map<Category,Float> oNewProfile = lastProfile;
+		
+		for(NewsDescription oCase : selectedCasesByUser){
+			for(Category oCategory : Category.values()){
+				float fCaseValue = oCase.getCategoryScore(oCategory);
+				float fLastValue = oNewProfile.get(oCategory);
+				float fNewValue = fLastValue + fCaseValue;
+				if (fNewValue > 1){
+					fNewValue = 1;
+				}
+				oNewProfile.put(oCategory, fNewValue);
+			}
+		}
+		
+		return oNewProfile;
 	}
 	
 
