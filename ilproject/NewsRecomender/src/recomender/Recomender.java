@@ -267,23 +267,27 @@ public class Recomender implements StandardCBRApplication
 		// Select cases
 		selectedCases = SelectCases.selectTopK(retrievedCases, 10);
 
+		
+	}
+	
+	public void sequence2() throws ExecutionException{
 		// Obtain critizied query
 		CriticalUserChoice choice = DisplayCasesTableWithCritiquesMethod.displayCasesInTableWithCritiques(selectedCases, critiques, _caseBase.getCases());
 
 		if(ContinueOrFinish.continueOrFinish(choice))
-			sequence2(choice.getSelectedCaseAsQuery(), choice);
+			sequence3(choice.getSelectedCaseAsQuery(), choice);
 		else
-			sequence3(choice, selectedCases);
+			sequence4(choice, selectedCases);
 	}
 
-	public void sequence2(CBRQuery query, CriticalUserChoice cuc) throws ExecutionException
+	public void sequence3(CBRQuery query, CriticalUserChoice cuc) throws ExecutionException
 	{
 		// Replaze current query with the critizied one
 		MoreLikeThis.moreLikeThis(query, cuc.getSelectedCase());
 		sequence1(query, cuc.getFilterConfig());
 	}
 
-	public void sequence3(UserChoice choice, Collection<CBRCase> retrievedCases)  throws ExecutionException
+	public void sequence4(UserChoice choice, Collection<CBRCase> retrievedCases)  throws ExecutionException
 	{
 		if(BuyOrQuit.buyOrQuit(choice))
 			System.out.println("Finish - User Buys: "+choice.getSelectedCase());
