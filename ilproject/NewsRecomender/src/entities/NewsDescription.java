@@ -931,9 +931,7 @@ public class NewsDescription implements CaseComponent
 		}
 		 
 	 }
-	
-
-	
+		
 	public String getCategoriesToString(){
 		String sResult = "";
 		for(Category oCategory:Category.values()){
