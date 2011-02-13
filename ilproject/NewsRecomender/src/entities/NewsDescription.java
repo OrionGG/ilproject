@@ -931,5 +931,18 @@ public class NewsDescription implements CaseComponent
 		}
 		 
 	 }
+	
+
+	
+	public String getCategoriesToString(){
+		String sResult = "";
+		for(Category oCategory:Category.values()){
+			float value = getCategoryScore(oCategory);
+			if(value != 0){
+				sResult += oCategory.toString() + " = " + value + "; ";
+			}
+		}
+		return sResult;
+	}
 
 }
