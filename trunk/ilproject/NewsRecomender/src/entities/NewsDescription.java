@@ -613,6 +613,11 @@ public class NewsDescription implements CaseComponent
 		this.cat0 = cat0;
 	}
 	
+	public String toString(){
+		String sResult = surl;
+		return sResult;
+	}
+	
 	public void  setCategoryScore(Category category, float score){
 		
 		 switch (category.ordinal()) {

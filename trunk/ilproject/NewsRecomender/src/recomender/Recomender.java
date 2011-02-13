@@ -197,9 +197,10 @@ public class Recomender implements StandardCBRApplication
 		}
 	}
 	
-	public static Collection<CBRCase> getResultCollection(Map<Category,Integer> mSelectedCategories){
+	public static Collection<NewsDescription> getResultCollection(Map<Category,Integer> mSelectedCategories){
 		CBRQuery query = new CBRQuery();
-
+		Collection<NewsDescription> lNewsDescriptions = new ArrayList();
+		
 		NewsDescription hd = new NewsDescription();
 		for(Entry<Category,Integer> oEntry: mSelectedCategories.entrySet()){
 			hd.setCategoryScore(oEntry.getKey(), oEntry.getValue());
@@ -217,7 +218,14 @@ public class Recomender implements StandardCBRApplication
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return getInstance().selectedCases;
+		
+		
+		for(CBRCase oCase : getInstance().selectedCases){
+			NewsDescription oNewsDescription = (NewsDescription)oCase.getDescription();
+			lNewsDescriptions.add(oNewsDescription);
+		}
+		
+		return lNewsDescriptions;
 	}
 	
 
@@ -267,6 +275,13 @@ public class Recomender implements StandardCBRApplication
 		// Select cases
 		selectedCases = SelectCases.selectTopK(retrievedCases, 10);
 
+		Collection<NewsDescription> lNewsDescriptions = new ArrayList();
+		
+		for(CBRCase oCase : selectedCases){
+			NewsDescription oNewsDescription = (NewsDescription)oCase.getDescription();
+			lNewsDescriptions.add(oNewsDescription);
+		}
+		
 		
 	}
 	
