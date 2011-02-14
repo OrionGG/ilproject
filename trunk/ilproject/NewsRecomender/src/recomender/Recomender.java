@@ -253,7 +253,7 @@ public class Recomender implements StandardCBRApplication
 				float fCaseValue = oCase.getCategoryScore(oCategory);
 				float fLastValue = 0;
 				
-				if(oNewProfile.get(oCategory) != null){
+				if(oNewProfile.containsKey(oCategory)){
 					fLastValue = oNewProfile.get(oCategory);
 				}
 				float fNewValue = fLastValue + fCaseValue; 
