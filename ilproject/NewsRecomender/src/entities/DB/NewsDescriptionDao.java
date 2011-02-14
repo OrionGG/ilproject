@@ -57,7 +57,7 @@ public class NewsDescriptionDao extends DAOWebsClassified{
 
 		List<Integer>  oResultList = new ArrayList<Integer>();
 		ResultSet oResultSet;
-		oResultSet = executeQuery("SELECT ID FROM URL WHERE URL = '" + sUrl + "'");
+		oResultSet = executeQuery("SELECT ID FROM URLS WHERE URL = '" + sUrl + "'");
 		while (oResultSet.next()) {
 			int i = oResultSet.getInt(fields.ID.toString());
 			oResultList.add(i);
