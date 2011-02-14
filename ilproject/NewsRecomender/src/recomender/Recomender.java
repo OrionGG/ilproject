@@ -311,7 +311,7 @@ public class Recomender implements StandardCBRApplication
 		Collection<RetrievalResult> retrievedCases = NNScoringMethod.evaluateSimilarity(filtered, query, simConfig);
 
 		// Select cases
-		selectedCases = SelectCases.selectTopK(retrievedCases, 10);
+		selectedCases = SelectCases.selectTopK(retrievedCases, 12);
 
 /*		Collection<NewsDescription> lNewsDescriptions = new ArrayList();
 		
