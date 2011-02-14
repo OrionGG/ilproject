@@ -951,7 +951,7 @@ public class NewsDescription implements CaseComponent
 			float value =  oEntry.getValue();
 			sResult += oCategory.toString() + " = " + value + "; ";
 			i++;
-			if(i<4){
+			if(i>3){
 				break;
 			}
 		}
