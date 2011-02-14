@@ -947,13 +947,13 @@ public class NewsDescription implements CaseComponent
 		
 		int i=0;
 		for(java.util.Map.Entry<Category, Float> oEntry:oBestThree.entrySet()){
+			if(i>2){
+				break;
+			}
 			Category oCategory = oEntry.getKey();
 			float value =  oEntry.getValue();
 			sResult += oCategory.toString() + " = " + value + "; ";
 			i++;
-			if(i>3){
-				break;
-			}
 		}
 		return sResult;
 	}
