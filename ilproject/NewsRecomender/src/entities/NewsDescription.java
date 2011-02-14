@@ -10,6 +10,9 @@ package entities;
 
 
 
+import java.util.Collections;
+import java.util.TreeMap;
+
 import dominio.Category;
 import jcolibri.cbrcore.Attribute;
 import jcolibri.cbrcore.CaseComponent;
@@ -934,10 +937,22 @@ public class NewsDescription implements CaseComponent
 		
 	public String getCategories(){
 		String sResult = "";
+		TreeMap<Category, Float> oBestThree = new TreeMap<Category, Float>(Collections.reverseOrder());
 		for(Category oCategory:Category.values()){
 			float value = getCategoryScore(oCategory);
 			if(value != 0){
-				sResult += oCategory.toString() + " = " + value + "; ";
+				oBestThree.put(oCategory, value);
+			}
+		}
+		
+		int i=0;
+		for(java.util.Map.Entry<Category, Float> oEntry:oBestThree.entrySet()){
+			Category oCategory = oEntry.getKey();
+			float value =  oEntry.getValue();
+			sResult += oCategory.toString() + " = " + value + "; ";
+			i++;
+			if(i<4){
+				break;
 			}
 		}
 		return sResult;
