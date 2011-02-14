@@ -208,6 +208,7 @@ public class Recomender implements StandardCBRApplication
 			hd.setCategoryScore(oEntry.getKey(), oEntry.getValue());
 		}
 		query.setDescription(hd);
+		System.out.print("Pasa por Recomender");
 		
 		try {
 			if(InstanceNull()){
@@ -225,6 +226,8 @@ public class Recomender implements StandardCBRApplication
 		for(CBRCase oCase : getInstance().selectedCases){
 			NewsDescription oNewsDescription = (NewsDescription)oCase.getDescription();
 			lNewsDescriptions.add(oNewsDescription);
+			System.out.print("Hay casos");
+
 		}
 		
 		return lNewsDescriptions;

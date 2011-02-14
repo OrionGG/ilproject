@@ -1,7 +1,7 @@
 /**
  * HouseDescription.java
  * jCOLIBRI2 framework. 
- * @author Juan A. Recio-García.
+ * @author Juan A. Recio-Garcï¿½a.
  * GAIA - Group for Artificial Intelligence Applications
  * http://gaia.fdi.ucm.es
  * 26/10/2007
@@ -774,7 +774,7 @@ public class NewsDescription implements CaseComponent
 		}
 		 
 	 }
-	
+
 	public float getCategoryScore(Category category){
 		
 		 switch (category.ordinal()) {
@@ -932,7 +932,7 @@ public class NewsDescription implements CaseComponent
 		 
 	 }
 		
-	public String getCategoriesToString(){
+	public String getCategories(){
 		String sResult = "";
 		for(Category oCategory:Category.values()){
 			float value = getCategoryScore(oCategory);
@@ -942,5 +942,7 @@ public class NewsDescription implements CaseComponent
 		}
 		return sResult;
 	}
-
+	public void setCategories(){
+	
+	}
 }
