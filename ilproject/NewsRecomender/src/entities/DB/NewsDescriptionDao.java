@@ -89,8 +89,9 @@ public class NewsDescriptionDao extends DAOWebsClassified{
 			
 			for(int i = 0; i < NUMCAT; i++){
 				try {
-					Category oCategory = Category.values()[oResultSet.getInt(fields.CAT.toString()+i)];
-					float fScore = oResultSet.getFloat(fields.SCORE.toString()+i);
+					int iPosition = i+1;
+					Category oCategory = Category.values()[oResultSet.getInt(fields.CAT.toString()+ iPosition)];
+					float fScore = oResultSet.getFloat(fields.SCORE.toString()+ iPosition);
 
 					oNewsDescription.setCategoryScore(oCategory, fScore);
 				} catch (NullPointerException e) {
