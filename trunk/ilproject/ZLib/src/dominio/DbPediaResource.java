@@ -380,17 +380,14 @@ public class DbPediaResource implements Resource{
 		// TODO Auto-generated method stub
 		return null;
 	}
-	@Override
 	public Literal asLiteral() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	@Override
 	public Resource asResource() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	@Override
 	public Resource getPropertyResourceValue(Property arg0) {
 		// TODO Auto-generated method stub
 		return null;

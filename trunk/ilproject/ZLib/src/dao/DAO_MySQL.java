@@ -10,9 +10,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import jena.Jenate;
 
+import dominio.Category;
+import dominio.DbPedia;
 import dominio.DbPediaResource;
 import encoders.Encode;
 
@@ -122,10 +125,35 @@ public class DAO_MySQL {
 		}
 		
 	}
+	public static void saveInterest(Category cat, Float score, String name) throws SQLException {
+		// TODO Auto-generated method stub
+	
+		Statement st = conexion.createStatement();
+			st.executeUpdate("INSERT INTO interest(user,category,score) VALUES ('"+name+"','"+cat.ordinal()+"','"+score+"')");
+		//	System.out.println("Entra en DAO_MySQL, insert");
+		
+		
+	}
 
 
 
 
+	public static Map<Category, Float> readInterest(String login) throws SQLException {
+		// TODO Auto-generated method stub
+		System.out.print("Entra en DAO_MySQL: ");
+		Statement st = conexion.createStatement();
+		String query="SELECT * FROM interest WHERE user='"+login+"'";
+			System.out.println(query);
+			ResultSet rs=st.executeQuery(query);
+			Map<Category, Float> selectedMap=new TreeMap<Category, Float> ();
+			while(rs.next()){
+				int cat=rs.getInt(2);
+				float score=rs.getFloat(3);
+				selectedMap.put(Category.values()[cat], score);
+			}
+		
+			return selectedMap;
+	}
 
 	public static ResultSet readFavorites(String login) throws SQLException {
 		// TODO Auto-generated method stub
